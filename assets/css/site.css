@@ -39,19 +39,11 @@ button { font: inherit; cursor: pointer; }
 
 /* En-tête navy */
 .topbar { height: 78px; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 max(28px, calc((100% - var(--page)) / 2 + 28px)); }
-.brand { display: flex; align-items: center; gap: 12px; font-size: 1.48rem; font-weight: 650; letter-spacing: -.6px; color: #fff; text-decoration: none; border-radius: 6px; }
-.brand > div > span { font-weight: 350; color: var(--brand-soft); margin-left: .28em; }
-.brand small { display: block; font-weight: 500; letter-spacing: 1.8px; font-size: .625rem; color: #92adbc; margin-top: 4px; text-transform: uppercase; }
-.brand-mark { position: relative; color: var(--brand); font-weight: 800; font-size: 2.5rem; line-height: 1; margin-right: 12px; }
-.brand-mark > span { position: absolute; font-size: 1.1rem; right: -13px; top: -3px; }
-.header-right { display: flex; gap: 20px; align-items: center; }
+.brand { font-size: 1.25rem; font-weight: 650; letter-spacing: -.3px; color: #fff; text-decoration: none; border-radius: 6px; }
 .language { display: flex; border: 1px solid #4b6373; border-radius: 6px; padding: 3px; }
 .language button { padding: 5px 9px; border: 0; border-radius: 4px; background: transparent; color: #c5d8e0; font-size: .875rem; font-weight: 600; transition: background .15s, color .15s; }
 .language button:hover:not(.selected) { color: #fff; }
 .language button.selected { background: #fff; color: var(--navy); }
-.github-link { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: #c5d8e0; transition: color .15s, background .15s; }
-.github-link:hover { color: #fff; background: #ffffff14; }
-.github-link svg { width: 20px; height: 20px; }
 
 /* Onglets soulignés */
 .tabs { background: var(--paper); border-bottom: 1px solid var(--line); }
@@ -89,7 +81,7 @@ button { font: inherit; cursor: pointer; }
 .tool-link::after { content: ""; position: absolute; inset: 0; border-radius: 10px; }
 .tool-link:focus-visible { outline: none; }
 .tool-link:focus-visible::after { outline: 3px solid var(--focus); outline-offset: 2px; }
-.tool-name-rest { font-weight: 350; color: var(--teal); }
+.tool-name-pre { font-weight: 400; color: var(--muted); }
 .tool-tagline { margin: 3px 0 0; font-size: .8125rem; color: var(--muted); }
 .tool-desc { margin: 0; font-size: .875rem; line-height: 1.5; color: var(--ink); flex: 1; }
 .tool-topics { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
@@ -116,11 +108,8 @@ button { font: inherit; cursor: pointer; }
 @keyframes rise { from { opacity: 0; transform: translateY(10px); } }
 
 @media (max-width: 800px) {
-  .topbar { height: 66px; padding: 0 16px; }
-  .brand { font-size: 1.2rem; }
-  .brand-mark { font-size: 2.1rem; }
-  .brand small { font-size: .5625rem; letter-spacing: 1.4px; }
-  .header-right { gap: 8px; }
+  .topbar { height: 60px; padding: 0 16px; }
+  .brand { font-size: 1.125rem; }
   .tabs-inner { padding: 0 16px; gap: 22px; }
   .page { padding: 28px 16px 40px; }
   .intro h1 { font-size: 1.65rem; }
@@ -128,13 +117,9 @@ button { font: inherit; cursor: pointer; }
   .footer-inner { padding: 14px 16px; }
   .footer-inner a { margin-left: 0; }
 }
-@media (max-width: 420px) {
-  .brand small { display: none; }
-}
 @media (pointer: coarse) {
   .tab { padding: 16px 0 14px; }
   .language button { min-height: 40px; min-width: 40px; }
-  .github-link { width: 40px; height: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .tool, .tool-open svg { animation: none; transition: none; }

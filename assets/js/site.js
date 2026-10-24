@@ -52,7 +52,7 @@
 
       const link = card.querySelector(".tool-link");
       link.href = `${SITE.pages}/${tool.repo}/`;
-      link.innerHTML = `<span></span><span class="tool-name-rest"></span><span class="sr-only"></span>`;
+      link.innerHTML = `<span class="tool-name-pre"></span><span></span><span class="sr-only"></span>`;
       link.children[0].textContent = tool.name[0];
       link.children[1].textContent = tool.name[1];
       link.children[2].textContent = ` ${t("newWindow")}`;

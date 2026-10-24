@@ -14,7 +14,7 @@ window.SECTIONS = [
   { id: "bibliotheque", href: "bibliotheque/", ready: false, label: { fr: "Bibliothèque", en: "Library" } }
 ];
 
-// name: [début, suite] du nom, affichés comme les marques Quicker (suite en clair).
+// name : [préfixe en clair, nom en gras], ex. ["Quicker", "Bridge"] ; ["", "Nom"] pour un nom tout en gras.
 // updated : date de repli si l'API GitHub ne répond pas.
 window.TOOLS = [
   {
@@ -43,7 +43,7 @@ window.TOOLS = [
   },
   {
     repo: "BridgeSketch-3D",
-    name: ["BridgeSketch", " 3D"],
+    name: ["", "BridgeSketch 3D"],
     logo: "assets/logos/bridgesketch-3d.svg",
     updated: "2026-10-16",
     tagline: { fr: "Configurateur 3D de ponts", en: "3D bridge configurator" },
@@ -67,7 +67,7 @@ window.TOOLS = [
   },
   {
     repo: "Extracto-Commento",
-    name: ["Extracto", " Commento"],
+    name: ["", "Extracto Commento"],
     logo: "assets/logos/extracto-commento.svg",
     updated: "2026-10-03",
     tagline: { fr: "Commentaires PDF vers Excel", en: "PDF comments to Excel" },
@@ -83,7 +83,6 @@ window.I18N = {
   fr: {
     title: "Anthony Chéruel · Outils",
     skip: "Aller au contenu",
-    brandSub: "Ingénieur en ponts · Québec",
     navLabel: "Sections",
     soon: "bientôt",
     toolsTitle: "Outils",
@@ -102,7 +101,6 @@ window.I18N = {
   en: {
     title: "Anthony Chéruel · Tools",
     skip: "Skip to content",
-    brandSub: "Bridge engineer · Québec",
     navLabel: "Sections",
     soon: "soon",
     toolsTitle: "Tools",

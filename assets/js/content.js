@@ -34,10 +34,10 @@ window.TOOLS = [
     name: ["Quicker", "Atlas"],
     logo: "assets/logos/quickeratlas.svg",
     updated: "2026-10-24",
-    tagline: { fr: "Atlas des ouvrages d'art du Québec", en: "Atlas of Québec's structures" },
+    tagline: { fr: "Atlas d'ouvrages d'art au Québec (et ailleurs)", en: "Atlas of some of Québec's structures" },
     desc: {
-      fr: "Visualisation moderne de l'inventaire des structures du MTMD au Québec, avec ma touche personnelle : profil LiDAR, données des cours d'eau, données sismiques et bien plus ! Tout à partir de données publiques.",
-      en: "A modern view of the MTMD's structure inventory in Québec, with my personal touch: LiDAR profile, watercourse data, seismic data and much more! All from public data."
+      fr: "Visualisation moderne de l'inventaire des structures du MTMD au Québec, avec ma touche personnelle : profil LiDAR, données des cours d'eau,sismiques, etc ! À partir de données publiques.",
+      en: "A modern view of the MTMD's structure inventory in Québec, with my personal touch: LiDAR profile, watercourse and seismic data, and much more! All from public data."
     }
   },
   {
@@ -45,10 +45,10 @@ window.TOOLS = [
     name: ["", "BridgeSketch 3D"],
     logo: "assets/logos/bridgesketch-3d.svg",
     updated: "2026-10-16",
-    tagline: { fr: "Modèle 3D d'un pont pour visualisation architecturale seulement", en: "3D bridge model for architectural visualization only" },
+    tagline: { fr: "Modèle 3D de pont pour visualisation architecturale", en: "3D bridge model for architectural visualization " },
     desc: {
-      fr: "Esquisse interactive d'un pont en 3D : travées, profil en travers, superstructure, appuis et site, puis exploration du résultat.",
-      en: "Interactive 3D bridge sketch: span arrangement, road section, superstructure, supports and site, then explore the result."
+      fr: "Esquisse interactive de ponts standards en 3D : travées, profil en travers, superstructure, appuis et site.",
+      en: "Interactive 3D bridge sketch: span arrangement, road section, superstructure, supports and site."
     }
   },
   {
@@ -58,7 +58,7 @@ window.TOOLS = [
     updated: "2026-10-10",
     tagline: { fr: "Convertisseur d'unités", en: "Units converter" },
     desc: {
-      fr: "Convertisseur d'unités fait sur mesure pour les ingénieurs en structure et en génie civil.",
+      fr: "Convertisseur d'unités fait sur mesure pour les ingénieurs en structure/civil.",
       en: "A unit converter tailor-made for structural and civil engineers."
     }
   },
@@ -67,7 +67,7 @@ window.TOOLS = [
     name: ["", "Extracto Commento"],
     logo: "assets/logos/extracto-commento.svg",
     updated: "2026-10-03",
-    tagline: { fr: "Commentaires PDF vers Excel", en: "PDF comments to Excel" },
+    tagline: { fr: "Extraction de commentaires PDF", en: "PDF comments extractor" },
     desc: {
       fr: "Extrait les commentaires de vos PDF vers un fichier Excel, directement dans le navigateur. Les fichiers ne quittent pas votre poste.",
       en: "Extracts the comments of your PDFs into an Excel file, right in the browser. Your files never leave your computer."
@@ -84,9 +84,9 @@ window.I18N = {
     soon: "bientôt",
     toolsTitle: "Outils",
     toolsIntro: [
-      "Des outils web que j'ai programmés (avec l'IA) pour l'ingénierie ou la productivité. Ils s'ouvrent dans le navigateur, sans installation ni compte. Ce sont des outils open source hébergés sur {github}.",
-      "J'ai développé ces outils par curiosité, pour répondre à un besoin précis que j'ai eu par le passé, et également pour mon apprentissage. J'ai pris soin de les valider dans plusieurs cas, mais des bugs ont pu subsister. Ces outils sont donc à utiliser avec parcimonie et je vous conseille de toujours vérifier les résultats.",
-      "N'hésitez pas à me communiquer vos commentaires et suggestions."
+      "Des outils web que j'ai programmé de zéro (avec l'aide de l'IA) pour mon m'aider dans mon quotidien. Ils s'ouvrent dans le navigateur, sans installation ni compte. Ce sont des outils open source hébergés sur {github}.",
+      "J'ai développé ces outils par curiosité, pour répondre à un besoin précis que j'ai eu par le passé, et également pour mon apprentissage. J'ai pris soin de les valider dans plusieurs cas, mais des bugs ont pu subsister. Ces outils sont donc à utiliser avec précaution et je conseille de toujours vérifier les résultats.",
+      "N'hésitez pas à communiquer avec moi vos commentaires et suggestions !"
     ],
     updated: d => `Mis à jour le ${d}`,
     code: "Code",
@@ -102,9 +102,9 @@ window.I18N = {
     soon: "soon",
     toolsTitle: "Tools",
     toolsIntro: [
-      "Web tools I programmed (with AI) for engineering or productivity. They open in your browser, with nothing to install and no account. They are open source and hosted on {github}.",
-      "I built these tools out of curiosity, to meet a specific need I had in the past, and also to learn. I took care to validate them on several cases, but bugs may remain. Use them sparingly, and I recommend always checking the results.",
-      "Feel free to send me your comments and suggestions."
+      "Web tools I programmed from scratch (with the help of AI) for engineering or productivity to help in my day to day. They open in your browser, with nothing to install and no account. They are open source and hosted on {github}.",
+      "I built these tools out of curiosity, to meet a specific need I had in the past, and also to learn. I took care to validate them on several cases, but bugs may remain. Use them with caution, and I recommend always checking the results.",
+      "Feel free to send me your comments and suggestions!"
     ],
     updated: d => `Updated ${d}`,
     code: "Code",

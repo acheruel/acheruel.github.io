@@ -2,7 +2,7 @@
 // Pour ouvrir une section : passer ready à true et créer la page indiquée par href.
 window.SITE = {
   version: "0.2",
-  date: "2026-10-25",
+  date: "2026-10-26",
   github: "acheruel",
   pages: "https://acheruel.github.io"
 };
@@ -44,7 +44,7 @@ window.TOOLS = [
     repo: "BridgeSketch-3D",
     name: ["", "BridgeSketch 3D"],
     logo: "assets/logos/bridgesketch-3d.svg",
-    updated: "2026-10-16",
+    updated: "2026-10-26",
     tagline: { fr: "Modèle 3D de pont pour visualisation architecturale", en: "3D bridge model for architectural visualization " },
     desc: {
       fr: "Esquisse interactive de ponts standards en 3D : travées, profil en travers, superstructure, appuis et site.",
@@ -55,7 +55,7 @@ window.TOOLS = [
     repo: "QuickerUnits",
     name: ["Quicker", "Units"],
     logo: "assets/logos/quickerunits.svg",
-    updated: "2026-10-10",
+    updated: "2026-10-25",
     tagline: { fr: "Convertisseur d'unités", en: "Units converter" },
     desc: {
       fr: "Convertisseur d'unités fait sur mesure pour les ingénieurs en structure/civil.",
@@ -84,9 +84,9 @@ window.I18N = {
     soon: "bientôt",
     toolsTitle: "Outils",
     toolsIntro: [
-      "Des outils web que j'ai programmé de zéro (avec l'aide de l'IA) pour mon m'aider dans mon quotidien. Ils s'ouvrent dans le navigateur, sans installation ni compte. Ce sont des outils open source hébergés sur {github}.",
-      "J'ai développé ces outils par curiosité, pour répondre à un besoin précis que j'ai eu par le passé, et également pour mon apprentissage. J'ai pris soin de les valider dans plusieurs cas, mais des bugs ont pu subsister. Ces outils sont donc à utiliser avec précaution et je conseille de toujours vérifier les résultats.",
-      "N'hésitez pas à communiquer avec moi vos commentaires et suggestions !"
+      "Des outils que j'ai programmé de zéro avec l'aide de l'IA pour m'aider au quotidien dans des tâches d'ingénierie ou administratives. Ils s'ouvrent dans le navigateur, sans installation ni compte. Ce sont des outils open source hébergés sur {github}.",
+      "J'ai développé ces outils par curiosité, pour mon apprentissage, et parfois pour répondre à un besoin précis que j'ai eu par le passé. J'ai pris soin de valider ces outils dans plusieurs cas, mais des bugs ont pu subsister. Ces outils sont donc à utiliser avec précaution et je conseille de toujours vérifier les résultats.",
+      "N'hésitez pas à communiquer avec moi si vous avez des commentaires et suggestions !"
     ],
     updated: d => `Mis à jour le ${d}`,
     code: "Code",

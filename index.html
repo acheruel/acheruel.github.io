@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Anthony Chéruel · Outils</title>
-  <meta name="description" content="Outils web d'Anthony Chéruel pour l'ingénierie des ponts et des structures : QuickerBridge, QuickerAtlas, BridgeSketch 3D, QuickerUnits, Extracto Commento.">
+  <meta name="description" content="Outils web open source d'Anthony Chéruel pour l'ingénierie ou la productivité : QuickerBridge, QuickerAtlas, BridgeSketch 3D, QuickerUnits, Extracto Commento.">
   <meta property="og:title" content="Anthony Chéruel · Outils">
-  <meta property="og:description" content="Outils web pour l'ingénierie des ponts et des structures, qui fonctionnent dans le navigateur.">
+  <meta property="og:description" content="Outils web pour l'ingénierie ou la productivité, qui s'ouvrent dans le navigateur, sans installation ni compte.">
   <meta property="og:url" content="https://acheruel.github.io/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/css/site.css">
@@ -31,22 +31,16 @@
   <main id="main" class="page">
     <section class="intro" aria-labelledby="tools-title">
       <h1 id="tools-title" data-i18n="toolsTitle">Outils</h1>
-      <p class="lead" data-i18n="toolsLead">Des outils web pour l'ingénierie des ponts et des structures. Ils s'ouvrent dans le navigateur, sans installation ni compte.</p>
-      <p class="meta" id="tools-meta" role="status" aria-live="polite"></p>
+      <div class="lead" id="tools-intro"></div>
     </section>
 
     <ul class="tools" id="tools"></ul>
-
-    <p class="note" role="note">
-      <svg class="note-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 15 14H1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6v4m0 2v.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <span data-i18n="warning">Valeurs préliminaires seulement : les outils d'analyse ne remplacent pas une conception détaillée.</span>
-    </p>
   </main>
 
   <footer class="footer">
     <div class="footer-inner">
       <span>© <span id="year">2026</span> Anthony Chéruel</span>
-      <span class="footer-release"><span data-i18n="siteVersion">Site</span> v<span id="site-version"></span> · <time id="site-date"></time></span>
+      <time id="site-date"></time>
       <a href="https://github.com/acheruel" target="_blank" rel="noopener noreferrer">github.com/acheruel</a>
     </div>
   </footer>
@@ -61,7 +55,6 @@
         </div>
       </div>
       <p class="tool-desc"></p>
-      <ul class="tool-topics"></ul>
       <div class="tool-foot">
         <span class="tool-date"></span>
         <a class="tool-code" target="_blank" rel="noopener noreferrer">

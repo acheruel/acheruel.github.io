@@ -58,8 +58,9 @@ button { font: inherit; cursor: pointer; }
 .page { flex: 1; width: 100%; max-width: var(--page); margin: 0 auto; padding: 40px 28px 56px; }
 .intro { margin-bottom: 26px; }
 .intro h1 { margin: 0 0 10px; font-size: 2rem; font-weight: 650; letter-spacing: -.8px; color: var(--navy); line-height: 1.15; }
-.lead { margin: 0; max-width: 62ch; font-size: 1rem; line-height: 1.55; color: var(--ink); }
-.meta { margin: 10px 0 0; font-size: .8125rem; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 1.3em; }
+.lead { font-size: 1rem; line-height: 1.55; color: var(--ink); }
+.lead p { margin: 0 0 8px; }
+.lead p:last-child { margin-bottom: 0; }
 
 /* Cartes d'outils */
 .tools { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 18px; }
@@ -84,8 +85,6 @@ button { font: inherit; cursor: pointer; }
 .tool-name-pre { font-weight: 400; color: var(--muted); }
 .tool-tagline { margin: 3px 0 0; font-size: .8125rem; color: var(--muted); }
 .tool-desc { margin: 0; font-size: .875rem; line-height: 1.5; color: var(--ink); flex: 1; }
-.tool-topics { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-.tool-topics li { font-size: .75rem; font-weight: 600; color: #2c5a66; background: var(--hover); border: 1px solid var(--note); border-radius: 5px; padding: 1px 7px; }
 .tool-foot { display: flex; align-items: center; gap: 12px; padding-top: 12px; margin-top: 2px; border-top: 1px solid var(--line); font-size: .8125rem; }
 .tool-date { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: auto; }
 .tool-code { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-weight: 600; text-decoration: none; padding: 4px 8px; margin: -4px 0; border-radius: 6px; transition: background .15s, color .15s; }
@@ -94,10 +93,6 @@ button { font: inherit; cursor: pointer; }
 .tool-open { display: inline-flex; align-items: center; gap: 4px; font-weight: 650; color: var(--teal); }
 .tool-open svg { width: 15px; height: 15px; transition: transform .3s var(--ease); }
 .tool:hover .tool-open svg { transform: translate(2px, -2px); }
-
-/* Note d'avertissement */
-.note { display: flex; align-items: flex-start; gap: 8px; margin: 26px 0 0; max-width: 80ch; font-size: .8125rem; line-height: 1.5; color: #7a4a0e; }
-.note-icon { width: 16px; height: 16px; flex: none; margin-top: 1px; color: var(--amber); }
 
 /* Pied de page */
 .footer { border-top: 1px solid var(--line); background: var(--paper); }

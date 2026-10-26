@@ -59,11 +59,6 @@
 
       card.querySelector(".tool-tagline").textContent = tool.tagline[lang];
       card.querySelector(".tool-desc").textContent = tool.desc[lang];
-      card.querySelector(".tool-topics").replaceChildren(...tool.topics[lang].map(topic => {
-        const li = document.createElement("li");
-        li.textContent = topic;
-        return li;
-      }));
 
       const date = card.querySelector(".tool-date");
       const iso = lastUpdate(tool);
@@ -80,10 +75,22 @@
     }));
   }
 
-  function renderMeta() {
-    const latest = TOOLS.map(lastUpdate).sort().at(-1);
-    document.getElementById("tools-meta").textContent =
-      `${t("toolsCount")(TOOLS.length)} · ${t("lastUpdate")(fmtDate(latest))}`;
+  function renderIntro() {
+    document.getElementById("tools-intro").replaceChildren(...t("toolsIntro").map(text => {
+      const p = document.createElement("p");
+      text.split("{github}").forEach((part, i) => {
+        if (i > 0) {
+          const a = document.createElement("a");
+          a.href = `https://github.com/${SITE.github}`;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = "GitHub";
+          p.append(a);
+        }
+        p.append(part);
+      });
+      return p;
+    }));
   }
 
   function renderStatic() {
@@ -99,7 +106,6 @@
       btn.classList.toggle("selected", on);
       btn.setAttribute("aria-pressed", String(on));
     });
-    document.getElementById("site-version").textContent = SITE.version;
     const siteDate = document.getElementById("site-date");
     siteDate.dateTime = SITE.date;
     siteDate.textContent = fmtDate(SITE.date);
@@ -109,8 +115,8 @@
   function render() {
     renderStatic();
     renderTabs();
+    renderIntro();
     renderTools();
-    renderMeta();
   }
 
   async function loadDates() {
@@ -148,7 +154,6 @@
       time.dateTime = iso.slice(0, 10);
       time.textContent = t("updated")(fmtDate(iso));
     });
-    renderMeta();
   }
 
   render();

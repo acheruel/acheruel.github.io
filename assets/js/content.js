@@ -1,20 +1,21 @@
 // Contenu du site. Pour ajouter un outil : une entrée dans TOOLS.
 // Pour ouvrir une section : passer ready à true et créer la page indiquée par href.
 window.SITE = {
-  version: "0.1",
-  date: "2026-10-24",
+  version: "0.2",
+  date: "2026-10-25",
   github: "acheruel",
   pages: "https://acheruel.github.io"
 };
 
 window.SECTIONS = [
+  { id: "accueil", href: "accueil/", ready: false, label: { fr: "Accueil", en: "Home" } },
+  { id: "cv", href: "cv/", ready: false, label: { fr: "Curriculum Vitae", en: "Curriculum Vitae" } },
   { id: "outils", href: "./", ready: true, label: { fr: "Outils", en: "Tools" } },
-  { id: "cv", href: "cv/", ready: false, label: { fr: "CV", en: "Résumé" } },
-  { id: "conseils", href: "conseils/", ready: false, label: { fr: "Conseils", en: "Advice" } },
-  { id: "bibliotheque", href: "bibliotheque/", ready: false, label: { fr: "Bibliothèque", en: "Library" } }
+  { id: "ressources", href: "ressources/", ready: false, label: { fr: "Ressources", en: "Resources" } }
 ];
 
 // name : [préfixe en clair, nom en gras], ex. ["Quicker", "Bridge"] ; ["", "Nom"] pour un nom tout en gras.
+// logo : le même que l'en-tête de l'outil.
 // updated : date de repli si l'API GitHub ne répond pas.
 window.TOOLS = [
   {
@@ -22,12 +23,11 @@ window.TOOLS = [
     name: ["Quicker", "Bridge"],
     logo: "assets/logos/quickerbridge.svg",
     updated: "2026-10-17",
-    tagline: { fr: "Poutres continues de pont", en: "Continuous bridge girders" },
+    tagline: { fr: "Plus rapide et complet que QuickBridge", en: "Faster and more complete than QuickBridge" },
     desc: {
-      fr: "Analyse préliminaire de poutres continues, calculée dans le navigateur avec PyCBA : enveloppes, lignes d'influence, camions canadiens, goussets, culées intégrales.",
-      en: "Preliminary analysis of continuous girders, computed in the browser with PyCBA: envelopes, influence lines, Canadian trucks, haunches, integral abutments."
-    },
-    topics: { fr: ["Ponts", "Analyse", "S6-25"], en: ["Bridges", "Analysis", "S6-25"] }
+      fr: "Analyse de poutres continues par éléments finis (poutre d'Euler-Bernoulli, via PyCBA) : enveloppes CL-625, CL-750QC, piéton S7-23, lignes d'influence, facteur d'essieu S6-25 et bien plus !",
+      en: "Continuous girder analysis with finite elements (Euler-Bernoulli beam, via PyCBA): CL-625, CL-750QC and S7-23 pedestrian envelopes, influence lines, S6-25 axle factor and much more!"
+    }
   },
   {
     repo: "QuickerAtlas",
@@ -36,22 +36,20 @@ window.TOOLS = [
     updated: "2026-10-24",
     tagline: { fr: "Atlas des ouvrages d'art du Québec", en: "Atlas of Québec's structures" },
     desc: {
-      fr: "Proposition de visualisation de l'inventaire des structures du ministère des Transports et de la Mobilité durable : ponts, ponceaux, murs, tunnels.",
-      en: "A proposed visualization of the Québec Ministry of Transportation's structure inventory: bridges, culverts, walls, tunnels."
-    },
-    topics: { fr: ["Ponts", "Carte", "Données ouvertes"], en: ["Bridges", "Map", "Open data"] }
+      fr: "Visualisation moderne de l'inventaire des structures du MTMD au Québec, avec ma touche personnelle : profil LiDAR, données des cours d'eau, données sismiques et bien plus ! Tout à partir de données publiques.",
+      en: "A modern view of the MTMD's structure inventory in Québec, with my personal touch: LiDAR profile, watercourse data, seismic data and much more! All from public data."
+    }
   },
   {
     repo: "BridgeSketch-3D",
     name: ["", "BridgeSketch 3D"],
     logo: "assets/logos/bridgesketch-3d.svg",
     updated: "2026-10-16",
-    tagline: { fr: "Configurateur 3D de ponts", en: "3D bridge configurator" },
+    tagline: { fr: "Modèle 3D d'un pont pour visualisation architecturale seulement", en: "3D bridge model for architectural visualization only" },
     desc: {
       fr: "Esquisse interactive d'un pont en 3D : travées, profil en travers, superstructure, appuis et site, puis exploration du résultat.",
       en: "Interactive 3D bridge sketch: span arrangement, road section, superstructure, supports and site, then explore the result."
-    },
-    topics: { fr: ["Ponts", "3D", "Avant-projet"], en: ["Bridges", "3D", "Concept"] }
+    }
   },
   {
     repo: "QuickerUnits",
@@ -60,10 +58,9 @@ window.TOOLS = [
     updated: "2026-10-10",
     tagline: { fr: "Convertisseur d'unités", en: "Units converter" },
     desc: {
-      fr: "Conversion d'unités pensée pour les ingénieurs civils et en structure. Fonctionne entièrement hors ligne.",
-      en: "Unit conversion built for civil and structural engineers. Works fully offline."
-    },
-    topics: { fr: ["Unités", "Hors ligne"], en: ["Units", "Offline"] }
+      fr: "Convertisseur d'unités fait sur mesure pour les ingénieurs en structure et en génie civil.",
+      en: "A unit converter tailor-made for structural and civil engineers."
+    }
   },
   {
     repo: "Extracto-Commento",
@@ -74,11 +71,11 @@ window.TOOLS = [
     desc: {
       fr: "Extrait les commentaires de vos PDF vers un fichier Excel, directement dans le navigateur. Les fichiers ne quittent pas votre poste.",
       en: "Extracts the comments of your PDFs into an Excel file, right in the browser. Your files never leave your computer."
-    },
-    topics: { fr: ["PDF", "Excel", "Révision"], en: ["PDF", "Excel", "Review"] }
+    }
   }
 ];
 
+// toolsIntro : un paragraphe par entrée ; {github} devient le lien vers le compte GitHub.
 window.I18N = {
   fr: {
     title: "Anthony Chéruel · Outils",
@@ -86,16 +83,16 @@ window.I18N = {
     navLabel: "Sections",
     soon: "bientôt",
     toolsTitle: "Outils",
-    toolsLead: "Des outils web pour l'ingénierie des ponts et des structures. Ils s'ouvrent dans le navigateur, sans installation ni compte.",
-    toolsCount: n => `${n} outils`,
-    lastUpdate: d => `dernière mise à jour le ${d}`,
+    toolsIntro: [
+      "Des outils web que j'ai programmés (avec l'IA) pour l'ingénierie ou la productivité. Ils s'ouvrent dans le navigateur, sans installation ni compte. Ce sont des outils open source hébergés sur {github}.",
+      "J'ai développé ces outils par curiosité, pour répondre à un besoin précis que j'ai eu par le passé, et également pour mon apprentissage. J'ai pris soin de les valider dans plusieurs cas, mais des bugs ont pu subsister. Ces outils sont donc à utiliser avec parcimonie et je vous conseille de toujours vérifier les résultats.",
+      "N'hésitez pas à me communiquer vos commentaires et suggestions."
+    ],
     updated: d => `Mis à jour le ${d}`,
     code: "Code",
     open: "Ouvrir",
     newWindow: "(s'ouvre dans une nouvelle fenêtre)",
     codeOf: n => `Code source de ${n} sur GitHub`,
-    warning: "Valeurs préliminaires seulement : les outils d'analyse ne remplacent pas une conception détaillée.",
-    siteVersion: "Site",
     locale: "fr-CA"
   },
   en: {
@@ -104,16 +101,16 @@ window.I18N = {
     navLabel: "Sections",
     soon: "soon",
     toolsTitle: "Tools",
-    toolsLead: "Web tools for bridge and structural engineering. They open in your browser, with nothing to install and no account.",
-    toolsCount: n => `${n} tools`,
-    lastUpdate: d => `last updated ${d}`,
+    toolsIntro: [
+      "Web tools I programmed (with AI) for engineering or productivity. They open in your browser, with nothing to install and no account. They are open source and hosted on {github}.",
+      "I built these tools out of curiosity, to meet a specific need I had in the past, and also to learn. I took care to validate them on several cases, but bugs may remain. Use them sparingly, and I recommend always checking the results.",
+      "Feel free to send me your comments and suggestions."
+    ],
     updated: d => `Updated ${d}`,
     code: "Code",
     open: "Open",
     newWindow: "(opens in a new window)",
     codeOf: n => `${n} source code on GitHub`,
-    warning: "Indicative preliminary values only: the analysis tools are not a substitute for detailed design.",
-    siteVersion: "Site",
     locale: "en-CA"
   }
 };

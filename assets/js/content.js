@@ -2,7 +2,7 @@
 // Pour ouvrir une section : passer ready à true et créer la page indiquée par href.
 window.SITE = {
   version: "0.2",
-  date: "2026-10-26",
+  date: "2026-10-28",
   github: "acheruel",
   pages: "https://acheruel.github.io"
 };
@@ -71,6 +71,17 @@ window.TOOLS = [
     desc: {
       fr: "Extrait les commentaires de vos PDF vers un fichier Excel, directement dans le navigateur. Les fichiers ne quittent pas votre poste.",
       en: "Extracts the comments of your PDFs into an Excel file, right in the browser. Your files never leave your computer."
+    }
+  },
+  {
+    repo: "Arborescento",
+    name: ["", "Arborescento"],
+    logo: "assets/logos/arborescento.svg",
+    updated: "2026-10-28",
+    tagline: { fr: "Arborescence de dossiers vers Excel", en: "Folder tree to Excel" },
+    desc: {
+      fr: "Liste l'arborescence d'un dossier, local ou réseau, avec filtres, carte mentale, statistiques et export Excel. Seuls les noms, tailles et dates sont lus, rien ne quitte votre poste.",
+      en: "Lists a local or network folder tree with filters, mind map, statistics and Excel export. Only names, sizes and dates are read; nothing leaves your computer."
     }
   }
 ];

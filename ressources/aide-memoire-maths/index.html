@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="fr" data-root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aide-mémoire de mathématiques · Anthony Chéruel</title>
+  <meta name="description" content="Aide-mémoire de mathématiques : algèbre, exposants et logarithmes, géométrie, trigonométrie, dérivées, intégrales, théorèmes et séries. Recherche, copie LaTeX et version imprimable.">
+  <meta property="og:title" content="Aide-mémoire de mathématiques">
+  <meta property="og:url" content="https://acheruel.github.io/ressources/aide-memoire-maths/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="../../assets/css/site.css">
+  <link rel="stylesheet" href="../../assets/css/aide-memoire.css">
+  <script src="../../assets/js/content.js" defer></script>
+  <script src="../../assets/js/site.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" defer></script>
+  <script src="../../assets/js/aide-memoire.js" defer></script>
+</head>
+<!--
+  Rédaction : chaque formule est un .f contenant un .tex (source LaTeX, \lt et \gt au lieu de < et >).
+  data-tex-en : variante anglaise de la source si elle diffère (virgule décimale, texte).
+  .item : unité de recherche ; data-k : mots-clés supplémentaires (FR et EN, sans accents).
+-->
+<body data-page="aide-memoire" data-section="ressources">
+  <a class="skip" href="#main" data-i18n="skip">Aller au contenu</a>
+
+  <header class="topbar">
+    <a class="brand" href="../../">Anthony Chéruel</a>
+    <div class="language" role="group" aria-label="Langue / Language">
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" data-lang="fr" aria-pressed="true" class="selected">FR</button>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Sections" data-i18n-aria="navLabel">
+    <div class="tabs-inner" id="tabs"></div>
+  </nav>
+
+  <main id="main" class="page sheet-page">
+    <nav class="crumbs" aria-label="Fil d'Ariane" data-en-label="Breadcrumb">
+      <a href="../" data-en="Resources">Ressources</a>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span aria-current="page" data-en="Math reference sheet">Aide-mémoire de mathématiques</span>
+    </nav>
+
+    <header class="sheet-head">
+      <div>
+        <h1 data-en="Math reference sheet">Aide-mémoire de mathématiques</h1>
+        <p class="sheet-lead" data-en="The usual formulas of algebra, geometry, trigonometry and calculus, on a single page.">Les formules usuelles d'algèbre, de géométrie, de trigonométrie et de calcul différentiel et intégral, sur une seule page.</p>
+      </div>
+      <button type="button" class="btn" id="print">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 6V1.75h7V6M4.5 11.5h-2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1h-2M4.5 9.5h7v5h-7z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span data-en="Print">Imprimer</span>
+      </button>
+    </header>
+
+    <div class="sheet-layout">
+      <aside class="toc">
+        <label class="search">
+          <span class="sr-only" data-en="Search a formula">Rechercher une formule</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.75" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m10.5 10.5 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input type="search" id="q" autocomplete="off" spellcheck="false" placeholder="Rechercher : cône, arctan, Pythagore…" data-en-placeholder="Search: cone, arctan, Pythagoras…">
+          <kbd aria-hidden="true">/</kbd>
+        </label>
+        <p class="search-status" id="search-status" role="status" aria-live="polite"></p>
+        <nav class="toc-nav" aria-label="Sommaire" data-en-label="Contents">
+          <ol>
+            <li><a href="#algebre"><span data-en="Algebra">Algèbre</span><small class="toc-n"></small></a></li>
+            <li><a href="#exp-log"><span data-en="Exponents &amp; logarithms">Exposants et logarithmes</span><small class="toc-n"></small></a></li>
+            <li><a href="#geometrie"><span data-en="Geometry">Géométrie</span><small class="toc-n"></small></a></li>
+            <li><a href="#trigonometrie"><span data-en="Trigonometry">Trigonométrie</span><small class="toc-n"></small></a></li>
+            <li><a href="#derivees"><span data-en="Derivatives">Dérivées</span><small class="toc-n"></small></a></li>
+            <li><a href="#integrales"><span data-en="Integrals">Intégrales</span><small class="toc-n"></small></a></li>
+            <li><a href="#theoremes"><span data-en="Theorems &amp; applications">Théorèmes et applications</span><small class="toc-n"></small></a></li>
+            <li><a href="#series"><span data-en="Series">Séries</span><small class="toc-n"></small></a></li>
+          </ol>
+        </nav>
+        <p class="toc-hint">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 3.5v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+          <span data-en="Click a formula to copy its LaTeX code.">Cliquez une formule pour copier son code LaTeX.</span>
+        </p>
+      </aside>
+
+      <div class="sheet" id="sheet">
+
+        <!-- ALGÈBRE -->
+        <section class="sec" id="algebre" aria-labelledby="h-algebre">
+          <h2 id="h-algebre" data-en="Algebra">Algèbre</h2>
+
+          <div class="grp">
+            <h3 data-en="Factoring">Factorisations</h3>
+            <div class="rows">
+              <div class="f item" data-k="identite remarquable difference carres squares"><span class="f-label" data-en="Difference of squares">Différence de carrés</span><span class="tex">x^2-h^2=(x-h)(x+h)</span></div>
+              <div class="f item" data-k="identite remarquable difference cubes"><span class="f-label" data-en="Difference of cubes">Différence de cubes</span><span class="tex">x^3-h^3=(x-h)(x^2+xh+h^2)</span></div>
+              <div class="f item wide" data-k="difference puissances nth powers factorisation"><span class="f-label" data-en="Difference of n-th powers">Différence de puissances n-ièmes</span><span class="tex">x^n-h^n=(x-h)\left(x^{n-1}+x^{n-2}h+x^{n-3}h^2+\cdots+xh^{n-2}+h^{n-1}\right)</span></div>
+            </div>
+          </div>
+
+          <div class="grp">
+            <h3 data-en="Binomial theorem">Binôme de Newton</h3>
+            <div class="rows">
+              <div class="f item wide" data-k="binome newton binomial expansion developpement"><span class="f-label" data-en="Expansion">Développement</span><span class="tex">(x+h)^n=x^n+nx^{n-1}h+\frac{n(n-1)}{2}x^{n-2}h^2+\cdots+\binom{n}{k}x^{n-k}h^k+\cdots+h^n</span></div>
+              <div class="f item" data-k="coefficient binomial combinaison combination"><span class="f-label" data-en="Binomial coefficient">Coefficient binomial</span><span class="tex">\binom{n}{k}=\frac{n!}{(n-k)!\,k!}</span></div>
+              <div class="f item" data-k="factorielle factorial"><span class="f-label" data-en="Factorial">Factorielle</span><span class="tex">n!=n(n-1)(n-2)\cdots3\cdot2\cdot1,\quad 0!=1</span></div>
+            </div>
+          </div>
+
+          <div class="grp">
+            <h3 data-en="Quadratic equation">Équation du second degré</h3>
+            <div class="rows">
+              <div class="f item" data-k="quadratique quadratic racines roots second degre formule"><span class="f-label" data-en="Roots of ax² + bx + c = 0">Racines de ax² + bx + c = 0</span><span class="tex">x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}</span></div>
+              <div class="f item" data-k="discriminant delta"><span class="f-label">Discriminant</span><span class="tex">\Delta=b^2-4ac</span></div>
+            </div>
+            <div class="cases">
+              <div class="case item" data-k="discriminant negatif complexes complex"><span class="tex" data-inline>\Delta\lt 0</span><span data-en="two complex conjugate roots">deux racines complexes conjuguées</span></div>
+              <div class="case item" data-k="discriminant nul double equal"><span class="tex" data-inline>\Delta=0</span><span data-en="one repeated real root">une racine réelle double</span></div>
+              <div class="case item" data-k="discriminant positif distinctes distinct"><span class="tex" data-inline>\Delta\gt 0</span><span data-en="two distinct real roots">deux racines réelles distinctes</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXPOSANTS ET LOGARITHMES -->
+        <section class="sec" id="exp-log" aria-labelledby="h-exp-log">
+          <h2 id="h-exp-log" data-en="Exponents &amp; logarithms">Exposants et logarithmes</h2>
+          <div class="split">
+            <div class="grp">
+              <h3><span data-en="Exponents">Exposants</span> <span class="cond">a, b &gt; 0</span></h3>
+              <div class="rows one">
+                <div class="f item" data-k="exposant produit puissance exponent product"><span class="f-label" data-en="Product">Produit</span><span class="tex">a^{x+y}=a^x\,a^y</span></div>
+                <div class="f item" data-k="exposant puissance power"><span class="f-label" data-en="Power of a power">Puissance d'une puissance</span><span class="tex">(a^x)^y=a^{xy}</span></div>
+                <div class="f item" data-k="exposant produit power product"><span class="f-label" data-en="Power of a product">Puissance d'un produit</span><span class="tex">(ab)^x=a^x\,b^x</span></div>
+                <div class="f item" data-k="exposant negatif negative"><span class="f-label" data-en="Negative exponent">Exposant négatif</span><span class="tex">a^{-x}=\frac{1}{a^x}</span></div>
+                <div class="f item" data-k="exposant nul zero"><span class="f-label" data-en="Zero exponent">Exposant nul</span><span class="tex">a^0=1</span></div>
+              </div>
+            </div>
+            <div class="grp">
+              <h3><span data-en="Logarithms">Logarithmes</span> <span class="cond">a, b, x &gt; 0, a ≠ 1</span></h3>
+              <div class="rows one">
+                <div class="f item" data-k="logarithme definition log"><span class="f-label" data-en="Definition">Définition</span><span class="tex">y=\log_a x\iff a^y=x</span></div>
+                <div class="f item" data-k="logarithme produit log product"><span class="f-label" data-en="Product">Produit</span><span class="tex">\log_a(x_1x_2)=\log_a x_1+\log_a x_2</span></div>
+                <div class="f item" data-k="logarithme quotient log"><span class="f-label">Quotient</span><span class="tex">\log_a\frac{x_1}{x_2}=\log_a x_1-\log_a x_2</span></div>
+                <div class="f item" data-k="logarithme puissance log power"><span class="f-label" data-en="Power">Puissance</span><span class="tex">\log_a x^r=r\log_a x</span></div>
+                <div class="f item" data-k="changement de base change of base log"><span class="f-label" data-en="Change of base">Changement de base</span><span class="tex">\log_a b=\frac{\log_c b}{\log_c a}</span></div>
+                <div class="f item" data-k="logarithme base un log one"><span class="f-label" data-en="Special values">Valeurs particulières</span><span class="tex">\log_a a=1,\quad \log_a 1=0</span></div>
+                <div class="f item" data-k="logarithme naturel neperien natural ln e euler"><span class="f-label" data-en="Natural logarithm">Logarithme naturel</span><span class="tex" data-tex-en="\ln x=\log_e x,\quad e=2.71828\ldots">\ln x=\log_e x,\quad e=2{,}71828\ldots</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- GÉOMÉTRIE -->
+        <section class="sec" id="geometrie" aria-labelledby="h-geometrie">
+          <h2 id="h-geometrie" data-en="Geometry">Géométrie</h2>
+          <p class="legend">
+            <span><span class="tex" data-inline>A</span> <span data-en="area">aire</span></span>
+            <span><span class="tex" data-inline>S</span> <span data-en="total surface area">aire totale</span></span>
+            <span><span class="tex" data-inline>V</span> <span data-en="volume">volume</span></span>
+            <span><span class="tex" data-inline>\theta</span> <span data-en="in radians">en radians</span></span>
+          </p>
+
+          <div class="grp">
+            <h3 data-en="Plane figures">Figures planes</h3>
+            <div class="shapes">
+              <figure class="shape item" data-k="triangle aire area">
+                <svg class="fig" viewBox="0 0 140 100" aria-hidden="true"><path class="fill" d="M12 84H128L56 14Z"/><path d="M12 84H128L56 14Z"/><path class="dash" d="M56 14V84"/><path class="thin" d="M56 77h7v7"/><text x="60" y="55">h</text><text x="86" y="98">b</text></svg>
+                <figcaption><b data-en="Triangle">Triangle</b><span class="f"><span class="tex">A=\tfrac12\,bh</span></span></figcaption>
+              </figure>
+              <figure class="shape item" data-k="parallelogramme parallelogram rectangle aire area">
+                <svg class="fig" viewBox="0 0 140 100" aria-hidden="true"><path class="fill" d="M10 84H98L130 16H42Z"/><path d="M10 84H98L130 16H42Z"/><path class="dash" d="M42 16V84"/><path class="thin" d="M42 77h7v7"/><text x="46" y="55">h</text><text x="52" y="98">b</text></svg>
+                <figcaption><b data-en="Parallelogram">Parallélogramme</b><span class="f"><span class="tex">A=bh</span></span></figcaption>
+              </figure>
+              <figure class="shape item" data-k="trapeze trapezoid aire area">
+                <svg class="fig" viewBox="0 0 140 100" aria-hidden="true"><path class="fill" d="M8 84H132L102 20H40Z"/><path d="M8 84H132L102 20H40Z"/><path class="dash" d="M40 20V84"/><path class="thin" d="M40 77h7v7"/><text x="44" y="57">h</text><text x="68" y="14">a</text><text x="68" y="98">b</text></svg>
+                <figcaption><b data-en="Trapezoid">Trapèze</b><span class="f"><span class="tex">A=\tfrac12\,(a+b)\,h</span></span></figcaption>
+              </figure>
+              <figure class="shape item" data-k="cercle circle disque disk aire circonference perimetre circumference pi">
+                <svg class="fig" viewBox="0 0 140 100" aria-hidden="true"><circle class="fill" cx="70" cy="50" r="38"/><circle cx="70" cy="50" r="38"/><path d="M70 50 96.9 23.1"/><circle class="dot" cx="70" cy="50" r="2.2"/><text x="74" y="34">r</text></svg>
+                <figcaption><b data-en="Circle">Cercle</b><span class="f"><span class="tex">A=\pi r^2</span></span><span class="f"><span class="tex">C=2\pi r</span></span></figcaption>
+              </figure>
+              <figure class="shape item" data-k="secteur circulaire sector arc longueur length angle">
+                <svg class="fig" viewBox="0 0 140 100" aria-hidden="true"><circle class="dash" cx="70" cy="58" r="38"/><path class="fill" d="M70 58 94.4 28.9A38 38 0 0 0 45.6 28.9Z"/><path d="M45.6 28.9 70 58 94.4 28.9"/><path class="hl" d="M94.4 28.9A38 38 0 0 0 45.6 28.9"/><path class="thin" d="M77.1 49.6A11 11 0 0 0 62.9 49.6"/><text x="65" y="43" class="sm">θ</text><text x="85" y="50">r</text><text x="66" y="15" class="t">s</text></svg>
+                <figcaption><b data-en="Circular sector">Secteur circulaire</b><span class="f"><span class="tex">A=\tfrac12\,r^2\theta</span></span><span class="f"><span class="tex">s=r\theta</span></span></figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <div class="grp">
+            <h3 data-en="Solids">Solides</h3>
+            <div class="shapes">
+              <figure class="shape item" data-k="sphere boule ball volume aire surface">
+                <svg class="fig" viewBox="0 0 140 100" aria-hidden="true"><circle class="fill" cx="70" cy="50" r="38"/><circle cx="70" cy="50" r="38"/><path class="thin" d="M32 50A38 10 0 0 0 108 50"/><path class="dash" d="M32 50A38 10 0 0 1 108 50"/><path class="dash" d="M70 50H108"/><circle class="dot" cx="70" cy="50" r="2.2"/><text x="85" y="46">r</text></svg>
+                <figcaption><b data-en="Sphere">Sphère</b><span class="f"><span class="tex">S=4\pi r^2</span></span><span class="f"><span class="tex">V=\tfrac43\,\pi r^3</span></span></figcaption>
+              </figure>
+              <figure class="shape item" data-k="cone droit right circular volume aire surface">
+                <svg class="fig" viewBox="0 0 140 100" aria-hidden="true"><path class="fill" d="M70 10 36 80A34 9 0 0 0 104 80Z"/><path d="M36 80 70 10 104 80"/><path d="M36 80A34 9 0 0 0 104 80"/><path class="dash" d="M36 80A34 9 0 0 1 104 80"/><path class="dash" d="M70 10V80H104"/><path class="thin" d="M70 73h7v7"/><text x="60" y="50">h</text><text x="90" y="76">r</text></svg>
+                <figcaption><b data-en="Right circular cone">Cône droit</b><span class="f"><span class="tex">S=\pi r^2+\pi r\sqrt{r^2+h^2}</span></span><span class="f"><span class="tex">V=\tfrac13\,\pi r^2h</span></span></figcaption>
+              </figure>
+              <figure class="shape item" data-k="cylindre droit right circular cylinder volume aire surface">
+                <svg class="fig" viewBox="0 0 140 100" aria-hidden="true"><path class="fill" d="M36 20V80A34 8 0 0 0 104 80V20Z"/><ellipse class="fill" cx="70" cy="20" rx="34" ry="8"/><ellipse cx="70" cy="20" rx="34" ry="8"/><path d="M36 20V80M104 20V80M36 80A34 8 0 0 0 104 80"/><path class="dash" d="M36 80A34 8 0 0 1 104 80"/><path class="dash" d="M70 20V80H104"/><path class="thin" d="M70 73h7v7"/><text x="60" y="54">h</text><text x="88" y="76">r</text></svg>
+                <figcaption><b data-en="Right circular cylinder">Cylindre droit</b><span class="f"><span class="tex">S=2\pi r^2+2\pi rh</span></span><span class="f"><span class="tex">V=\pi r^2h</span></span></figcaption>
+              </figure>
+            </div>
+          </div>
+        </section>
+
+        <!-- TRIGONOMÉTRIE -->
+        <section class="sec" id="trigonometrie" aria-labelledby="h-trigonometrie">
+          <h2 id="h-trigonometrie" data-en="Trigonometry">Trigonométrie</h2>
+
+          <div class="grp">
+            <h3 data-en="Definitions">Définitions</h3>
+            <div class="with-fig">
+              <svg class="fig fig-def" viewBox="0 0 220 170" role="img" aria-label="Angle θ en position standard, point (a, b) à distance r de l'origine, quadrants I à IV" data-en-label="Angle θ in standard position, point (a, b) at distance r from the origin, quadrants I to IV">
+                <path class="axis" d="M10 110H210M204 106l6 4-6 4M120 162V12M116 18l4-6 4 6"/>
+                <text x="203" y="128">x</text><text x="128" y="20">y</text>
+                <path class="dash" d="M60 50V110"/>
+                <path class="seg" d="M60 110H120"/>
+                <path class="ray" d="M120 110 60 50"/>
+                <path class="hl" d="M140 110A20 20 0 0 0 105.9 95.9"/>
+                <circle class="dot" cx="60" cy="50" r="3"/>
+                <text x="12" y="45">(a, b)</text>
+                <text x="94" y="74">r</text>
+                <text x="135" y="94" class="t">θ</text>
+                <text x="47" y="85">b</text>
+                <text x="86" y="127">a</text>
+                <text class="q" x="176" y="44">I</text><text class="q" x="24" y="24">II</text><text class="q" x="22" y="152">III</text><text class="q" x="174" y="152">IV</text>
+              </svg>
+              <div class="rows defs">
+                <div class="f item" data-k="sinus sine definition"><span class="tex">\sin\theta=\frac{b}{r}</span></div>
+                <div class="f item" data-k="cosecante cosecant csc definition"><span class="tex">\csc\theta=\frac{r}{b}=\frac{1}{\sin\theta}</span></div>
+                <div class="f item" data-k="cosinus cosine definition"><span class="tex">\cos\theta=\frac{a}{r}</span></div>
+                <div class="f item" data-k="secante secant sec definition"><span class="tex">\sec\theta=\frac{r}{a}=\frac{1}{\cos\theta}</span></div>
+                <div class="f item" data-k="tangente tangent tan definition"><span class="tex">\tan\theta=\frac{b}{a}</span></div>
+                <div class="f item" data-k="cotangente cotangent cot definition"><span class="tex">\cot\theta=\frac{a}{b}=\frac{1}{\tan\theta}</span></div>
+                <div class="f item span2" data-k="rayon module distance pythagore"><span class="tex">r=\sqrt{a^2+b^2}</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grp">
+            <h3 data-en="Exact values">Valeurs remarquables</h3>
+            <div class="trig item" data-k="valeurs remarquables exact values table cercle trigonometrique unit circle angles degres radians sin cos tan">
+              <div class="trig-table-wrap">
+                <table class="trig-table" id="trig-table">
+                  <caption class="sr-only" data-en="Sine, cosine and tangent of the special angles">Sinus, cosinus et tangente des angles remarquables</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">θ</th>
+                      <th scope="col">rad</th>
+                      <th scope="col"><span class="sw sw-sin" aria-hidden="true"></span>sin θ</th>
+                      <th scope="col"><span class="sw sw-cos" aria-hidden="true"></span>cos θ</th>
+                      <th scope="col">tan θ</th>
+                    </tr>
+                  </thead>
+                  <tbody id="trig-body"></tbody>
+                </table>
+                <p class="foot-note" data-en="tan θ is undefined at 90° and 270° (vertical asymptotes).">tan θ n'est pas définie à 90° et 270° (asymptotes verticales).</p>
+              </div>
+              <figure class="circle-fig">
+                <svg id="unit-circle" viewBox="0 0 260 260" role="img" aria-label="Cercle trigonométrique" data-en-label="Unit circle"></svg>
+                <figcaption class="circle-readout" id="circle-readout" aria-live="polite"></figcaption>
+                <p class="circle-hint" data-en="Hover a row or click a point.">Survolez une ligne ou cliquez un point.</p>
+              </figure>
+            </div>
+          </div>
+
+          <div class="grp">
+            <h3 data-en="Identities">Identités</h3>
+            <div class="split">
+              <div class="rows one">
+                <div class="f item" data-k="identite pythagoricienne pythagorean fondamentale"><span class="f-label" data-en="Pythagorean">Pythagoriciennes</span><span class="tex">\sin^2\theta+\cos^2\theta=1</span></div>
+                <div class="f item nl" data-k="identite pythagoricienne pythagorean tangente secante"><span class="tex">\tan^2\theta+1=\sec^2\theta</span></div>
+                <div class="f item nl" data-k="identite pythagoricienne pythagorean cotangente cosecante"><span class="tex">\cot^2\theta+1=\csc^2\theta</span></div>
+                <div class="f item" data-k="addition somme difference sum angle sinus"><span class="f-label" data-en="Sum and difference">Somme et différence</span><span class="tex">\sin(\alpha\pm\beta)=\sin\alpha\cos\beta\pm\cos\alpha\sin\beta</span></div>
+                <div class="f item nl" data-k="addition somme difference sum angle cosinus"><span class="tex">\cos(\alpha\pm\beta)=\cos\alpha\cos\beta\mp\sin\alpha\sin\beta</span></div>
+              </div>
+              <div class="rows one">
+                <div class="f item" data-k="angle double double angle sinus"><span class="f-label" data-en="Double angle">Angle double</span><span class="tex">\sin 2\theta=2\sin\theta\cos\theta</span></div>
+                <div class="f item nl" data-k="angle double double angle cosinus"><span class="tex">\cos 2\theta=\cos^2\theta-\sin^2\theta</span></div>
+                <div class="f item" data-k="linearisation power reduction carre square"><span class="f-label" data-en="Power reduction">Linéarisation</span><span class="tex">\sin^2\theta=\tfrac12\,(1-\cos 2\theta)</span></div>
+                <div class="f item nl" data-k="linearisation power reduction carre square"><span class="tex">\cos^2\theta=\tfrac12\,(1+\cos 2\theta)</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grp">
+            <h3 data-en="Law of cosines">Loi des cosinus</h3>
+            <div class="with-fig">
+              <svg class="fig fig-tri" viewBox="0 0 220 122" role="img" aria-label="Triangle de côtés x, y et z, angle θ entre x et y" data-en-label="Triangle with sides x, y and z, angle θ between x and y">
+                <path class="fill" d="M70 16 16 100H204Z"/><path d="M70 16 16 100H204Z"/>
+                <path class="hl" d="M59.2 32.8A20 20 0 0 0 86.9 26.6"/>
+                <text x="66" y="50" class="t">θ</text><text x="28" y="56">x</text><text x="142" y="52">y</text><text x="106" y="117">z</text>
+              </svg>
+              <div class="rows one">
+                <div class="f item" data-k="loi des cosinus law of cosines al-kashi triangle"><span class="f-label" data-en="Any triangle">Triangle quelconque</span><span class="tex">z^2=x^2+y^2-2xy\cos\theta</span></div>
+                <div class="f item" data-k="pythagore pythagoras theoreme theorem triangle rectangle right"><span class="f-label" data-en="If θ = π/2: Pythagoras">Si θ = π/2 : Pythagore</span><span class="tex">z^2=x^2+y^2</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- DÉRIVÉES -->
+        <section class="sec" id="derivees" aria-labelledby="h-derivees">
+          <h2 id="h-derivees" data-en="Derivatives">Dérivées</h2>
+
+          <div class="grp">
+            <h3 data-en="Definition">Définition</h3>
+            <div class="rows">
+              <div class="f item wide" data-k="derivee definition limite derivative limit pente tangente slope tangent"><span class="f-label" data-en="Slope of the tangent at (x, f(x))">Pente de la tangente en (x, f(x))</span><span class="tex">f'(x)=\lim_{h\to0}\frac{f(x+h)-f(x)}{h}</span></div>
+            </div>
+          </div>
+
+          <div class="grp">
+            <h3 data-en="Rules">Règles de dérivation</h3>
+            <div class="rows">
+              <div class="f item" data-k="produit product leibniz regle rule"><span class="f-label" data-en="Product">Produit</span><span class="tex">(fg)'=fg'+gf'</span></div>
+              <div class="f item" data-k="puissance power regle rule"><span class="f-label" data-en="Power">Puissance</span><span class="tex">(x^r)'=r\,x^{r-1}</span></div>
+              <div class="f item" data-k="inverse reciproque reciprocal regle rule"><span class="f-label" data-en="Reciprocal">Inverse</span><span class="tex">\left(\frac{1}{g}\right)'=-\frac{g'}{g^2}</span></div>
+              <div class="f item" data-k="chaine composee chain rule composition"><span class="f-label" data-en="Chain rule">Dérivée en chaîne</span><span class="tex">(f\circ g)'(x)=f'\big(g(x)\big)\,g'(x)</span></div>
+              <div class="f item" data-k="quotient regle rule"><span class="f-label">Quotient</span><span class="tex">\left(\frac{f}{g}\right)'=\frac{gf'-fg'}{g^2}</span></div>
+            </div>
+          </div>
+
+          <div class="split three">
+            <div class="grp">
+              <h3 data-en="Trigonometric">Trigonométriques</h3>
+              <div class="rows one bare">
+                <div class="f item" data-k="derivee sinus sine"><span class="tex">(\sin x)'=\cos x</span></div>
+                <div class="f item" data-k="derivee cosinus cosine"><span class="tex">(\cos x)'=-\sin x</span></div>
+                <div class="f item" data-k="derivee tangente tangent"><span class="tex">(\tan x)'=\sec^2 x</span></div>
+                <div class="f item" data-k="derivee cotangente cotangent"><span class="tex">(\cot x)'=-\csc^2 x</span></div>
+                <div class="f item" data-k="derivee secante secant"><span class="tex">(\sec x)'=\sec x\tan x</span></div>
+                <div class="f item" data-k="derivee cosecante cosecant"><span class="tex">(\csc x)'=-\csc x\cot x</span></div>
+              </div>
+            </div>
+            <div class="grp">
+              <h3 data-en="Exponentials and logarithms">Exponentielles et logarithmes</h3>
+              <div class="rows one bare">
+                <div class="f item" data-k="derivee exponentielle exponential e"><span class="tex">(e^x)'=e^x</span></div>
+                <div class="f item" data-k="derivee exponentielle base a exponential"><span class="tex">(a^x)'=a^x\ln a</span></div>
+                <div class="f item" data-k="derivee logarithme naturel natural ln"><span class="tex">(\ln x)'=\frac{1}{x}</span></div>
+                <div class="f item" data-k="derivee logarithme base a log"><span class="tex">(\log_a x)'=\frac{1}{x}\log_a e=\frac{1}{x\ln a}</span></div>
+              </div>
+            </div>
+            <div class="grp">
+              <h3 data-en="Inverse trigonometric">Trigonométriques inverses</h3>
+              <div class="rows one bare">
+                <div class="f item" data-k="derivee arcsinus arcsin inverse sine sin-1"><span class="tex">(\arcsin x)'=\frac{1}{\sqrt{1-x^2}}</span></div>
+                <div class="f item" data-k="derivee arccosinus arccos inverse cosine cos-1"><span class="tex">(\arccos x)'=-\frac{1}{\sqrt{1-x^2}}</span></div>
+                <div class="f item" data-k="derivee arctangente arctan inverse tangent tan-1"><span class="tex">(\arctan x)'=\frac{1}{1+x^2}</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- INTÉGRALES -->
+        <section class="sec" id="integrales" aria-labelledby="h-integrales">
+          <h2 id="h-integrales"><span data-en="Integrals">Intégrales</span> <span class="cond" data-en="constant of integration omitted">constante d'intégration omise</span></h2>
+
+          <div class="grp">
+            <h3 data-en="Definitions">Définitions</h3>
+            <div class="rows">
+              <div class="f item wide" data-k="integrale definie somme de riemann definite integral riemann sum limite"><span class="f-label" data-en="Definite integral (Riemann sum)">Intégrale définie (somme de Riemann)</span><span class="tex">\int_a^b f(x)\,dx=\lim_{n\to\infty}\frac{b-a}{n}\sum_{k=0}^{n-1}f\!\left(a+\frac{k}{n}(b-a)\right)</span></div>
+              <div class="f item wide" data-k="primitive antiderivative integrale indefinie indefinite"><span class="f-label" data-en="Antiderivative">Primitive</span><span class="tex" data-tex-en="\int f(x)\,dx=F(x)+C\quad\text{where}\quad F'=f">\int f(x)\,dx=F(x)+C\quad\text{où}\quad F'=f</span></div>
+            </div>
+          </div>
+
+          <div class="split">
+            <div class="grp">
+              <h3 data-en="Powers and exponentials">Puissances et exponentielles</h3>
+              <div class="rows one bare">
+                <div class="f item" data-k="integrale puissance power"><span class="tex">\int x^r\,dx=\frac{x^{r+1}}{r+1}\quad(r\neq-1)</span></div>
+                <div class="f item" data-k="integrale inverse un sur x logarithme ln reciprocal"><span class="tex">\int x^{-1}\,dx=\ln|x|</span></div>
+                <div class="f item" data-k="integrale exponentielle exponential"><span class="tex">\int e^{ax}\,dx=\frac{1}{a}\,e^{ax}</span></div>
+              </div>
+              <h3 data-en="Rational functions and radicals">Fractions rationnelles et radicaux</h3>
+              <div class="rows one bare">
+                <div class="f item" data-k="integrale fraction rationnelle difference carres logarithme"><span class="tex">\int\frac{dx}{x^2-a^2}=\frac{1}{2a}\ln\left|\frac{x-a}{x+a}\right|</span></div>
+                <div class="f item" data-k="integrale arctangente arctan somme carres"><span class="tex">\int\frac{dx}{x^2+a^2}=\frac{1}{a}\arctan\frac{x}{a}</span></div>
+                <div class="f item" data-k="integrale arcsinus arcsin racine radical"><span class="tex">\int\frac{dx}{\sqrt{a^2-x^2}}=\arcsin\frac{x}{a}</span></div>
+                <div class="f item" data-k="integrale racine radical logarithme"><span class="tex">\int\frac{dx}{\sqrt{x^2\pm a^2}}=\ln\left|x+\sqrt{x^2\pm a^2}\right|</span></div>
+              </div>
+            </div>
+            <div class="grp">
+              <h3 data-en="Trigonometric">Trigonométriques</h3>
+              <div class="rows one bare">
+                <div class="f item" data-k="integrale sinus sine"><span class="tex">\int\sin ax\,dx=-\frac{1}{a}\cos ax</span></div>
+                <div class="f item" data-k="integrale cosinus cosine"><span class="tex">\int\cos ax\,dx=\frac{1}{a}\sin ax</span></div>
+                <div class="f item" data-k="integrale tangente tangent"><span class="tex">\int\tan ax\,dx=-\frac{1}{a}\ln|\cos ax|</span></div>
+                <div class="f item" data-k="integrale cotangente cotangent"><span class="tex">\int\cot ax\,dx=\frac{1}{a}\ln|\sin ax|</span></div>
+                <div class="f item" data-k="integrale secante secant"><span class="tex">\int\sec ax\,dx=\frac{1}{a}\ln|\sec ax+\tan ax|</span></div>
+                <div class="f item" data-k="integrale cosecante cosecant"><span class="tex">\int\csc ax\,dx=-\frac{1}{a}\ln|\csc ax+\cot ax|</span></div>
+              </div>
+              <h3 data-en="Products (by parts)">Produits (par parties)</h3>
+              <div class="rows one bare">
+                <div class="f item" data-k="integrale par parties x sinus by parts"><span class="tex">\int x\sin ax\,dx=-\frac{x\cos ax}{a}+\frac{\sin ax}{a^2}</span></div>
+                <div class="f item" data-k="integrale par parties x cosinus by parts"><span class="tex">\int x\cos ax\,dx=\frac{x\sin ax}{a}+\frac{\cos ax}{a^2}</span></div>
+                <div class="f item" data-k="integrale par parties x exponentielle by parts"><span class="tex">\int x\,e^{ax}\,dx=\frac{x\,e^{ax}}{a}-\frac{e^{ax}}{a^2}</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- THÉORÈMES ET APPLICATIONS -->
+        <section class="sec" id="theoremes" aria-labelledby="h-theoremes">
+          <h2 id="h-theoremes" data-en="Theorems &amp; applications">Théorèmes et applications</h2>
+
+          <div class="grp">
+            <h3 data-en="Theorems">Théorèmes</h3>
+            <div class="rows">
+              <div class="f item" data-k="theoreme fondamental du calcul fundamental theorem of calculus"><span class="f-label" data-en="Fundamental theorem of calculus">Théorème fondamental du calcul</span><span class="tex" data-tex-en="\int_a^b f(x)\,dx=F(b)-F(a)\quad\text{where}\quad F'=f">\int_a^b f(x)\,dx=F(b)-F(a)\quad\text{où}\quad F'=f</span></div>
+              <div class="f item" data-k="theoreme des accroissements finis valeur moyenne mean value theorem"><span class="f-label"><span data-en="Mean value theorem">Théorème des accroissements finis</span><small data-en="f continuous on [a, b], differentiable on (a, b)">f continue sur [a, b], dérivable sur ]a, b[</small></span><span class="tex" data-tex-en="\frac{f(b)-f(a)}{b-a}=f'(c)\ \text{for some}\ c\in(a,b)">\frac{f(b)-f(a)}{b-a}=f'(c)\ \text{pour un}\ c\in\,]a,b[</span></div>
+              <div class="f item" data-k="integration par parties by parts"><span class="f-label" data-en="Integration by parts">Intégration par parties</span><span class="tex">\int u\,\frac{dv}{dx}\,dx=uv-\int v\,\frac{du}{dx}\,dx</span></div>
+              <div class="f item" data-k="test derivee seconde second derivative test maximum minimum extremum local"><span class="f-label"><span data-en="Second derivative test">Test de la dérivée seconde</span><small data-en="when f′(x) = 0">si f′(x) = 0</small></span><span class="tex" data-tex-en="f''(x)\lt 0\Rightarrow\text{local max.},\quad f''(x)\gt 0\Rightarrow\text{local min.}">f''(x)\lt 0\Rightarrow\text{max. local},\quad f''(x)\gt 0\Rightarrow\text{min. local}</span></div>
+            </div>
+          </div>
+
+          <div class="grp">
+            <h3><span data-en="Curve sketching">Étude de courbe</span> <span class="mn">M<sub>2</sub>I<sub>2</sub>ACIDS</span></h3>
+            <ol class="acids item" data-k="etude de courbe curve sketching m2i2acids maximum minimum intersections intercepts inflexion inflection asymptote convexite concavite convexity croissance decroissance increasing decreasing symetrie symmetry">
+              <li><b>M</b><span>Maximum</span></li>
+              <li><b>M</b><span>Minimum</span></li>
+              <li><b>I</b><span data-en="Intercepts">Intersections avec les axes</span></li>
+              <li><b>I</b><span data-en="Inflections">Points d'inflexion</span></li>
+              <li><b>A</b><span>Asymptotes</span></li>
+              <li><b>C</b><span data-en="Convexity">Convexité</span></li>
+              <li><b>I</b><span data-en="Increasing">Intervalles de croissance</span></li>
+              <li><b>D</b><span data-en="Decreasing">Décroissance</span></li>
+              <li><b>S</b><span data-en="Symmetry">Symétrie</span></li>
+            </ol>
+          </div>
+
+          <div class="grp">
+            <h3 data-en="Applications of the integral">Applications de l'intégrale</h3>
+            <div class="split">
+              <div class="rows one">
+                <div class="f item" data-k="volume disques disc method revolution solide axe x"><span class="f-label"><span data-en="Volume, disc method">Volume, méthode des disques</span><small data-en="about the x-axis">autour de l'axe des x</small></span><span class="tex">V=\int_a^b\pi y^2\,dx</span></div>
+                <div class="f item" data-k="volume coquilles cylindriques tubes shell method revolution axe y"><span class="f-label"><span data-en="Volume, shell method">Volume, coquilles cylindriques</span><small data-en="about the y-axis">autour de l'axe des y</small></span><span class="tex">V=\int_a^b 2\pi xy\,dx</span></div>
+                <div class="f item" data-k="aire surface revolution area axe x"><span class="f-label"><span data-en="Surface of revolution">Aire de révolution</span><small data-en="about the x-axis">autour de l'axe des x</small></span><span class="tex">S=\int_a^b 2\pi y\sqrt{1+(y')^2}\,dx</span></div>
+              </div>
+              <div class="rows one">
+                <div class="f item" data-k="longueur arc length parametrique parametric"><span class="f-label"><span data-en="Arc length">Longueur d'arc</span><small>x = x(t), y = y(t)</small></span><span class="tex">L=\int_{t_0}^{t_1}\sqrt{\left(\frac{dx}{dt}\right)^2+\left(\frac{dy}{dt}\right)^2}\,dt</span></div>
+                <div class="f item" data-k="longueur arc length fonction"><span class="f-label"><span data-en="Arc length">Longueur d'arc</span><small>y = y(x)</small></span><span class="tex">L=\int_a^b\sqrt{1+(y')^2}\,dx</span></div>
+                <div class="f item" data-k="longueur arc length fonction"><span class="f-label"><span data-en="Arc length">Longueur d'arc</span><small>x = x(y)</small></span><span class="tex">L=\int_c^d\sqrt{1+(x')^2}\,dy</span></div>
+              </div>
+            </div>
+            <div class="rows">
+              <div class="f item" data-k="centre de masse centroide centroid center of mass moments plaque lamina"><span class="f-label"><span data-en="Centroid of a lamina">Centre de masse d'une plaque</span><small data-en="M: total mass">M : masse totale</small></span><span class="tex">(\bar x,\bar y)=\left(\frac{M_y}{M},\frac{M_x}{M}\right)</span></div>
+              <div class="f item" data-k="moments statiques first moments centre de masse densite density"><span class="f-label"><span data-en="Moments, density ρ">Moments, masse surfacique ρ</span><small data-en="h(x): vertical strip height, k(y): horizontal strip length">h(x) : hauteur d'une bande verticale, k(y) : longueur d'une bande horizontale</small></span><span class="tex">M_y=\int_a^b\rho\,x\,h(x)\,dx,\quad M_x=\int_c^d\rho\,y\,k(y)\,dy</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SÉRIES -->
+        <section class="sec" id="series" aria-labelledby="h-series">
+          <h2 id="h-series" data-en="Power series">Séries entières usuelles</h2>
+          <div class="rows one series">
+            <div class="f item" data-k="serie exponentielle series exponential taylor maclaurin"><span class="f-label"><span data-en="Exponential">Exponentielle</span><small data-en="for all x">pour tout x</small></span><span class="tex">e^x=\sum_{n=0}^{\infty}\frac{x^n}{n!}=1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\cdots</span></div>
+            <div class="f item" data-k="serie geometrique geometric series"><span class="f-label"><span data-en="Geometric">Géométrique</span><small>−1 &lt; x &lt; 1</small></span><span class="tex">\frac{1}{1-x}=\sum_{n=0}^{\infty}x^n=1+x+x^2+x^3+\cdots</span></div>
+            <div class="f item" data-k="serie sinus sine series taylor"><span class="f-label"><span data-en="Sine">Sinus</span><small data-en="for all x">pour tout x</small></span><span class="tex">\sin x=\sum_{n=0}^{\infty}(-1)^n\frac{x^{2n+1}}{(2n+1)!}=x-\frac{x^3}{3!}+\frac{x^5}{5!}-\cdots</span></div>
+            <div class="f item" data-k="serie cosinus cosine series taylor"><span class="f-label"><span data-en="Cosine">Cosinus</span><small data-en="for all x">pour tout x</small></span><span class="tex">\cos x=\sum_{n=0}^{\infty}(-1)^n\frac{x^{2n}}{(2n)!}=1-\frac{x^2}{2!}+\frac{x^4}{4!}-\cdots</span></div>
+            <div class="f item" data-k="serie logarithme naturel logarithm series ln"><span class="f-label"><span data-en="Logarithm">Logarithme</span><small>−1 ≤ x &lt; 1</small></span><span class="tex">\ln(1-x)=-\sum_{n=1}^{\infty}\frac{x^n}{n}=-x-\frac{x^2}{2}-\frac{x^3}{3}-\cdots</span></div>
+          </div>
+        </section>
+
+        <div class="empty" id="empty" hidden>
+          <p><span data-en="No formula matches">Aucune formule ne correspond à</span> « <b id="empty-q"></b> ».</p>
+          <button type="button" class="btn" id="clear-search" data-en="Clear search">Effacer la recherche</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© <span id="year">2026</span> Anthony Chéruel</span>
+      <time id="site-date"></time>
+      <a href="https://github.com/acheruel" target="_blank" rel="noopener noreferrer">github.com/acheruel</a>
+    </div>
+  </footer>
+</body>
+</html>

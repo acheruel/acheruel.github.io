@@ -50,7 +50,8 @@ button { font: inherit; cursor: pointer; }
 .tabs-inner { max-width: var(--page); margin: 0 auto; padding: 0 28px; display: flex; gap: 28px; overflow-x: auto; scrollbar-width: none; }
 .tab { position: relative; display: inline-flex; align-items: baseline; gap: 6px; padding: 14px 0 12px; font-size: .875rem; font-weight: 600; color: var(--muted); text-decoration: none; white-space: nowrap; }
 .tab::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: transparent; }
-.tab[aria-current="page"] { color: var(--teal); border-bottom-color: var(--teal); }
+.tab[aria-current="page"] { color: var(--teal); }
+.tab[aria-current="page"]::after { background: var(--teal); }
 .tab:not(.is-soon):hover { color: var(--ink); }
 .tab.is-soon { color: #8a9ca7; cursor: default; }
 .tab small { font-size: .6875rem; font-weight: 600; color: #7d939f; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 0 7px; line-height: 1.5; }
@@ -62,6 +63,12 @@ button { font: inherit; cursor: pointer; }
 .lead { font-size: 1rem; line-height: 1.55; color: var(--ink); }
 .lead p { margin: 0 0 8px; }
 .lead p:last-child { margin-bottom: 0; }
+
+/* Catégories d'outils */
+.tool-group + .tool-group { margin-top: 40px; }
+.group-title { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; font-size: .8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.3px; color: var(--navy); }
+.group-title::after { content: ""; flex: 1; height: 1px; background: var(--field); }
+.group-title small { font-size: .75rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--muted); font-variant-numeric: tabular-nums; }
 
 /* Cartes d'outils */
 .tools { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 18px; }
@@ -94,6 +101,7 @@ button { font: inherit; cursor: pointer; }
 .tool-open { display: inline-flex; align-items: center; gap: 4px; font-weight: 650; color: var(--teal); }
 .tool-open svg { width: 15px; height: 15px; transition: transform .3s var(--ease); }
 .tool:hover .tool-open svg { transform: translate(2px, -2px); }
+.tool.is-internal:hover .tool-open svg { transform: translateX(3px); }
 
 /* Pied de page */
 .footer { border-top: 1px solid var(--line); background: var(--paper); }

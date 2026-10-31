@@ -1,5 +1,5 @@
 // Aide-mémoire de mathématiques : rendu KaTeX, copie LaTeX, recherche, sommaire actif,
-// tableau des valeurs remarquables lié au cercle trigonométrique, impression.
+// tableau des valeurs remarquables lié au cercle trigonométrique.
 (() => {
   "use strict";
 
@@ -338,9 +338,6 @@
     };
     frame = requestAnimationFrame(step);
   }
-
-  /* Impression */
-  document.getElementById("print").addEventListener("click", () => print());
 
   /* Démarrage et changement de langue */
   function renderAll() {

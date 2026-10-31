@@ -10,19 +10,11 @@
 
 [hidden] { display: none !important; }
 
-/* Fil d'Ariane et en-tête de page */
-.crumbs { display: flex; align-items: center; gap: 6px; margin: -14px 0 18px; font-size: .8125rem; color: var(--muted); }
-.crumbs a { color: var(--teal); font-weight: 600; border-radius: 4px; }
-.crumbs a:hover { color: var(--navy); }
-.crumbs svg { width: 14px; height: 14px; color: #8fa4b0; flex: none; }
-
+/* En-tête de page */
 .sheet-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
 .sheet-head h1 { margin: 0 0 8px; font-size: 2rem; font-weight: 650; letter-spacing: -.8px; line-height: 1.15; color: var(--navy); text-wrap: balance; }
 .sheet-lead { margin: 0; max-width: 68ch; line-height: 1.55; }
 
-.btn { display: inline-flex; align-items: center; gap: 7px; flex: none; padding: 7px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); font-size: .875rem; font-weight: 600; box-shadow: var(--shadow); transition: background .15s, border-color .15s; }
-.btn:hover { background: var(--hover); border-color: var(--field); }
-.btn svg { width: 16px; height: 16px; }
 
 .sheet-layout { display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: 28px; align-items: start; }
 
@@ -199,7 +191,6 @@
 }
 
 @media (max-width: 900px) {
-  .crumbs { margin-top: -6px; }
   .sheet-head { flex-direction: column; align-items: flex-start; gap: 14px; }
   .sheet-head h1 { font-size: 1.65rem; }
   .sheet-layout { grid-template-columns: minmax(0, 1fr); gap: 12px; }
@@ -230,7 +221,7 @@
   @page { margin: 12mm; }
   :root { font-size: 13px; }
   body { display: block; background: #fff; }
-  .topbar, .tabs, .crumbs, .toc, .footer, .skip, #print, .toast, .copy, .circle-hint, .empty, .foot-note { display: none !important; }
+  .topbar, .tabs, .crumbs, .toc, .footer, .skip, .toast, .copy, .circle-hint, .empty, .foot-note { display: none !important; }
   .page { max-width: none; padding: 0; }
   .sheet-head { margin-bottom: 10px; }
   .sheet-head h1 { font-size: 20pt; }

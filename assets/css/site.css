@@ -64,6 +64,17 @@ button { font: inherit; cursor: pointer; }
 .lead p { margin: 0 0 8px; }
 .lead p:last-child { margin-bottom: 0; }
 
+/* Boutons */
+.btn { display: inline-flex; align-items: center; gap: 7px; flex: none; padding: 7px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); font-size: .875rem; font-weight: 600; box-shadow: var(--shadow); transition: background .15s, border-color .15s; }
+.btn:hover { background: var(--hover); border-color: var(--field); }
+.btn svg { width: 16px; height: 16px; }
+
+/* Fil d'Ariane des sous-pages */
+.crumbs { display: flex; align-items: center; gap: 6px; margin: -14px 0 18px; font-size: .8125rem; color: var(--muted); }
+.crumbs a { color: var(--teal); font-weight: 600; border-radius: 4px; }
+.crumbs a:hover { color: var(--navy); }
+.crumbs svg { width: 14px; height: 14px; color: #8fa4b0; flex: none; }
+
 /* Catégories d'outils */
 .tool-group + .tool-group { margin-top: 40px; }
 .group-title { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; font-size: .8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.3px; color: var(--navy); }
@@ -94,11 +105,10 @@ button { font: inherit; cursor: pointer; }
 .tool-tagline { margin: 3px 0 0; font-size: .8125rem; color: var(--muted); }
 .tool-desc { margin: 0; font-size: .875rem; line-height: 1.5; color: var(--ink); flex: 1; }
 .tool-foot { display: flex; align-items: center; gap: 12px; padding-top: 12px; margin-top: 2px; border-top: 1px solid var(--line); font-size: .8125rem; }
-.tool-date { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: auto; }
 .tool-code { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-weight: 600; text-decoration: none; padding: 4px 8px; margin: -4px 0; border-radius: 6px; }
 .tool-code:hover { background: var(--hover); color: var(--ink); }
 .tool-code svg { width: 15px; height: 15px; }
-.tool-open { display: inline-flex; align-items: center; gap: 4px; font-weight: 650; color: var(--teal); }
+.tool-open { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; font-weight: 650; color: var(--teal); }
 .tool-open svg { width: 15px; height: 15px; transition: transform .3s var(--ease); }
 .tool:hover .tool-open svg { transform: translate(2px, -2px); }
 .tool.is-internal:hover .tool-open svg { transform: translateX(3px); }
@@ -117,6 +127,7 @@ button { font: inherit; cursor: pointer; }
   .tabs-inner { padding: 0 16px; gap: 22px; }
   .page { padding: 28px 16px 40px; }
   .intro h1 { font-size: 1.65rem; }
+  .crumbs { margin-top: -6px; }
   .tools { grid-template-columns: 1fr; gap: 14px; }
   .footer-inner { padding: 14px 16px; }
   .footer-inner a { margin-left: 0; }

@@ -1,8 +1,8 @@
 // Contenu du site. Pour ajouter un outil : une entrée dans TOOLS (avec sa catégorie).
 // Pour ouvrir une section : passer ready à true et créer la page indiquée par href.
 window.SITE = {
-  version: "0.3",
-  date: "2026-10-29",
+  version: "0.3.1",
+  date: "2026-10-31",
   github: "acheruel",
   pages: "https://acheruel.github.io"
 };
@@ -18,19 +18,19 @@ window.SECTIONS = [
 // Catégories de la page Outils, dans l'ordre d'affichage.
 window.CATEGORIES = [
   { id: "ingenierie", label: { fr: "Ingénierie", en: "Engineering" } },
-  { id: "productivite", label: { fr: "Productivité", en: "Productivity" } }
+  { id: "productivite", label: { fr: "Productivité", en: "Productivity" } },
+  { id: "bienetre", label: { fr: "Bien-être", en: "Well-being" } }
 ];
 
 // name : [préfixe en clair, nom en gras], ex. ["Quicker", "Bridge"] ; ["", "Nom"] pour un nom tout en gras.
 // logo : le même que l'en-tête de l'outil.
-// updated : date de repli si l'API GitHub ne répond pas.
+// href, code : pour un outil hébergé dans ce site (sinon acheruel.github.io/<repo>/ et son dépôt).
 window.TOOLS = [
   {
     repo: "QuickerBridge",
     category: "ingenierie",
     name: ["Quicker", "Bridge"],
     logo: "assets/logos/quickerbridge.svg",
-    updated: "2026-10-17",
     tagline: { fr: "Plus rapide et complet que QuickBridge", en: "Faster and more complete than QuickBridge" },
     desc: {
       fr: "Analyse de poutres continues par éléments finis (poutre d'Euler-Bernoulli, via PyCBA) : enveloppes CL-625, CL-750QC, piéton S7-23, lignes d'influence, facteur d'essieu S6-25 et bien plus !",
@@ -42,7 +42,6 @@ window.TOOLS = [
     category: "ingenierie",
     name: ["Quicker", "Atlas"],
     logo: "assets/logos/quickeratlas.svg",
-    updated: "2026-10-24",
     tagline: { fr: "Atlas d'ouvrages d'art au Québec (et ailleurs)", en: "Atlas of bridges and structures in Québec (and beyond)" },
     desc: {
       fr: "Visualisation moderne de l'inventaire des structures du MTMD au Québec, avec ma touche personnelle : profil LiDAR, données des cours d'eau, sismiques, etc. ! À partir de données publiques.",
@@ -54,7 +53,6 @@ window.TOOLS = [
     category: "ingenierie",
     name: ["", "BridgeSketch 3D"],
     logo: "assets/logos/bridgesketch-3d.svg",
-    updated: "2026-10-26",
     tagline: { fr: "Modèle 3D de pont pour visualisation architecturale", en: "3D bridge model for architectural visualization" },
     desc: {
       fr: "Esquisse interactive de ponts standards en 3D : travées, profil en travers, superstructure, appuis et site.",
@@ -66,7 +64,6 @@ window.TOOLS = [
     category: "ingenierie",
     name: ["Quicker", "Units"],
     logo: "assets/logos/quickerunits.svg",
-    updated: "2026-10-25",
     tagline: { fr: "Convertisseur d'unités", en: "Unit converter" },
     desc: {
       fr: "Convertisseur d'unités fait sur mesure pour les ingénieurs en structure/civil.",
@@ -78,7 +75,6 @@ window.TOOLS = [
     category: "productivite",
     name: ["", "Extracto Commento"],
     logo: "assets/logos/extracto-commento.svg",
-    updated: "2026-10-03",
     tagline: { fr: "Extraction de commentaires PDF", en: "PDF comment extraction" },
     desc: {
       fr: "Extrait les commentaires de vos PDF vers un fichier Excel, directement dans le navigateur. Les fichiers ne quittent pas votre poste.",
@@ -90,11 +86,23 @@ window.TOOLS = [
     category: "productivite",
     name: ["", "Arborescento"],
     logo: "assets/logos/arborescento.svg",
-    updated: "2026-10-28",
     tagline: { fr: "Arborescence de dossiers vers Excel", en: "Folder tree to Excel" },
     desc: {
       fr: "Liste l'arborescence d'un dossier, local ou réseau, avec filtres, carte mentale, statistiques et export Excel. Seuls les noms, tailles et dates sont lus, rien ne quitte votre poste.",
       en: "Lists the tree of a local or network folder, with filters, mind map, statistics and Excel export. Only names, sizes and dates are read; nothing leaves your computer."
+    }
+  },
+  {
+    repo: "Respiro",
+    category: "bienetre",
+    name: ["", "Respiro"],
+    logo: "assets/logos/respiro.svg",
+    href: "outils/respiro/",
+    code: "https://github.com/acheruel/acheruel.github.io/tree/main/outils/respiro",
+    tagline: { fr: "Respiration guidée, 5 s / 5 s", en: "Guided breathing, 5 s / 5 s" },
+    desc: {
+      fr: "Une animation sobre pour respirer : 5 secondes d'inspiration, 5 secondes d'expiration, en continu et sans son. Se détache dans une mini-fenêtre qui reste visible par-dessus votre travail.",
+      en: "A quiet animation to breathe with: 5 seconds in, 5 seconds out, looping and silent. Pops out into a mini window that stays on top of your work."
     }
   }
 ];
@@ -106,7 +114,8 @@ window.I18N = {
     pageTitle: {
       outils: "Anthony Chéruel · Outils",
       ressources: "Anthony Chéruel · Ressources",
-      "aide-memoire": "Aide-mémoire de mathématiques · Anthony Chéruel"
+      "aide-memoire": "Aide-mémoire de mathématiques · Anthony Chéruel",
+      respiro: "Respiro · Anthony Chéruel"
     },
     skip: "Aller au contenu",
     navLabel: "Sections",
@@ -118,7 +127,6 @@ window.I18N = {
       "N'hésitez pas à communiquer avec moi si vous avez des commentaires et suggestions !"
     ],
     toolCount: n => (n > 1 ? `${n} outils` : "1 outil"),
-    updated: d => `Mis à jour le ${d}`,
     code: "Code",
     open: "Ouvrir",
     newWindow: "(s'ouvre dans une nouvelle fenêtre)",
@@ -129,7 +137,8 @@ window.I18N = {
     pageTitle: {
       outils: "Anthony Chéruel · Tools",
       ressources: "Anthony Chéruel · Resources",
-      "aide-memoire": "Math reference sheet · Anthony Chéruel"
+      "aide-memoire": "Math reference sheet · Anthony Chéruel",
+      respiro: "Respiro · Anthony Chéruel"
     },
     skip: "Skip to content",
     navLabel: "Sections",
@@ -141,7 +150,6 @@ window.I18N = {
       "Feel free to reach out if you have comments or suggestions!"
     ],
     toolCount: n => (n > 1 ? `${n} tools` : "1 tool"),
-    updated: d => `Updated ${d}`,
     code: "Code",
     open: "Open",
     newWindow: "(opens in a new window)",

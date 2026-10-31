@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aide-mémoire de mathématiques · Anthony Chéruel</title>
-  <meta name="description" content="Aide-mémoire de mathématiques : algèbre, exposants et logarithmes, géométrie, trigonométrie, dérivées, intégrales, théorèmes et séries. Recherche, copie LaTeX et version imprimable.">
+  <meta name="description" content="Aide-mémoire de mathématiques : géométrie, trigonométrie, algèbre, exposants et logarithmes, dérivées, intégrales, théorèmes et séries. Recherche instantanée et copie LaTeX.">
   <meta property="og:title" content="Aide-mémoire de mathématiques">
   <meta property="og:url" content="https://acheruel.github.io/ressources/aide-memoire-maths/">
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
@@ -46,12 +46,8 @@
     <header class="sheet-head">
       <div>
         <h1 data-en="Math reference sheet">Aide-mémoire de mathématiques</h1>
-        <p class="sheet-lead" data-en="The usual formulas of algebra, geometry, trigonometry and calculus, on a single page.">Les formules usuelles d'algèbre, de géométrie, de trigonométrie et de calcul différentiel et intégral, sur une seule page.</p>
+        <p class="sheet-lead" data-en="The usual formulas of geometry, trigonometry, algebra and calculus, on a single page.">Les formules usuelles de géométrie, de trigonométrie, d'algèbre et de calcul différentiel et intégral, sur une seule page.</p>
       </div>
-      <button type="button" class="btn" id="print">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 6V1.75h7V6M4.5 11.5h-2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1h-2M4.5 9.5h7v5h-7z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-        <span data-en="Print">Imprimer</span>
-      </button>
     </header>
 
     <div class="sheet-layout">
@@ -65,10 +61,10 @@
         <p class="search-status" id="search-status" role="status" aria-live="polite"></p>
         <nav class="toc-nav" aria-label="Sommaire" data-en-label="Contents">
           <ol>
-            <li><a href="#algebre"><span data-en="Algebra">Algèbre</span><small class="toc-n"></small></a></li>
-            <li><a href="#exp-log"><span data-en="Exponents &amp; logarithms">Exposants et logarithmes</span><small class="toc-n"></small></a></li>
             <li><a href="#geometrie"><span data-en="Geometry">Géométrie</span><small class="toc-n"></small></a></li>
             <li><a href="#trigonometrie"><span data-en="Trigonometry">Trigonométrie</span><small class="toc-n"></small></a></li>
+            <li><a href="#algebre"><span data-en="Algebra">Algèbre</span><small class="toc-n"></small></a></li>
+            <li><a href="#exp-log"><span data-en="Exponents &amp; logarithms">Exposants et logarithmes</span><small class="toc-n"></small></a></li>
             <li><a href="#derivees"><span data-en="Derivatives">Dérivées</span><small class="toc-n"></small></a></li>
             <li><a href="#integrales"><span data-en="Integrals">Intégrales</span><small class="toc-n"></small></a></li>
             <li><a href="#theoremes"><span data-en="Theorems &amp; applications">Théorèmes et applications</span><small class="toc-n"></small></a></li>
@@ -82,71 +78,6 @@
       </aside>
 
       <div class="sheet" id="sheet">
-
-        <!-- ALGÈBRE -->
-        <section class="sec" id="algebre" aria-labelledby="h-algebre">
-          <h2 id="h-algebre" data-en="Algebra">Algèbre</h2>
-
-          <div class="grp">
-            <h3 data-en="Factoring">Factorisations</h3>
-            <div class="rows">
-              <div class="f item" data-k="identite remarquable difference carres squares"><span class="f-label" data-en="Difference of squares">Différence de carrés</span><span class="tex">x^2-h^2=(x-h)(x+h)</span></div>
-              <div class="f item" data-k="identite remarquable difference cubes"><span class="f-label" data-en="Difference of cubes">Différence de cubes</span><span class="tex">x^3-h^3=(x-h)(x^2+xh+h^2)</span></div>
-              <div class="f item wide" data-k="difference puissances nth powers factorisation"><span class="f-label" data-en="Difference of n-th powers">Différence de puissances n-ièmes</span><span class="tex">x^n-h^n=(x-h)\left(x^{n-1}+x^{n-2}h+x^{n-3}h^2+\cdots+xh^{n-2}+h^{n-1}\right)</span></div>
-            </div>
-          </div>
-
-          <div class="grp">
-            <h3 data-en="Binomial theorem">Binôme de Newton</h3>
-            <div class="rows">
-              <div class="f item wide" data-k="binome newton binomial expansion developpement"><span class="f-label" data-en="Expansion">Développement</span><span class="tex">(x+h)^n=x^n+nx^{n-1}h+\frac{n(n-1)}{2}x^{n-2}h^2+\cdots+\binom{n}{k}x^{n-k}h^k+\cdots+h^n</span></div>
-              <div class="f item" data-k="coefficient binomial combinaison combination"><span class="f-label" data-en="Binomial coefficient">Coefficient binomial</span><span class="tex">\binom{n}{k}=\frac{n!}{(n-k)!\,k!}</span></div>
-              <div class="f item" data-k="factorielle factorial"><span class="f-label" data-en="Factorial">Factorielle</span><span class="tex">n!=n(n-1)(n-2)\cdots3\cdot2\cdot1,\quad 0!=1</span></div>
-            </div>
-          </div>
-
-          <div class="grp">
-            <h3 data-en="Quadratic equation">Équation du second degré</h3>
-            <div class="rows">
-              <div class="f item" data-k="quadratique quadratic racines roots second degre formule"><span class="f-label" data-en="Roots of ax² + bx + c = 0">Racines de ax² + bx + c = 0</span><span class="tex">x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}</span></div>
-              <div class="f item" data-k="discriminant delta"><span class="f-label">Discriminant</span><span class="tex">\Delta=b^2-4ac</span></div>
-            </div>
-            <div class="cases">
-              <div class="case item" data-k="discriminant negatif complexes complex"><span class="tex" data-inline>\Delta\lt 0</span><span data-en="two complex conjugate roots">deux racines complexes conjuguées</span></div>
-              <div class="case item" data-k="discriminant nul double equal"><span class="tex" data-inline>\Delta=0</span><span data-en="one repeated real root">une racine réelle double</span></div>
-              <div class="case item" data-k="discriminant positif distinctes distinct"><span class="tex" data-inline>\Delta\gt 0</span><span data-en="two distinct real roots">deux racines réelles distinctes</span></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- EXPOSANTS ET LOGARITHMES -->
-        <section class="sec" id="exp-log" aria-labelledby="h-exp-log">
-          <h2 id="h-exp-log" data-en="Exponents &amp; logarithms">Exposants et logarithmes</h2>
-          <div class="split">
-            <div class="grp">
-              <h3><span data-en="Exponents">Exposants</span> <span class="cond">a, b &gt; 0</span></h3>
-              <div class="rows one">
-                <div class="f item" data-k="exposant produit puissance exponent product"><span class="f-label" data-en="Product">Produit</span><span class="tex">a^{x+y}=a^x\,a^y</span></div>
-                <div class="f item" data-k="exposant puissance power"><span class="f-label" data-en="Power of a power">Puissance d'une puissance</span><span class="tex">(a^x)^y=a^{xy}</span></div>
-                <div class="f item" data-k="exposant produit power product"><span class="f-label" data-en="Power of a product">Puissance d'un produit</span><span class="tex">(ab)^x=a^x\,b^x</span></div>
-                <div class="f item" data-k="exposant negatif negative"><span class="f-label" data-en="Negative exponent">Exposant négatif</span><span class="tex">a^{-x}=\frac{1}{a^x}</span></div>
-                <div class="f item" data-k="exposant nul zero"><span class="f-label" data-en="Zero exponent">Exposant nul</span><span class="tex">a^0=1</span></div>
-              </div>
-            </div>
-            <div class="grp">
-              <h3><span data-en="Logarithms">Logarithmes</span> <span class="cond">a, b, x &gt; 0, a ≠ 1</span></h3>
-              <div class="rows one">
-                <div class="f item" data-k="logarithme definition log"><span class="f-label" data-en="Definition">Définition</span><span class="tex">y=\log_a x\iff a^y=x</span></div>
-                <div class="f item" data-k="logarithme produit log product"><span class="f-label" data-en="Product">Produit</span><span class="tex">\log_a(x_1x_2)=\log_a x_1+\log_a x_2</span></div>
-                <div class="f item" data-k="logarithme quotient log"><span class="f-label">Quotient</span><span class="tex">\log_a\frac{x_1}{x_2}=\log_a x_1-\log_a x_2</span></div>
-                <div class="f item" data-k="logarithme puissance log power"><span class="f-label" data-en="Power">Puissance</span><span class="tex">\log_a x^r=r\log_a x</span></div>
-                <div class="f item" data-k="changement de base change of base log"><span class="f-label" data-en="Change of base">Changement de base</span><span class="tex">\log_a b=\frac{\log_c b}{\log_c a}</span></div>
-                <div class="f item" data-k="logarithme base un log one"><span class="f-label" data-en="Special values">Valeurs particulières</span><span class="tex">\log_a a=1,\quad \log_a 1=0</span></div>
-                <div class="f item" data-k="logarithme naturel neperien natural ln e euler"><span class="f-label" data-en="Natural logarithm">Logarithme naturel</span><span class="tex" data-tex-en="\ln x=\log_e x,\quad e=2.71828\ldots">\ln x=\log_e x,\quad e=2{,}71828\ldots</span></div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         <!-- GÉOMÉTRIE -->
         <section class="sec" id="geometrie" aria-labelledby="h-geometrie">
@@ -213,17 +144,17 @@
               <svg class="fig fig-def" viewBox="0 0 220 170" role="img" aria-label="Angle θ en position standard, point (a, b) à distance r de l'origine, quadrants I à IV" data-en-label="Angle θ in standard position, point (a, b) at distance r from the origin, quadrants I to IV">
                 <path class="axis" d="M10 110H210M204 106l6 4-6 4M120 162V12M116 18l4-6 4 6"/>
                 <text x="203" y="128">x</text><text x="128" y="20">y</text>
-                <path class="dash" d="M60 50V110"/>
-                <path class="seg" d="M60 110H120"/>
-                <path class="ray" d="M120 110 60 50"/>
-                <path class="hl" d="M140 110A20 20 0 0 0 105.9 95.9"/>
-                <circle class="dot" cx="60" cy="50" r="3"/>
-                <text x="12" y="45">(a, b)</text>
-                <text x="94" y="74">r</text>
-                <text x="135" y="94" class="t">θ</text>
-                <text x="47" y="85">b</text>
-                <text x="86" y="127">a</text>
-                <text class="q" x="176" y="44">I</text><text class="q" x="24" y="24">II</text><text class="q" x="22" y="152">III</text><text class="q" x="174" y="152">IV</text>
+                <path class="dash" d="M180 50V110"/>
+                <path class="seg" d="M120 110H180"/>
+                <path class="ray" d="M120 110 180 50"/>
+                <path class="hl" d="M140 110A20 20 0 0 0 134.1 95.9"/>
+                <circle class="dot" cx="180" cy="50" r="3"/>
+                <text x="164" y="40">(a, b)</text>
+                <text x="138" y="76">r</text>
+                <text x="145" y="104" class="t">θ</text>
+                <text x="186" y="85">b</text>
+                <text x="146" y="127">a</text>
+                <text class="q" x="200" y="24">I</text><text class="q" x="24" y="24">II</text><text class="q" x="22" y="152">III</text><text class="q" x="174" y="152">IV</text>
               </svg>
               <div class="rows defs">
                 <div class="f item" data-k="sinus sine definition"><span class="tex">\sin\theta=\frac{b}{r}</span></div>
@@ -294,6 +225,71 @@
               <div class="rows one">
                 <div class="f item" data-k="loi des cosinus law of cosines al-kashi triangle"><span class="f-label" data-en="Any triangle">Triangle quelconque</span><span class="tex">z^2=x^2+y^2-2xy\cos\theta</span></div>
                 <div class="f item" data-k="pythagore pythagoras theoreme theorem triangle rectangle right"><span class="f-label" data-en="If θ = π/2: Pythagoras">Si θ = π/2 : Pythagore</span><span class="tex">z^2=x^2+y^2</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ALGÈBRE -->
+        <section class="sec" id="algebre" aria-labelledby="h-algebre">
+          <h2 id="h-algebre" data-en="Algebra">Algèbre</h2>
+
+          <div class="grp">
+            <h3 data-en="Factoring">Factorisations</h3>
+            <div class="rows">
+              <div class="f item" data-k="identite remarquable difference carres squares"><span class="f-label" data-en="Difference of squares">Différence de carrés</span><span class="tex">x^2-h^2=(x-h)(x+h)</span></div>
+              <div class="f item" data-k="identite remarquable difference cubes"><span class="f-label" data-en="Difference of cubes">Différence de cubes</span><span class="tex">x^3-h^3=(x-h)(x^2+xh+h^2)</span></div>
+              <div class="f item wide" data-k="difference puissances nth powers factorisation"><span class="f-label" data-en="Difference of n-th powers">Différence de puissances n-ièmes</span><span class="tex">x^n-h^n=(x-h)\left(x^{n-1}+x^{n-2}h+x^{n-3}h^2+\cdots+xh^{n-2}+h^{n-1}\right)</span></div>
+            </div>
+          </div>
+
+          <div class="grp">
+            <h3 data-en="Binomial theorem">Binôme de Newton</h3>
+            <div class="rows">
+              <div class="f item wide" data-k="binome newton binomial expansion developpement"><span class="f-label" data-en="Expansion">Développement</span><span class="tex">(x+h)^n=x^n+nx^{n-1}h+\frac{n(n-1)}{2}x^{n-2}h^2+\cdots+\binom{n}{k}x^{n-k}h^k+\cdots+h^n</span></div>
+              <div class="f item" data-k="coefficient binomial combinaison combination"><span class="f-label" data-en="Binomial coefficient">Coefficient binomial</span><span class="tex">\binom{n}{k}=\frac{n!}{(n-k)!\,k!}</span></div>
+              <div class="f item" data-k="factorielle factorial"><span class="f-label" data-en="Factorial">Factorielle</span><span class="tex">n!=n(n-1)(n-2)\cdots3\cdot2\cdot1,\quad 0!=1</span></div>
+            </div>
+          </div>
+
+          <div class="grp">
+            <h3 data-en="Quadratic equation">Équation du second degré</h3>
+            <div class="rows">
+              <div class="f item" data-k="quadratique quadratic racines roots second degre formule"><span class="f-label" data-en="Roots of ax² + bx + c = 0">Racines de ax² + bx + c = 0</span><span class="tex">x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}</span></div>
+              <div class="f item" data-k="discriminant delta"><span class="f-label">Discriminant</span><span class="tex">\Delta=b^2-4ac</span></div>
+            </div>
+            <div class="cases">
+              <div class="case item" data-k="discriminant negatif complexes complex"><span class="tex" data-inline>\Delta\lt 0</span><span data-en="two complex conjugate roots">deux racines complexes conjuguées</span></div>
+              <div class="case item" data-k="discriminant nul double equal"><span class="tex" data-inline>\Delta=0</span><span data-en="one repeated real root">une racine réelle double</span></div>
+              <div class="case item" data-k="discriminant positif distinctes distinct"><span class="tex" data-inline>\Delta\gt 0</span><span data-en="two distinct real roots">deux racines réelles distinctes</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXPOSANTS ET LOGARITHMES -->
+        <section class="sec" id="exp-log" aria-labelledby="h-exp-log">
+          <h2 id="h-exp-log" data-en="Exponents &amp; logarithms">Exposants et logarithmes</h2>
+          <div class="split">
+            <div class="grp">
+              <h3><span data-en="Exponents">Exposants</span> <span class="cond">a, b &gt; 0</span></h3>
+              <div class="rows one">
+                <div class="f item" data-k="exposant produit puissance exponent product"><span class="f-label" data-en="Product">Produit</span><span class="tex">a^{x+y}=a^x\,a^y</span></div>
+                <div class="f item" data-k="exposant puissance power"><span class="f-label" data-en="Power of a power">Puissance d'une puissance</span><span class="tex">(a^x)^y=a^{xy}</span></div>
+                <div class="f item" data-k="exposant produit power product"><span class="f-label" data-en="Power of a product">Puissance d'un produit</span><span class="tex">(ab)^x=a^x\,b^x</span></div>
+                <div class="f item" data-k="exposant negatif negative"><span class="f-label" data-en="Negative exponent">Exposant négatif</span><span class="tex">a^{-x}=\frac{1}{a^x}</span></div>
+                <div class="f item" data-k="exposant nul zero"><span class="f-label" data-en="Zero exponent">Exposant nul</span><span class="tex">a^0=1</span></div>
+              </div>
+            </div>
+            <div class="grp">
+              <h3><span data-en="Logarithms">Logarithmes</span> <span class="cond">a, b, x &gt; 0, a ≠ 1</span></h3>
+              <div class="rows one">
+                <div class="f item" data-k="logarithme definition log"><span class="f-label" data-en="Definition">Définition</span><span class="tex">y=\log_a x\iff a^y=x</span></div>
+                <div class="f item" data-k="logarithme produit log product"><span class="f-label" data-en="Product">Produit</span><span class="tex">\log_a(x_1x_2)=\log_a x_1+\log_a x_2</span></div>
+                <div class="f item" data-k="logarithme quotient log"><span class="f-label">Quotient</span><span class="tex">\log_a\frac{x_1}{x_2}=\log_a x_1-\log_a x_2</span></div>
+                <div class="f item" data-k="logarithme puissance log power"><span class="f-label" data-en="Power">Puissance</span><span class="tex">\log_a x^r=r\log_a x</span></div>
+                <div class="f item" data-k="changement de base change of base log"><span class="f-label" data-en="Change of base">Changement de base</span><span class="tex">\log_a b=\frac{\log_c b}{\log_c a}</span></div>
+                <div class="f item" data-k="logarithme base un log one"><span class="f-label" data-en="Special values">Valeurs particulières</span><span class="tex">\log_a a=1,\quad \log_a 1=0</span></div>
+                <div class="f item" data-k="logarithme naturel neperien natural ln e euler"><span class="f-label" data-en="Natural logarithm">Logarithme naturel</span><span class="tex" data-tex-en="\ln x=\log_e x,\quad e=2.71828\ldots">\ln x=\log_e x,\quad e=2{,}71828\ldots</span></div>
               </div>
             </div>
           </div>

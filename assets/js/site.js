@@ -8,8 +8,6 @@
   "use strict";
 
   const { SITE, SECTIONS, CATEGORIES, TOOLS, I18N } = window;
-  const CACHE_KEY = "acheruel:repos";
-  const CACHE_MS = 60 * 60 * 1000;
   const root = document.documentElement.dataset.root || "";
   const page = document.body.dataset.page || "outils";
   const section = document.body.dataset.section || page;
@@ -20,12 +18,10 @@
   };
 
   let lang = store.get("lang") === "en" ? "en" : "fr";
-  let pushed = {}; // repo -> date ISO de la dernière mise à jour (API GitHub)
 
   const t = key => I18N[lang][key];
   const parseDate = s => new Date(s.length === 10 ? `${s}T12:00:00` : s);
   const fmtDate = s => new Intl.DateTimeFormat(t("locale"), { day: "numeric", month: "short", year: "numeric" }).format(parseDate(s));
-  const lastUpdate = tool => pushed[tool.repo] || tool.updated;
 
   window.siteLang = () => lang;
   window.siteDate = fmtDate;
@@ -60,7 +56,7 @@
     card.querySelector(".tool-logo").src = root + tool.logo;
 
     const link = card.querySelector(".tool-link");
-    link.href = `${SITE.pages}/${tool.repo}/`;
+    link.href = tool.href ? root + tool.href : `${SITE.pages}/${tool.repo}/`;
     link.innerHTML = `<span class="tool-name-pre"></span><span></span><span class="sr-only"></span>`;
     link.children[0].textContent = tool.name[0];
     link.children[1].textContent = tool.name[1];
@@ -69,16 +65,10 @@
     card.querySelector(".tool-tagline").textContent = tool.tagline[lang];
     card.querySelector(".tool-desc").textContent = tool.desc[lang];
 
-    const date = card.querySelector(".tool-date");
-    const iso = lastUpdate(tool);
-    date.innerHTML = `<time></time>`;
-    date.firstChild.dateTime = iso.slice(0, 10);
-    date.firstChild.textContent = t("updated")(fmtDate(iso));
-
     const code = card.querySelector(".tool-code");
-    code.href = `https://github.com/${SITE.github}/${tool.repo}`;
+    code.href = tool.code || `https://github.com/${SITE.github}/${tool.repo}`;
     code.setAttribute("aria-label", `${t("codeOf")(fullName)} ${t("newWindow")}`);
-    code.title = `github.com/${SITE.github}/${tool.repo}`;
+    code.title = code.href.replace("https://", "");
     card.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
     return card;
   }
@@ -166,25 +156,6 @@
     renderTools();
   }
 
-  async function loadDates() {
-    const cached = store.get(CACHE_KEY, sessionStorage);
-    if (cached) {
-      try {
-        const { at, data } = JSON.parse(cached);
-        if (Date.now() - at < CACHE_MS) { pushed = data; return; }
-      } catch { /* cache illisible */ }
-    }
-    try {
-      const res = await fetch(`https://api.github.com/users/${SITE.github}/repos?per_page=100`, {
-        headers: { Accept: "application/vnd.github+json" }
-      });
-      if (!res.ok) return;
-      const repos = await res.json();
-      pushed = Object.fromEntries(repos.map(r => [r.name, r.pushed_at]));
-      store.set(CACHE_KEY, JSON.stringify({ at: Date.now(), data: pushed }), sessionStorage);
-    } catch { /* hors ligne ou limite atteinte : dates de repli */ }
-  }
-
   document.querySelectorAll(".language button").forEach(btn => btn.addEventListener("click", () => {
     if (btn.dataset.lang === lang) return;
     lang = btn.dataset.lang;
@@ -194,17 +165,5 @@
     document.dispatchEvent(new CustomEvent("langchange", { detail: { lang } }));
   }));
 
-  // Met à jour les dates en place pour ne pas relancer l'animation d'entrée des cartes.
-  function updateDates() {
-    document.querySelectorAll("#tools .tool").forEach(card => {
-      const tool = TOOLS.find(x => card.querySelector(".tool-code").href.endsWith(`/${x.repo}`));
-      const iso = lastUpdate(tool);
-      const time = card.querySelector(".tool-date time");
-      time.dateTime = iso.slice(0, 10);
-      time.textContent = t("updated")(fmtDate(iso));
-    });
-  }
-
   render();
-  if (document.getElementById("tools")) loadDates().then(updateDates);
 })();

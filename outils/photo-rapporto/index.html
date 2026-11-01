@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="fr" data-root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Photo Rapporto · Anthony Chéruel</title>
+  <meta name="description" content="Photo Rapporto : téléversez vos photos de chantier, ajoutez une légende à chacune et exportez un rapport photo PDF soigné, avec date et informations du projet. Tout reste sur votre appareil.">
+  <meta property="og:title" content="Photo Rapporto">
+  <meta property="og:url" content="https://acheruel.github.io/outils/photo-rapporto/">
+  <link rel="icon" href="../../assets/logos/photo-rapporto.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/css/site.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="../../assets/js/content.js" defer></script>
+  <script src="../../assets/js/site.js" defer></script>
+  <script src="vendor/jspdf-4.2.1.umd.min.js" defer></script>
+  <script src="vendor/sortable-1.15.7.min.js" defer></script>
+  <script src="pdf.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body data-page="photo-rapporto" data-section="outils">
+  <a class="skip" href="#main" data-i18n="skip">Aller au contenu</a>
+
+  <header class="topbar">
+    <a class="brand" href="../../">Anthony Chéruel</a>
+    <div class="language" role="group" aria-label="Langue / Language">
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" data-lang="fr" aria-pressed="true" class="selected">FR</button>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Sections" data-i18n-aria="navLabel">
+    <div class="tabs-inner" id="tabs"></div>
+  </nav>
+
+  <main id="main" class="page pr-page">
+    <nav class="crumbs" aria-label="Fil d'Ariane" data-en-label="Breadcrumb">
+      <a href="../../" data-en="Tools">Outils</a>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span aria-current="page">Photo Rapporto</span>
+    </nav>
+
+    <header class="pr-head">
+      <img src="../../assets/logos/photo-rapporto.svg" alt="" width="48" height="48">
+      <div>
+        <h1><span class="pre">Photo</span> Rapporto <small class="pr-version">v1.0</small></h1>
+        <p data-en="Your site photos, ready to send. Add a caption to each photo and export a clean PDF report, dated and labelled with your project details.">Vos photos de chantier, prêtes à envoyer. Ajoutez une légende à chaque photo et exportez un rapport PDF soigné, daté et identifié à votre projet.</p>
+      </div>
+    </header>
+
+    <p class="pr-local">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 2.75 3.5v4c0 3.2 2.2 5.6 5.25 7 3.05-1.4 5.25-3.8 5.25-7v-4L8 1.5Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="m5.6 8 1.7 1.7 3.2-3.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span data-en="100% local: your photos never leave your device. Your work is kept in this browser until you clear it.">100 % local : vos photos ne quittent pas votre appareil. Votre travail est conservé dans ce navigateur jusqu'à ce que vous l'effaciez.</span>
+    </p>
+
+    <div class="steps" role="tablist" aria-label="Étapes" data-en-label="Steps">
+      <button type="button" class="step" role="tab" id="tab-photos" aria-controls="panel-photos" aria-selected="true">
+        <b>1</b><span data-en="Photos">Photos</span><small class="step-count" id="count-photos">0</small>
+      </button>
+      <button type="button" class="step" role="tab" id="tab-report" aria-controls="panel-report" aria-selected="false" tabindex="-1">
+        <b>2</b><span data-en="Report details">Informations</span>
+      </button>
+      <button type="button" class="step" role="tab" id="tab-preview" aria-controls="panel-preview" aria-selected="false" tabindex="-1">
+        <b>3</b><span data-en="Preview">Aperçu</span>
+      </button>
+    </div>
+
+    <!-- 1. Photos -->
+    <section class="panel" id="panel-photos" role="tabpanel" aria-labelledby="tab-photos">
+      <div class="drop" id="drop">
+        <input type="file" id="file-input" accept="image/*" multiple hidden>
+        <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
+        <svg class="drop-icon" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="9" width="30" height="23" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 9l2.2-3.5h7.6L26 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <div class="drop-text">
+          <strong data-en="Drop your photos here">Déposez vos photos ici</strong>
+          <span data-en="JPEG, PNG or WebP · as many as you like">JPEG, PNG ou WebP · autant que vous voulez</span>
+        </div>
+        <div class="drop-actions">
+          <button type="button" class="btn btn-primary" id="pick">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <span data-en="Add photos">Ajouter des photos</span>
+          </button>
+          <button type="button" class="btn" id="camera" hidden>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.75" y="4" width="12.5" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 4 6.4 2.5h3.2L10.5 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            <span data-en="Take a photo">Prendre une photo</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="photo-bar" id="photo-bar" hidden>
+        <p class="photo-hint" data-en="Drag a photo by its handle to reorder it. Tap a photo to enlarge it.">Glissez une photo par sa poignée pour la déplacer. Touchez une photo pour l'agrandir.</p>
+        <div class="photo-tools">
+          <label class="select-inline">
+            <span data-en="Sort">Trier</span>
+            <select id="sort">
+              <option value="" data-en="Choose…">Choisir…</option>
+              <option value="date" data-en="By date taken">Par date de prise</option>
+              <option value="name" data-en="By file name">Par nom de fichier</option>
+              <option value="reverse" data-en="Reverse order">Inverser l'ordre</option>
+            </select>
+          </label>
+          <button type="button" class="btn btn-quiet" id="clear-photos">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span data-en="Remove all">Tout retirer</span>
+          </button>
+        </div>
+      </div>
+
+      <ol class="photos" id="photos"></ol>
+    </section>
+
+    <!-- 2. Informations du rapport -->
+    <section class="panel" id="panel-report" role="tabpanel" aria-labelledby="tab-report" hidden>
+      <div class="report-grid">
+        <div class="card">
+          <div class="card-head">
+            <h2 data-en="Report details">Informations du rapport</h2>
+            <p data-en="Kept in this browser: fill them in once, they will be there next time.">Mémorisées dans ce navigateur : remplissez-les une fois, elles seront là la prochaine fois.</p>
+          </div>
+
+          <div class="presets">
+            <label class="field">
+              <span data-en="Template">Modèle</span>
+              <select id="preset-select"><option value="" data-en="— Saved templates —">— Modèles enregistrés —</option></select>
+            </label>
+            <button type="button" class="btn" id="preset-save" data-en-title="Save the details and layout as a template" title="Enregistrer les informations et la mise en page comme modèle">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h8l2 2v9H3z M5.5 2.5v3h5v-3 M5.5 13.5v-4h5v4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              <span data-en="Save as…">Enregistrer…</span>
+            </button>
+            <button type="button" class="btn btn-quiet" id="preset-delete" disabled data-en-title="Delete this template" title="Supprimer ce modèle">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="sr-only" data-en="Delete template">Supprimer le modèle</span>
+            </button>
+          </div>
+
+          <div class="fields" id="fields">
+            <label class="field span-2"><span data-en="Report title">Titre du rapport</span><input id="f-title" data-key="title" autocomplete="off" placeholder="Rapport photo" data-en-placeholder="Photo report"></label>
+            <label class="field span-2"><span data-en="Project name">Nom du projet</span><input data-key="projectName" autocomplete="off" placeholder="Réfection du pont P-12345" data-en-placeholder="Rehabilitation of bridge P-12345"></label>
+            <label class="field"><span data-en="Project no.">N° de projet</span><input data-key="projectNo" autocomplete="off" placeholder="2026-0142" data-en-placeholder="2026-0142"></label>
+            <label class="field"><span data-en="Contract no.">N° de contrat</span><input data-key="contractNo" autocomplete="off" placeholder="C-8841-26" data-en-placeholder="C-8841-26"></label>
+            <label class="field"><span data-en="Client">Client</span><input data-key="client" autocomplete="off"></label>
+            <label class="field"><span data-en="Location">Lieu</span><input data-key="location" autocomplete="off"></label>
+            <label class="field"><span data-en="Prepared by">Préparé par</span><input data-key="author" autocomplete="name"></label>
+            <label class="field"><span data-en="Report date">Date du rapport</span><input type="date" data-key="reportDate"></label>
+            <label class="field"><span data-en="Visit date">Date de la visite</span><input type="date" data-key="visitDate"></label>
+            <label class="field"><span data-en="Weather">Météo</span><input data-key="weather" autocomplete="off" placeholder="Ensoleillé, 12 °C" data-en-placeholder="Sunny, 12 °C"></label>
+            <label class="field span-2"><span data-en="Introduction / notes">Introduction / notes</span><textarea data-key="notes" rows="3" placeholder="Objet de la visite, observations générales…" data-en-placeholder="Purpose of the visit, general observations…"></textarea></label>
+          </div>
+
+          <div class="extra" id="extra"></div>
+          <button type="button" class="btn btn-quiet" id="add-field">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <span data-en="Add a field">Ajouter un champ</span>
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2 data-en="Layout">Mise en page</h2>
+          </div>
+
+          <div class="opt">
+            <span class="opt-label" id="lbl-per" data-en="Photos per page">Photos par page</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-per" data-opt="perPage">
+              <button type="button" role="radio" data-value="1">1</button>
+              <button type="button" role="radio" data-value="2">2</button>
+              <button type="button" role="radio" data-value="4">4</button>
+              <button type="button" role="radio" data-value="6">6</button>
+            </div>
+          </div>
+          <div class="opt">
+            <span class="opt-label" id="lbl-paper" data-en="Paper">Format</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-paper" data-opt="paper">
+              <button type="button" role="radio" data-value="letter" data-en="Letter">Lettre</button>
+              <button type="button" role="radio" data-value="a4">A4</button>
+            </div>
+          </div>
+          <div class="opt">
+            <span class="opt-label" id="lbl-orient" data-en="Orientation">Orientation</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-orient" data-opt="orientation">
+              <button type="button" role="radio" data-value="portrait" data-en="Portrait">Portrait</button>
+              <button type="button" role="radio" data-value="landscape" data-en="Landscape">Paysage</button>
+            </div>
+          </div>
+          <div class="opt">
+            <span class="opt-label" id="lbl-quality" data-en="Image quality">Qualité des images</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-quality" data-opt="quality">
+              <button type="button" role="radio" data-value="standard" data-en="Standard">Standard</button>
+              <button type="button" role="radio" data-value="high" data-en="High">Haute</button>
+            </div>
+          </div>
+
+          <div class="checks">
+            <label class="check"><input type="checkbox" data-opt="cover"><span data-en="Cover page">Page de garde</span></label>
+            <label class="check"><input type="checkbox" data-opt="showDate"><span data-en="Date and time of each photo">Date et heure de chaque photo</span></label>
+            <label class="check"><input type="checkbox" data-opt="numbering"><span data-en="Number the photos">Numéroter les photos</span></label>
+            <label class="check"><input type="checkbox" data-opt="showFile"><span data-en="File name">Nom du fichier</span></label>
+          </div>
+
+          <div class="logo-row">
+            <div class="logo-box" id="logo-box" aria-hidden="true"><span data-en="Logo">Logo</span></div>
+            <div class="logo-actions">
+              <span class="opt-label" data-en="Logo in the header (optional)">Logo dans l'en-tête (facultatif)</span>
+              <div>
+                <input type="file" id="logo-input" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden>
+                <button type="button" class="btn" id="logo-pick" data-en="Choose…">Choisir…</button>
+                <button type="button" class="btn btn-quiet" id="logo-clear" hidden data-en="Remove">Retirer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Aperçu -->
+    <section class="panel" id="panel-preview" role="tabpanel" aria-labelledby="tab-preview" hidden>
+      <div class="preview-bar">
+        <p id="preview-summary" class="preview-summary"></p>
+        <div class="seg seg-small" role="radiogroup" aria-label="Taille de l'aperçu" data-en-label="Preview size" id="zoom">
+          <button type="button" role="radio" data-value="s" aria-label="Petit" data-en-label="Small">S</button>
+          <button type="button" role="radio" data-value="m" aria-label="Moyen" data-en-label="Medium">M</button>
+          <button type="button" role="radio" data-value="l" aria-label="Grand" data-en-label="Large">L</button>
+        </div>
+      </div>
+      <div class="pages" id="pages" data-zoom="m"></div>
+    </section>
+
+    <!-- Barre d'action -->
+    <div class="actionbar" id="actionbar">
+      <p class="actionbar-status" id="status" aria-live="polite"></p>
+      <button type="button" class="btn btn-primary btn-export" id="export" disabled>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0L5 7m3 3 3-3M3 12.5v1h10v-1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span data-en="Export PDF">Exporter le PDF</span>
+      </button>
+    </div>
+  </main>
+
+  <!-- Agrandissement d'une photo, avec sa légende -->
+  <dialog class="viewer" id="viewer" aria-labelledby="viewer-title">
+    <div class="viewer-inner">
+      <header class="viewer-head">
+        <h2 id="viewer-title"></h2>
+        <button type="button" class="icon-btn" id="viewer-close" aria-label="Fermer" data-en-label="Close">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8m0-8-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <div class="viewer-body">
+        <button type="button" class="icon-btn viewer-nav" id="viewer-prev" aria-label="Photo précédente" data-en-label="Previous photo">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <img id="viewer-img" alt="">
+        <button type="button" class="icon-btn viewer-nav" id="viewer-next" aria-label="Photo suivante" data-en-label="Next photo">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <label class="viewer-caption">
+        <span class="sr-only" data-en="Caption">Légende</span>
+        <textarea id="viewer-caption" rows="2" placeholder="Légende de la photo…" data-en-placeholder="Photo caption…"></textarea>
+      </label>
+    </div>
+  </dialog>
+
+  <template id="photo-template">
+    <li class="photo">
+      <div class="photo-top">
+        <button type="button" class="handle" aria-label="Déplacer" data-en-label="Move">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><g fill="currentColor"><circle cx="6" cy="4" r="1.2"/><circle cx="10" cy="4" r="1.2"/><circle cx="6" cy="8" r="1.2"/><circle cx="10" cy="8" r="1.2"/><circle cx="6" cy="12" r="1.2"/><circle cx="10" cy="12" r="1.2"/></g></svg>
+        </button>
+        <span class="photo-num"></span>
+        <span class="photo-btns">
+          <button type="button" class="icon-btn" data-act="left" aria-label="Avancer" data-en-label="Move earlier">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="icon-btn" data-act="right" aria-label="Reculer" data-en-label="Move later">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="icon-btn" data-act="rotate" aria-label="Pivoter de 90°" data-en-label="Rotate 90°">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M12.5 8a4.5 4.5 0 1 1-1.3-3.2M12.5 2.5v2.8H9.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="icon-btn danger" data-act="delete" aria-label="Retirer" data-en-label="Remove">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </span>
+      </div>
+      <button type="button" class="thumb" data-act="view"><img alt="" decoding="async"><span class="photo-date"></span></button>
+      <label class="caption">
+        <span class="sr-only"></span>
+        <textarea rows="2" placeholder="Légende / description…" data-en-placeholder="Caption / description…"></textarea>
+      </label>
+    </li>
+  </template>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© <span id="year">2026</span> Anthony Chéruel</span>
+      <time id="site-date"></time>
+      <a href="https://github.com/acheruel" target="_blank" rel="noopener noreferrer">github.com/acheruel</a>
+    </div>
+  </footer>
+</body>
+</html>

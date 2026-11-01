@@ -132,8 +132,25 @@ button { font: inherit; cursor: pointer; }
   .footer-inner { padding: 14px 16px; }
   .footer-inner a { margin-left: 0; }
 }
+/* Écran large et bas (Galaxy Z Fold ouvert en paysage, ~816 × 536 px CSS) : en-tête compact
+   pour laisser la hauteur au contenu. */
+@media (orientation: landscape) and (max-height: 620px) {
+  .topbar { height: 52px; padding: 0 20px; }
+  .brand { font-size: 1.0625rem; }
+  .tabs-inner { padding: 0 20px; gap: 24px; }
+  .tab { padding: 12px 0 10px; }
+  .page { padding: 20px 20px 32px; }
+  .intro { margin-bottom: 20px; }
+  .intro h1 { font-size: 1.6rem; margin-bottom: 8px; }
+  .lead { font-size: .9375rem; }
+  .crumbs { margin: -4px 0 12px; }
+  .tool-group + .tool-group { margin-top: 28px; }
+  .tools { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+  .footer-inner { padding: 12px 20px; }
+}
 @media (pointer: coarse) {
   .tab { padding: 16px 0 14px; }
+  .tool-code { padding: 8px 10px; margin: -8px 0; }
   .language button { min-height: 40px; min-width: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {

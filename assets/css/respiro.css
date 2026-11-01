@@ -1,7 +1,7 @@
 /* Respiro : complète site.css. L'animation est en CSS pur pour continuer
    dans la mini-fenêtre même quand l'onglet d'origine est en arrière-plan. */
 :root {
-  --period: 10s; /* 5 s d'inspiration + 5 s d'expiration */
+  --period: 10s; /* 5 s d'inspiration + 5 s d'expiration ; respiro.js le règle sur la scène */
   --breath-ease: cubic-bezier(.37, 0, .63, 1);
 }
 
@@ -59,6 +59,14 @@
 }
 .detached p { margin: 0; color: var(--muted); }
 
+/* Durée de chaque phase : 1 à 5 s */
+.tempo { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 16px; }
+.tempo-label { font-size: .8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--navy); }
+.tempo-options { display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); box-shadow: var(--shadow); }
+.tempo-options button { min-width: 46px; padding: 6px 10px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); font-size: .875rem; font-weight: 600; font-variant-numeric: tabular-nums; transition: background .15s, color .15s; }
+.tempo-options button:hover:not(.selected) { background: var(--hover); color: var(--ink); }
+.tempo-options button.selected { background: var(--teal); color: #fff; }
+
 .respiro-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 16px; }
 .btn-primary { background: var(--teal); border-color: var(--teal); color: #fff; }
 .btn-primary:hover { background: #006b65; border-color: #006b65; }
@@ -73,6 +81,23 @@
   .respiro-head { align-items: flex-start; margin-bottom: 16px; }
   .respiro-head h1 { font-size: 1.65rem; }
   .breath, .detached { height: clamp(300px, 62vh, 460px); }
+}
+
+@media (pointer: coarse) {
+  .tempo-options button { min-height: 42px; min-width: 50px; }
+}
+
+/* Écran large et bas (Galaxy Z Fold ouvert en paysage, ~816 × 536) : texte à gauche, fleur à droite,
+   le tout tient dans la hauteur de l'écran. */
+@media (orientation: landscape) and (max-height: 620px) and (min-width: 640px) {
+  .respiro-page { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 24px; align-items: start; }
+  .respiro-head { align-items: flex-start; margin-bottom: 14px; }
+  .respiro-head h1 { font-size: 1.5rem; }
+  .respiro-head p { font-size: .9375rem; }
+  .crumbs { margin-top: 0; }
+  .tempo { margin-bottom: 0; }
+  .respiro-actions { margin-top: 14px; }
+  .breath, .detached { height: calc(100svh - 150px); min-height: 260px; }
 }
 
 /* Mouvement réduit : la fleur garde sa respiration (c'est le contenu), sans rotation. */

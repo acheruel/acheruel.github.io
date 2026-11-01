@@ -18,8 +18,7 @@ window.SECTIONS = [
 // Catégories de la page Outils, dans l'ordre d'affichage.
 window.CATEGORIES = [
   { id: "ingenierie", label: { fr: "Ingénierie", en: "Engineering" } },
-  { id: "productivite", label: { fr: "Productivité", en: "Productivity" } },
-  { id: "bienetre", label: { fr: "Bien-être", en: "Well-being" } }
+  { id: "productivite", label: { fr: "Productivité", en: "Productivity" } }
 ];
 
 // name : [préfixe en clair, nom en gras], ex. ["Quicker", "Bridge"] ; ["", "Nom"] pour un nom tout en gras.
@@ -93,16 +92,16 @@ window.TOOLS = [
     }
   },
   {
-    repo: "Respiro",
-    category: "bienetre",
-    name: ["", "Respiro"],
-    logo: "assets/logos/respiro.svg",
-    href: "outils/respiro/",
-    code: "https://github.com/acheruel/acheruel.github.io/tree/main/outils/respiro",
-    tagline: { fr: "Respiration guidée, 5 s / 5 s", en: "Guided breathing, 5 s / 5 s" },
+    repo: "PhotoRapporto",
+    category: "productivite",
+    name: ["Photo", " Rapporto"],
+    logo: "assets/logos/photo-rapporto.svg",
+    href: "outils/photo-rapporto/",
+    code: "https://github.com/acheruel/acheruel.github.io/tree/main/outils/photo-rapporto",
+    tagline: { fr: "Rapport photo PDF en quelques minutes", en: "A PDF photo report in minutes" },
     desc: {
-      fr: "Une animation sobre pour respirer : 5 secondes d'inspiration, 5 secondes d'expiration, en continu et sans son. Se détache dans une mini-fenêtre qui reste visible par-dessus votre travail.",
-      en: "A quiet animation to breathe with: 5 seconds in, 5 seconds out, looping and silent. Pops out into a mini window that stays on top of your work."
+      fr: "Téléversez vos photos de chantier, réordonnez-les, légendez-les et exportez un rapport PDF soigné : page de garde, numéros de projet et de contrat, date, 1 à 6 photos par page. Rien ne quitte votre appareil.",
+      en: "Upload your site photos, reorder and caption them, then export a clean PDF report: cover page, project and contract numbers, date, 1 to 6 photos per page. Nothing leaves your device."
     }
   }
 ];
@@ -115,7 +114,8 @@ window.I18N = {
       outils: "Anthony Chéruel · Outils",
       ressources: "Anthony Chéruel · Ressources",
       "aide-memoire": "Aide-mémoire de mathématiques · Anthony Chéruel",
-      respiro: "Respiro · Anthony Chéruel"
+      respiro: "Respiro · Anthony Chéruel",
+      "photo-rapporto": "Photo Rapporto · Anthony Chéruel"
     },
     skip: "Aller au contenu",
     navLabel: "Sections",
@@ -138,7 +138,8 @@ window.I18N = {
       outils: "Anthony Chéruel · Tools",
       ressources: "Anthony Chéruel · Resources",
       "aide-memoire": "Math reference sheet · Anthony Chéruel",
-      respiro: "Respiro · Anthony Chéruel"
+      respiro: "Respiro · Anthony Chéruel",
+      "photo-rapporto": "Photo Rapporto · Anthony Chéruel"
     },
     skip: "Skip to content",
     navLabel: "Sections",

@@ -1,8 +1,8 @@
 // Contenu du site. Pour ajouter un outil : une entrée dans TOOLS (avec sa catégorie).
 // Pour ouvrir une section : passer ready à true et créer la page indiquée par href.
 window.SITE = {
-  version: "0.3.1",
-  date: "2026-10-31",
+  version: "0.3.2",
+  date: "2026-11-01",
   github: "acheruel",
   pages: "https://acheruel.github.io"
 };
@@ -56,6 +56,17 @@ window.TOOLS = [
     desc: {
       fr: "Esquisse interactive de ponts standards en 3D : travées, profil en travers, superstructure, appuis et site.",
       en: "Interactive 3D sketch of standard bridges: spans, cross-section, superstructure, supports and site."
+    }
+  },
+  {
+    repo: "QuickerStrut-Tie",
+    category: "ingenierie",
+    name: ["Quicker", "Strut&Tie"],
+    logo: "assets/logos/quickerstrut-tie.svg",
+    tagline: { fr: "Modèles bielles-tirants selon CSA S6 et A23.3", en: "Strut-and-tie models to CSA S6 and A23.3" },
+    desc: {
+      fr: "Dessinez un modèle bielles-tirants 2D et déplacez ses nœuds : efforts, bielles, tirants, zones nodales et ancrages vérifiés en direct. Gabarits de ponts (about réduit, chevêtre, semelle sur pieux) et exemples publiés reproduits.",
+      en: "Draw a 2D strut-and-tie model and drag its nodes: forces, struts, ties, nodal zones and anchorages checked live. Bridge templates (dapped end, bent cap, pile cap) and published examples reproduced."
     }
   },
   {

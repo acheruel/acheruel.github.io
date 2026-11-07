@@ -9,8 +9,10 @@ Rapport photo PDF en quelques minutes, directement dans le navigateur : https://
    introduction et champs libres. Mémorisés dans le navigateur, avec des **modèles** enregistrables
    (logo compris).
 3. **Aperçu et export** : aperçu fidèle des pages, puis PDF Lettre ou A4, portrait ou paysage,
-   1, 2, 4 ou 6 photos par page, page de garde facultative, légendes, date et numéro de chaque
-   photo, en-tête et pied de page (« Page x / N ») sur chaque page.
+   1, 2, 4 ou 6 photos par page, page de garde facultative, légendes (précédées de « Légende : »),
+   date et numéro de chaque photo, en-tête sur chaque page et numéro de page en pied de page.
+   Texte en Arial. Qualité des images : **Compacte** (120 ppp, fichier léger pour le courriel),
+   Standard (200 ppp) ou Haute (300 ppp).
 
 Inspiré de la mise en page des rapports photo de CompanyCam et de Fieldwire (page de garde avec
 les informations du projet, grille de photos numérotées et légendées).

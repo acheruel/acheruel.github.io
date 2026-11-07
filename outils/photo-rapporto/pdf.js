@@ -5,11 +5,14 @@
 //   { k: "rect", x, y, w, h, fill, r }
 //   { k: "img", src: "photo" | "logo", i, x, y, w, h }
 // Les deux rendus lisent les mêmes opérations : l'aperçu est fidèle au PDF.
+// Police : Arial. Le PDF mesure le texte avec Helvetica (mêmes chasses qu'Arial) et nomme la police
+// ArialMT / Arial-BoldMT, sans l'incorporer : le lecteur affiche l'Arial du système.
 (() => {
   "use strict";
 
   const PAPER = { letter: [612, 792], a4: [595.28, 841.89] };
-  const COL = { navy: "#102d41", ink: "#17374b", muted: "#566e7c", teal: "#007f78", line: "#dce5eb", soft: "#f3f6f8", frame: "#eef2f5" };
+  const COL = { navy: "#102d41", ink: "#17374b", muted: "#566e7c", teal: "#007f78", line: "#dce5eb", soft: "#f3f6f8" };
+  const ARIAL = { normal: "ArialMT", bold: "Arial-BoldMT" };
   // [colonnes, rangées] selon le nombre de photos par page
   const GRID = {
     portrait: { 1: [1, 1], 2: [1, 2], 4: [2, 2], 6: [2, 3] },
@@ -218,13 +221,27 @@
       return { label: clean(label), rest: clean(rest) };
     };
     const hasMeta = photos.some((p, i) => { const mm = metaOf(p, i + 1); return mm.label || mm.rest; });
-    const wrapped = photos.map(p => m.wrap(clean(p.caption || "").trim(), cap.size, false, cellW));
+    // Légende : « Légende : » en gras au début de la première ligne, puis le texte de l'utilisateur.
+    const capLabel = clean(t.caption || "");
+    const labelW = capLabel ? m.width(`${capLabel} `, cap.size, true) : 0;
+    function wrapCaption(s) {
+      if (!s) return [];
+      const paras = s.split("\n");
+      const first = paras.shift();
+      let lines = m.wrap(first, cap.size, false, cellW - labelW);
+      if (lines.length > 1 && first.startsWith(lines[0])) {
+        lines = [lines[0], ...m.wrap(first.slice(lines[0].length).trimStart(), cap.size, false, cellW)];
+      }
+      if (!lines.length) lines = [""];
+      for (const para of paras) lines.push(...(para.trim() ? m.wrap(para, cap.size, false, cellW) : [""]));
+      return lines;
+    }
+    const wrapped = photos.map(p => wrapCaption(clean(p.caption || "").trim()));
     const capLines = Math.min(cap.lines, Math.max(0, ...wrapped.map(l => l.length)));
     const capH = (hasMeta || capLines) ? 9 + (hasMeta ? 11 : 0) + capLines * leading + 1 : 0;
 
     function cell(p, n, lines, x, y, h) {
       const boxH = h - capH;
-      rect(x, y, cellW, boxH, COL.frame, 3);
       const s = Math.min(cellW / p.w, boxH / p.h);
       const iw = p.w * s, ih = p.h * s;
       ops.push({ k: "img", src: "photo", i: p.index, x: x + (cellW - iw) / 2, y: y + (boxH - ih) / 2, w: iw, h: ih });
@@ -240,7 +257,12 @@
         if (meta.rest) text(m.fit(meta.rest, 8, false, x + cellW - mx), mx, cy, 8, { color: COL.muted });
         cy += 3;
       }
-      m.clamp(lines, capLines, cap.size, false, cellW).forEach((ln, k) => text(ln, x, cy + (k + 1) * leading - 2, cap.size));
+      if (!lines.length || !capLines) return;
+      const out = m.clamp(lines, capLines, cap.size, false, cellW);
+      out[0] = m.fit(out[0], cap.size, false, cellW - labelW);
+      const by = k => cy + (k + 1) * leading - 2;
+      if (capLabel) text(capLabel, x, by(0), cap.size, { bold: true, color: COL.navy });
+      out.forEach((ln, k) => text(ln, k === 0 ? x + labelW : x, by(k), cap.size));
     }
 
     let i = 0;
@@ -266,16 +288,13 @@
       placeRows(runningHeader(), rows, cellH);
     }
 
-    // Pieds de page (sauf page de garde)
+    // Pieds de page (sauf page de garde) : numéro de page seulement, le titre et le projet sont déjà en en-tête.
     const total = pages.length;
     pages.forEach((pg, k) => {
       if (pg.kind === "cover") return;
       ops = pg.ops;
       line(M, FOOT_Y - 11, W - M, FOOT_Y - 11);
-      const pageTxt = clean(t.page(k + 1, total));
-      const left = clean([title, info.projectNo].filter(Boolean).join("  ·  "));
-      text(m.fit(left, 7.5, false, CW - m.width(pageTxt, 7.5, false) - 24), M, FOOT_Y, 7.5, { color: COL.muted });
-      text(pageTxt, W - M, FOOT_Y, 7.5, { color: COL.muted, align: "right" });
+      text(clean(t.page(k + 1, total)), W - M, FOOT_Y, 7.5, { color: COL.muted, align: "right" });
     });
 
     return { W, H, pages: pages.map(p => p.ops) };
@@ -296,7 +315,7 @@
     ctx.fillRect(0, 0, doc.W, doc.H);
     for (const op of doc.pages[index]) {
       if (op.k === "text") {
-        ctx.font = `${op.bold ? "700 " : ""}${op.size}px Helvetica, Arial, sans-serif`;
+        ctx.font = `${op.bold ? "700 " : ""}${op.size}px Arial, Arimo, "Liberation Sans", Helvetica, sans-serif`;
         ctx.fillStyle = op.color;
         ctx.textAlign = op.align;
         ctx.textBaseline = "alphabetic";
@@ -347,6 +366,11 @@
           if (op.src === "photo") onProgress(++done, imgOps);
         }
       }
+    }
+    // Les polices Helvetica du document deviennent Arial (mêmes chasses, non incorporées).
+    for (const [style, name] of Object.entries(ARIAL)) {
+      const font = pdf.internal.getFont("helvetica", style);
+      if (font) font.postScriptName = name;
     }
     return pdf.output("blob");
   }

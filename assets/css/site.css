@@ -113,6 +113,18 @@ button { font: inherit; cursor: pointer; }
 .tool:hover .tool-open svg { transform: translate(2px, -2px); }
 .tool.is-internal:hover .tool-open svg { transform: translateX(3px); }
 
+/* Note sous un titre de catégorie et liste de liens (page Ressources) */
+.group-note { margin: -4px 0 14px; font-size: .875rem; line-height: 1.5; color: var(--muted); }
+.picks { margin-top: 18px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 16px 18px 10px; animation: rise .6s var(--ease) both; animation-delay: 240ms; }
+.no-intro .picks { animation: none; }
+.picks-title { margin: 0 0 8px; font-size: 1rem; font-weight: 650; letter-spacing: -.2px; color: var(--navy); }
+.picks-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); column-gap: 24px; }
+.picks-list li { border-top: 1px solid var(--line); }
+.picks-list a { display: flex; flex-direction: column; gap: 1px; padding: 9px 8px; margin: 0 -8px; border-radius: 6px; color: var(--ink); }
+.picks-list a:hover { background: var(--hover); }
+.picks-list b { font-size: .875rem; font-weight: 650; color: var(--teal); }
+.picks-list span { font-size: .8125rem; line-height: 1.45; color: var(--muted); }
+
 /* Pied de page */
 .footer { border-top: 1px solid var(--line); background: var(--paper); }
 .footer-inner { max-width: var(--page); margin: 0 auto; padding: 16px 28px; display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -129,6 +141,8 @@ button { font: inherit; cursor: pointer; }
   .intro h1 { font-size: 1.65rem; }
   .crumbs { margin-top: -6px; }
   .tools { grid-template-columns: 1fr; gap: 14px; }
+  .picks { padding: 14px 16px 8px; }
+  .picks-list { grid-template-columns: 1fr; }
   .footer-inner { padding: 14px 16px; }
   .footer-inner a { margin-left: 0; }
 }
@@ -154,6 +168,6 @@ button { font: inherit; cursor: pointer; }
   .language button { min-height: 40px; min-width: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tool, .tool-open svg { animation: none; transition: none; }
+  .tool, .tool-open svg, .picks { animation: none; transition: none; }
   .tool:hover { transform: none; }
 }

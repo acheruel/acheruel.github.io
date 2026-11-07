@@ -47,14 +47,14 @@
     fr: n => {
       const s = n > 1 ? `${n} secondes` : "1 seconde";
       return {
-        lead: `${s} d'inspiration, ${s} d'expiration. Suivez la fleur : elle s'ouvre quand vous inspirez et se referme quand vous expirez.`,
+        lead: `${s} d'inspiration, ${s} d'expiration. Suivez la rosace : elle s'ouvre quand vous inspirez et se referme quand vous expirez.`,
         sr: `Animation de respiration : ${s} d'inspiration, ${s} d'expiration, en boucle.`
       };
     },
     en: n => {
       const s = n > 1 ? `${n} seconds` : "1 second";
       return {
-        lead: `${s} in, ${s} out. Follow the flower: it opens as you breathe in and closes as you breathe out.`,
+        lead: `${s} in, ${s} out. Follow the rosette: it opens as you breathe in and closes as you breathe out.`,
         sr: `Breathing animation: ${s} in, ${s} out, looping.`
       };
     }

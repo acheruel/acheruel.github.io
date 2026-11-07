@@ -44,7 +44,7 @@
         <div>
           <h1>Respiro</h1>
           <!-- Texte écrit par respiro.js selon la durée choisie. -->
-          <p id="respiro-lead">5 secondes d'inspiration, 5 secondes d'expiration. Suivez la fleur : elle s'ouvre quand vous inspirez et se referme quand vous expirez.</p>
+          <p id="respiro-lead">5 secondes d'inspiration, 5 secondes d'expiration. Suivez la rosace : elle s'ouvre quand vous inspirez et se referme quand vous expirez.</p>
         </div>
       </header>
 
@@ -71,19 +71,29 @@
 
     <div class="stage-slot" id="slot">
       <div class="breath" id="breath">
+        <div class="halo" aria-hidden="true"></div>
         <div class="guide" aria-hidden="true"></div>
         <div class="flower" aria-hidden="true">
-          <span class="petal" style="--a: 0deg"><i></i></span>
-          <span class="petal" style="--a: 60deg"><i></i></span>
-          <span class="petal" style="--a: 120deg"><i></i></span>
-          <span class="petal" style="--a: 180deg"><i></i></span>
-          <span class="petal" style="--a: 240deg"><i></i></span>
-          <span class="petal" style="--a: 300deg"><i></i></span>
+          <div class="ring ring-outer">
+            <span class="petal" style="--a: 0deg"><i></i></span>
+            <span class="petal" style="--a: 45deg"><i></i></span>
+            <span class="petal" style="--a: 90deg"><i></i></span>
+            <span class="petal" style="--a: 135deg"><i></i></span>
+            <span class="petal" style="--a: 180deg"><i></i></span>
+            <span class="petal" style="--a: 225deg"><i></i></span>
+            <span class="petal" style="--a: 270deg"><i></i></span>
+            <span class="petal" style="--a: 315deg"><i></i></span>
+          </div>
+          <div class="ring ring-inner">
+            <span class="petal" style="--a: 30deg"><i></i></span>
+            <span class="petal" style="--a: 90deg"><i></i></span>
+            <span class="petal" style="--a: 150deg"><i></i></span>
+            <span class="petal" style="--a: 210deg"><i></i></span>
+            <span class="petal" style="--a: 270deg"><i></i></span>
+            <span class="petal" style="--a: 330deg"><i></i></span>
+          </div>
+          <span class="core"></span>
         </div>
-        <p class="phase" aria-hidden="true">
-          <span class="phase-in" data-en="Breathe in">Inspirez</span>
-          <span class="phase-out" data-en="Breathe out">Expirez</span>
-        </p>
         <p class="sr-only" id="respiro-sr">Animation de respiration : 5 secondes d'inspiration, 5 secondes d'expiration, en boucle.</p>
       </div>
 

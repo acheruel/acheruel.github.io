@@ -1,8 +1,8 @@
 // Contenu du site. Pour ajouter un outil : une entrée dans TOOLS (avec sa catégorie).
 // Pour ouvrir une section : passer ready à true et créer la page indiquée par href.
 window.SITE = {
-  version: "0.3.2",
-  date: "2026-11-01",
+  version: "0.4",
+  date: "2026-11-07",
   github: "acheruel",
   pages: "https://acheruel.github.io"
 };
@@ -105,14 +105,14 @@ window.TOOLS = [
   {
     repo: "PhotoRapporto",
     category: "productivite",
-    name: ["Photo", " Rapporto"],
+    name: ["", "Photo Rapporto"],
     logo: "assets/logos/photo-rapporto.svg",
     href: "outils/photo-rapporto/",
     code: "https://github.com/acheruel/acheruel.github.io/tree/main/outils/photo-rapporto",
     tagline: { fr: "Rapport photo PDF en quelques minutes", en: "A PDF photo report in minutes" },
     desc: {
-      fr: "Téléversez vos photos de chantier, réordonnez-les, légendez-les et exportez un rapport PDF soigné : page de garde, numéros de projet et de contrat, date, 1 à 6 photos par page. Rien ne quitte votre appareil.",
-      en: "Upload your site photos, reorder and caption them, then export a clean PDF report: cover page, project and contract numbers, date, 1 to 6 photos per page. Nothing leaves your device."
+      fr: "Téléversez vos photos de chantier, réordonnez-les, légendez-les et exportez un rapport PDF soigné : page de garde, numéros de projet et de contrat, date, 1 à 6 photos par page, mode compact pour l'envoi par courriel. Rien ne quitte votre appareil.",
+      en: "Upload your site photos, reorder and caption them, then export a clean PDF report: cover page, project and contract numbers, date, 1 to 6 photos per page, compact mode for email. Nothing leaves your device."
     }
   }
 ];

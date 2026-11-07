@@ -10,6 +10,7 @@
   const THUMB = 720; // px, grand côté des miniatures (grille et aperçu)
 
   const DEFAULT_OPTS = { perPage: 2, paper: "letter", orientation: "portrait", quality: "standard", cover: false, showDate: true, numbering: true, showFile: false };
+  const QUALITY = { compact: { dpi: 120, q: 0.62 }, standard: { dpi: 200, q: 0.82 }, high: { dpi: 300, q: 0.9 } };
   const INFO_KEYS = ["title", "projectName", "projectNo", "contractNo", "client", "location", "author", "reportDate", "visitDate", "weather", "notes"];
 
   const TXT = {
@@ -20,6 +21,7 @@
       project: "Projet",
       contract: "Contrat",
       notes: "Introduction",
+      caption: "Légende :",
       page: (i, n) => `Page ${i} / ${n}`,
       photoCount: n => (n > 1 ? `${n} photos` : n === 1 ? "1 photo" : "Aucune photo"),
       fields: { projectNo: "N° de projet", contractNo: "N° de contrat", client: "Client", location: "Lieu", author: "Préparé par", reportDate: "Date du rapport", visitDate: "Date de la visite", weather: "Météo" },
@@ -34,7 +36,7 @@
       preparing: (i, n) => `Préparation des images… ${i} / ${n}`,
       building: "Assemblage du PDF…",
       ready: name => `PDF prêt : ${name}`,
-      failed: "L'export a échoué. Essayez la qualité Standard ou moins de photos.",
+      failed: "L'export a échoué. Essayez la qualité Compacte ou moins de photos.",
       confirmClear: "Retirer toutes les photos et leurs légendes ?",
       presetName: "Nom du modèle :",
       presetSaved: name => `Modèle « ${name} » enregistré.`,
@@ -55,6 +57,7 @@
       project: "Project",
       contract: "Contract",
       notes: "Introduction",
+      caption: "Caption:",
       page: (i, n) => `Page ${i} of ${n}`,
       photoCount: n => (n > 1 ? `${n} photos` : n === 1 ? "1 photo" : "No photos"),
       fields: { projectNo: "Project no.", contractNo: "Contract no.", client: "Client", location: "Location", author: "Prepared by", reportDate: "Report date", visitDate: "Visit date", weather: "Weather" },
@@ -69,7 +72,7 @@
       preparing: (i, n) => `Preparing images… ${i} / ${n}`,
       building: "Building the PDF…",
       ready: name => `PDF ready: ${name}`,
-      failed: "The export failed. Try Standard quality or fewer photos.",
+      failed: "The export failed. Try Compact quality or fewer photos.",
       confirmClear: "Remove all photos and their captions?",
       presetName: "Template name:",
       presetSaved: name => `Template “${name}” saved.`,
@@ -345,7 +348,7 @@
       if (img.getAttribute("src") !== p.thumbUrl) img.src = p.thumbUrl;
       img.alt = p.name;
       li.querySelector(".thumb").setAttribute("aria-label", t().photoN(i + 1, n));
-      li.querySelector(".caption .sr-only").textContent = t().captionOf(i + 1);
+      li.querySelector(".caption-of").textContent = t().captionOf(i + 1);
       li.querySelector('[data-act="left"]').disabled = i === 0;
       li.querySelector('[data-act="right"]').disabled = i === n - 1;
       if (list.children[i] !== li) list.insertBefore(li, list.children[i] || null);
@@ -731,8 +734,8 @@
     btn.classList.add("is-busy");
     try {
       const d = buildLayout();
-      const dpi = state.opts.quality === "high" ? 300 : 200;
-      const q = state.opts.quality === "high" ? 0.9 : 0.82;
+      // Compacte : PDF léger (courriel) mais photos nettes à l'écran et à l'impression bureautique.
+      const { dpi, q } = QUALITY[state.opts.quality] || QUALITY.standard;
       let logoData = null;
       const getImage = async op => {
         if (op.src === "logo") {

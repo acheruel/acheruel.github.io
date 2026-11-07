@@ -42,7 +42,7 @@
     <header class="pr-head">
       <img src="../../assets/logos/photo-rapporto.svg" alt="" width="48" height="48">
       <div>
-        <h1><span class="pre">Photo</span> Rapporto <small class="pr-version">v1.0</small></h1>
+        <h1>Photo Rapporto <small class="pr-version">v1.1</small></h1>
         <p data-en="Your site photos, ready to send. Add a caption to each photo and export a clean PDF report, dated and labelled with your project details.">Vos photos de chantier, prêtes à envoyer. Ajoutez une légende à chaque photo et exportez un rapport PDF soigné, daté et identifié à votre projet.</p>
       </div>
     </header>
@@ -184,6 +184,7 @@
           <div class="opt">
             <span class="opt-label" id="lbl-quality" data-en="Image quality">Qualité des images</span>
             <div class="seg" role="radiogroup" aria-labelledby="lbl-quality" data-opt="quality">
+              <button type="button" role="radio" data-value="compact" data-en="Compact" title="Fichier léger, à envoyer par courriel" data-en-title="Small file, easy to email">Compacte</button>
               <button type="button" role="radio" data-value="standard" data-en="Standard">Standard</button>
               <button type="button" role="radio" data-value="high" data-en="High">Haute</button>
             </div>
@@ -253,7 +254,7 @@
         </button>
       </div>
       <label class="viewer-caption">
-        <span class="sr-only" data-en="Caption">Légende</span>
+        <span class="caption-label" data-en="Caption">Légende</span>
         <textarea id="viewer-caption" rows="2" placeholder="Légende de la photo…" data-en-placeholder="Photo caption…"></textarea>
       </label>
     </div>
@@ -283,8 +284,9 @@
       </div>
       <button type="button" class="thumb" data-act="view"><img alt="" decoding="async"><span class="photo-date"></span></button>
       <label class="caption">
-        <span class="sr-only"></span>
-        <textarea rows="2" placeholder="Légende / description…" data-en-placeholder="Caption / description…"></textarea>
+        <span class="caption-label" aria-hidden="true" data-en="Caption">Légende</span>
+        <span class="sr-only caption-of"></span>
+        <textarea rows="2" placeholder="Description de la photo…" data-en-placeholder="Photo description…"></textarea>
       </label>
     </li>
   </template>

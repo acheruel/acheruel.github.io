@@ -1,5 +1,5 @@
 """Lance un moteur PDF -> Markdown sur un PDF ; écrit out/<tool>/<nom>.md et .json (temps, mémoire)."""
-import sys, time, json, resource, pathlib
+import sys, time, json, pathlib
 
 tool, pdf, outdir = sys.argv[1], sys.argv[2], pathlib.Path(sys.argv[3])
 outdir.mkdir(parents=True, exist_ok=True)
@@ -59,7 +59,7 @@ elif tool == "marker":
     from marker.output import text_from_rendered
     models = create_model_dict()
     t0 = time.perf_counter()
-    rendered = PdfConverter(artifact_dict=models)(pdf)
+    rendered = PdfConverter(artifact_dict=models, config={"pdftext_workers": 1})(pdf)  # Windows : pas de processus fils
     md, _, images = text_from_rendered(rendered)
     d = outdir / f"{name}_images"
     d.mkdir(exist_ok=True)
@@ -71,9 +71,13 @@ else:
 
 t1 = time.perf_counter()
 (outdir / f"{name}.md").write_text(md, encoding="utf-8")
-ru = resource.getrusage(resource.RUSAGE_SELF)
-rc = resource.getrusage(resource.RUSAGE_CHILDREN)
+try:  # Linux, macOS
+    import resource
+    peak = max(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss, resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss) / 1024
+except ImportError:  # Windows
+    import psutil
+    peak = psutil.Process().memory_info().peak_wset / 2**20
 json.dump({"tool": tool, "pdf": pdf, "seconds": round(t1 - t0, 2), "load_seconds": round(t0 - t_import, 2),
-           "peak_rss_mb": round(max(ru.ru_maxrss, rc.ru_maxrss) / 1024), "chars": len(md), **extra},
+           "peak_rss_mb": round(peak), "chars": len(md), **extra},
           open(outdir / f"{name}.json", "w"), indent=1, default=str)
 print(tool, name, f"{t1 - t0:.1f}s", len(md), "car.")

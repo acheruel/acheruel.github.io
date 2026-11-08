@@ -83,3 +83,9 @@
 @media (pointer: coarse) {
   .cv-formats button { min-height: 52px; }
 }
+
+/* Renvoi vers MarkDownO (Markdown pour une IA, avec OCR) */
+.cv-ai { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border: 1px solid #9fcfcb; border-radius: 8px; background: #f2faf8; }
+.cv-ai p { margin: 0; font-size: .8125rem; line-height: 1.45; color: #1e504d; }
+.cv-ai .btn { align-self: flex-start; }
+.cv-ai .btn img { width: 18px; height: 18px; }

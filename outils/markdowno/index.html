@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>MarkDownO · Anthony Chéruel</title>
-  <meta name="description" content="MarkDownO : convertissez Word, PowerPoint, Excel, PDF, HTML, CSV, EPUB, courriels Outlook et plus en Markdown avec MarkItDown de Microsoft, qui tourne dans votre navigateur. Aperçu, copie et téléchargement.">
+  <meta name="description" content="MarkDownO : PDF vers Markdown pour les IA (titres, tableaux à cellules fusionnées, OCR local des tableaux en image, figures, chapitres), et Word, PowerPoint, Excel, HTML, EPUB ou courriels Outlook avec MarkItDown. Tout tourne dans votre navigateur.">
   <meta property="og:title" content="MarkDownO">
   <meta property="og:url" content="https://acheruel.github.io/outils/markdowno/">
   <link rel="icon" href="../../assets/logos/markdowno.svg" type="image/svg+xml">
@@ -40,20 +40,20 @@
     <header class="ot-head">
       <img src="../../assets/logos/markdowno.svg" alt="" width="48" height="48">
       <div>
-        <h1>MarkDownO <small class="ot-version">v1.0</small></h1>
-        <p data-en="Turn Office documents, PDFs, web pages, spreadsheets, e-books and Outlook e-mails into Markdown, ready for a note, a wiki or an AI assistant. Powered by Microsoft's MarkItDown, running in your browser.">Transformez documents Office, PDF, pages web, tableurs, livres numériques et courriels Outlook en Markdown, prêt pour une note, un wiki ou un assistant IA. Propulsé par MarkItDown de Microsoft, qui tourne dans votre navigateur.</p>
+        <h1>MarkDownO <small class="ot-version">v1.1</small></h1>
+        <p data-en="Turn PDFs, Office documents, web pages, spreadsheets, e-books and Outlook e-mails into Markdown an AI assistant can use. PDFs keep their headings, tables (even merged cells, or tables pasted as images, read by OCR) and figures; other formats go through Microsoft's MarkItDown. Everything runs in your browser.">Transformez PDF, documents Office, pages web, tableurs, livres numériques et courriels Outlook en Markdown utilisable par un assistant IA. Les PDF gardent leurs titres, leurs tableaux (même à cellules fusionnées, ou insérés comme images et lus par OCR) et leurs figures ; les autres formats passent par MarkItDown de Microsoft. Tout tourne dans votre navigateur.</p>
       </div>
     </header>
 
     <p class="ot-local">
       <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 2.75 3.5v4c0 3.2 2.2 5.6 5.25 7 3.05-1.4 5.25-3.8 5.25-7v-4L8 1.5Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="m5.6 8 1.7 1.7 3.2-3.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span data-en="Your files never leave your device. Only the conversion engine (Python in WebAssembly, about 30 MB) is downloaded once from jsDelivr and PyPI, then cached by your browser.">Vos fichiers ne quittent pas votre appareil. Seul le moteur de conversion (Python en WebAssembly, environ 30 Mo) est téléchargé une fois depuis jsDelivr et PyPI, puis gardé en cache par le navigateur.</span>
+      <span data-en="Your files never leave your device. Only the engines are downloaded once, then cached by your browser: OCR (about 6 MB, jsDelivr) for PDFs with images, MarkItDown (Python in WebAssembly, about 30 MB, jsDelivr and PyPI) for the other formats.">Vos fichiers ne quittent pas votre appareil. Seuls les moteurs sont téléchargés une fois, puis gardés en cache par le navigateur : l'OCR (environ 6 Mo, jsDelivr) pour les PDF avec des images, MarkItDown (Python en WebAssembly, environ 30 Mo, jsDelivr et PyPI) pour les autres formats.</span>
     </p>
 
     <p class="md-labo">
       <a href="comparateur/">
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 13.5V7m4 6.5V2.5m4 11V9m3 4.5V5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <span data-en="PDF to Markdown comparator (prototype): which tool handles tables and figures best?">Comparateur PDF vers Markdown (prototype) : quel outil gère le mieux tableaux et figures ?</span>
+        <span data-en="PDF to Markdown comparator: this engine against Docling, Marker, pymupdf4llm, MarkItDown…">Comparateur PDF vers Markdown : ce moteur face à Docling, Marker, pymupdf4llm, MarkItDown…</span>
       </a>
     </p>
 
@@ -71,6 +71,41 @@
         </button>
       </div>
       <ul class="md-formats" id="formats" aria-label="Formats pris en charge" data-en-label="Supported formats"></ul>
+    </section>
+
+
+    <section class="card md-pdf-opts" id="pdf-opts" aria-labelledby="pdf-opts-title">
+      <h2 id="pdf-opts-title">PDF</h2>
+      <div class="opt">
+        <span class="opt-label" id="lbl-pdfeng" data-en="Engine">Moteur</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-pdfeng" data-opt="pdfEngine">
+          <button type="button" role="radio" data-value="pdfo" data-en="Structure + OCR">Structure + OCR</button>
+          <button type="button" role="radio" data-value="markitdown" data-en="MarkItDown (plain text)">MarkItDown (texte brut)</button>
+        </div>
+      </div>
+      <div class="opt">
+        <span class="opt-label" id="lbl-ocr" data-en="OCR of images">OCR des images</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-ocr" data-opt="ocr">
+          <button type="button" role="radio" data-value="auto" data-en="Automatic">Automatique</button>
+          <button type="button" role="radio" data-value="off" data-en="Off">Non</button>
+        </div>
+      </div>
+      <div class="opt">
+        <span class="opt-label" id="lbl-figs" data-en="Figures">Figures</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-figs" data-opt="figures">
+          <button type="button" role="radio" data-value="text" data-en="Cards">Fiches</button>
+          <button type="button" role="radio" data-value="images" data-en="Cards + images (.zip)">Fiches + images (.zip)</button>
+        </div>
+      </div>
+      <div class="opt">
+        <span class="opt-label" id="lbl-out" data-en="Output">Sortie</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-out" data-opt="split">
+          <button type="button" role="radio" data-value="one" data-en="One file">Un fichier</button>
+          <button type="button" role="radio" data-value="chapters" data-en="Per chapter (.zip)">Par chapitre (.zip)</button>
+        </div>
+      </div>
+      <label class="field md-pages"><span data-en="Pages">Pages</span><input type="text" id="pdf-pages" inputmode="numeric" autocomplete="off" placeholder="toutes" data-en-placeholder="all" title="Ex. : 1-10, 15, 18-20" data-en-title="E.g. 1-10, 15, 18-20"></label>
+      <label class="check md-markers"><input type="checkbox" id="pdf-markers"><span><span data-en="Page markers">Repères de page</span><small data-en="&lt;!-- page 12 --&gt;: an AI can cite its source.">&lt;!-- page 12 --&gt; : une IA peut citer sa source.</small></span></label>
     </section>
 
     <section class="card md-engine" id="engine" aria-live="polite">
@@ -105,7 +140,7 @@
             </button>
             <button type="button" class="btn" id="save-one" disabled>
               <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0L5 7m3 3 3-3M3 12.5v1h10v-1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span>.md</span>
+              <span id="save-one-label">.md</span>
             </button>
           </div>
         </header>

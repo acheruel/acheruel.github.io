@@ -148,10 +148,10 @@ window.TOOLS = [
     logo: "assets/logos/markdowno.svg",
     href: "outils/markdowno/",
     code: "https://github.com/acheruel/acheruel.github.io/tree/main/outils/markdowno",
-    tagline: { fr: "Tout en Markdown, avec MarkItDown", en: "Everything to Markdown, with MarkItDown" },
+    tagline: { fr: "PDF et documents en Markdown pour les IA", en: "PDFs and documents to Markdown for AI" },
     desc: {
-      fr: "Word, PowerPoint, Excel, PDF, pages web, CSV, EPUB ou courriels Outlook convertis en Markdown par MarkItDown de Microsoft, qui tourne dans le navigateur. Aperçu, copie et téléchargement ; vos fichiers restent sur votre appareil.",
-      en: "Word, PowerPoint, Excel, PDF, web pages, CSV, EPUB or Outlook e-mails converted to Markdown by Microsoft's MarkItDown, running in your browser. Preview, copy and download; your files stay on your device."
+      fr: "PDF de normes et de manuels convertis en Markdown utilisable par une IA : titres, tableaux à cellules fusionnées, tableaux insérés comme images lus par OCR (valeurs douteuses signalées), figures, chapitres et repères de page. Word, PowerPoint, Excel, pages web, EPUB ou courriels Outlook passent par MarkItDown. Tout tourne dans le navigateur ; vos fichiers restent sur votre appareil.",
+      en: "PDFs of standards and manuals converted to Markdown an AI can use: headings, merged-cell tables, tables pasted as images read by OCR (doubtful values flagged), figures, chapters and page markers. Word, PowerPoint, Excel, web pages, EPUB or Outlook e-mails go through MarkItDown. Everything runs in the browser; your files stay on your device."
     }
   }
 ];

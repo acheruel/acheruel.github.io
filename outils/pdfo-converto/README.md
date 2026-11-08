@@ -37,19 +37,27 @@ Inspiré des fonctions d'[iLovePDF](https://www.ilovepdf.com/fr) et de
 
 Une plage de pages (« 1-10, 15 ») s'applique à tous les formats.
 
+## Markdown pour une IA : MarkDownO
+
+[MarkDownO](../markdowno/) utilise le même moteur et lit en plus, par OCR local, les tableaux insérés
+comme images, le texte des figures et les pages numérisées. Le bouton « Ouvrir ce PDF dans MarkDownO »
+(onglet Markdown) y envoie le PDF et la plage de pages, sans passer par le réseau.
+
 ## Limites
 
 - Pas de reconnaissance de caractères (OCR) : le texte *dessiné dans une image* (capture d'écran,
   page numérisée) n'est pas lu. Une page numérisée devient une figure « page numérisée » ; avec
   *Images (.zip)*, une IA qui lit les images en tire le texte (souvent mieux qu'un OCR).
-- Les tableaux sans filets (simple alignement de colonnes) restent en paragraphes.
+- Les tableaux sans filets (simple alignement de colonnes) restent en paragraphes. Les libellés de
+  ligne posés à gauche d'une grille, sans filets (« DC1 », « LL »), en deviennent la première colonne.
 - La détection des figures est heuristique : un dessin très aéré peut être coupé en deux, un encadré
   très chargé en traits peut passer pour une figure. *Ignorer* revient au comportement d'avant.
 
 ## Fichiers
 
-- `index.html` : page ; `app.js` : interface ; `extract.js` : structure du PDF (lignes, titres,
-  listes, tableaux) ; `writers.js` : Markdown, chapitres et .docx ; `styles.css`.
+- `index.html` : page ; `app.js` : interface ; `styles.css`. Le moteur est partagé avec MarkDownO, dans
+  `../commun/` : `pdf-extract.js` (structure du PDF : lignes, titres, listes, tableaux, figures) et
+  `pdf-writers.js` (Markdown, chapitres et .docx).
 - `exemples/rapport-inspection-exemple.pdf` : rapport fictif généré par `exemples/generer_exemple.py`.
 - Bibliothèques (dans `../vendor/`) : [pdf.js](https://github.com/mozilla/pdf.js) 6.4.299 (Apache 2.0),
   [pdf-lib](https://github.com/Hopding/pdf-lib) 1.17.1, [fflate](https://github.com/101arrowz/fflate)

@@ -7,7 +7,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-const REPO = process.env.REPO || path.resolve(__dirname, "../../..");
+const REPO = path.resolve(process.env.REPO || path.join(__dirname, "../../.."));
 const TYPES = { ".js": "text/javascript", ".mjs": "text/javascript", ".html": "text/html", ".wasm": "application/wasm", ".json": "application/json", ".pdf": "application/pdf" };
 
 (async () => {
@@ -26,14 +26,14 @@ const TYPES = { ".js": "text/javascript", ".mjs": "text/javascript", ".html": "t
   await new Promise(r => server.once("listening", r));
   const port = server.address().port;
 
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ channel: process.env.CHANNEL || "msedge" });
   const page = await browser.newPage();
   page.on("pageerror", e => console.error("pageerror", e.message));
   await page.goto(`http://127.0.0.1:${port}/outils/pdfo-converto/`);
   const r = await page.evaluate(async () => {
     const { openPdf } = await import("/outils/commun/pdf-outils.js");
-    const { extract } = await import("/outils/pdfo-converto/extract.js");
-    const { toMarkdown } = await import("/outils/pdfo-converto/writers.js");
+    const { extract } = await import("/outils/commun/pdf-extract.js");
+    const { toMarkdown } = await import("/outils/commun/pdf-writers.js");
     const bytes = new Uint8Array(await (await fetch("/__pdf")).arrayBuffer());
     const t0 = performance.now();
     const pdf = await openPdf(bytes, null, { fontExtraProperties: true });

@@ -1,6 +1,6 @@
 // Comparateur PDF vers Markdown (prototype) : résultats du banc d'essai, puis sorties côte à côte
 // avec la page du PDF. Les sorties des exemples sont précalculées (donnees/) ; pour un PDF déposé,
-// PDFo Converto et MarkItDown tournent dans le navigateur.
+// MarkDownO (structure et OCR) et MarkItDown tournent dans le navigateur.
 import { openPdf, readFile, looksLikePdf, renderPage, dropCanvas, esc } from "../../commun/pdf-outils.js";
 import { renderMarkdown } from "../../commun/markdown.js";
 
@@ -14,7 +14,7 @@ const TXT = {
     sub: d => `${d.docs.length} manuels de la FHWA, extraits de ${d.docs.map(x => x.pagesSample).join(" et ")} pages choisies pour leurs tableaux, figures et équations ; vitesse aussi mesurée sur les documents complets. Mesures du ${d.date}.`,
     both: "Les deux", pages: n => `${n} p.`,
     cols: ["Outil", "Où", "Vitesse", "Texte", "Titres", "Tableaux", "Équations", "Figures", "Questions RAG", "Jetons"],
-    colHints: ["", "Navigateur ou Python sur un poste", "Secondes par page (extrait) ; document complet en dessous", "Mots du PDF retrouvés", "Titres du sommaire retrouvés comme titres Markdown", "Lignes de tableau retrouvées entières dans une ligne de tableau ; valeurs présentes n'importe où en dessous", "Équations dessinées en image, lues", "Images de figures extraites et liées ; légendes retrouvées en dessous", "Fait retrouvé dans les 3 meilleurs morceaux d'une recherche par mots-clés", "Taille pour une IA, estimée (caractères ÷ 4)"],
+    colHints: ["", "Navigateur ou Python sur un poste", "Secondes par page (extrait) ; document complet en dessous", "Mots du PDF retrouvés", "Titres du sommaire retrouvés comme titres Markdown", "Lignes de tableau retrouvées entières dans une ligne de tableau ; valeurs présentes n'importe où en dessous", "Équations dessinées en image, lues", "Images de figures extraites et liées ; légendes retrouvées en dessous", "Fait retrouvé dans les 3 meilleurs morceaux d'une recherche par mots-clés", "Taille pour une IA (jetons o200k, tiktoken)"],
     browser: "navigateur", python: "Python", java: "Java",
     full: (s, p) => `complet : ${fmtS(s)} (${p} p.)`,
     present: n => `valeurs : ${n}`,
@@ -23,8 +23,9 @@ const TXT = {
     perPage: s => `${s < 0.1 ? s.toFixed(3) : s.toFixed(2)} s/p.`,
     own: "Votre PDF…", ownLoaded: name => `Votre PDF : ${name}`,
     live: "en direct", loadingMd: "Chargement…",
-    reading: (i, n) => `PDFo Converto lit la page ${i} sur ${n}…`,
-    convertoDone: s => `PDFo Converto : ${fmtS(s)}.`,
+    reading: (i, n) => `MarkDownO lit la page ${i} sur ${n}…`,
+    ocring: (i, n) => `MarkDownO : OCR des zones en image, ${i + 1} sur ${n}…`,
+    convertoDone: s => `MarkDownO : ${fmtS(s)}.`,
     engineLoad: "Chargement de MarkItDown (Python dans le navigateur, environ 30 Mo, une seule fois)…",
     engineRun: "MarkItDown convertit le PDF…",
     engineDone: s => `MarkItDown : ${fmtS(s)}.`,
@@ -49,7 +50,7 @@ const TXT = {
     sub: d => `${d.docs.length} FHWA manuals, excerpts of ${d.docs.map(x => x.pagesSample).join(" and ")} pages picked for their tables, figures and equations; speed also measured on the full documents. Measured on ${d.date}.`,
     both: "Both", pages: n => `${n} p.`,
     cols: ["Tool", "Where", "Speed", "Text", "Headings", "Tables", "Equations", "Figures", "RAG questions", "Tokens"],
-    colHints: ["", "Browser or Python on a computer", "Seconds per page (excerpt); full document below", "PDF words found", "Table of contents headings found as Markdown headings", "Table rows found whole in one table row; values present anywhere below", "Equations drawn as images, read", "Figure images extracted and linked; captions found below", "Fact found in the top 3 chunks of a keyword search", "Size for an AI, estimated (characters ÷ 4)"],
+    colHints: ["", "Browser or Python on a computer", "Seconds per page (excerpt); full document below", "PDF words found", "Table of contents headings found as Markdown headings", "Table rows found whole in one table row; values present anywhere below", "Equations drawn as images, read", "Figure images extracted and linked; captions found below", "Fact found in the top 3 chunks of a keyword search", "Size for an AI (o200k tokens, tiktoken)"],
     browser: "browser", python: "Python", java: "Java",
     full: (s, p) => `full: ${fmtS(s)} (${p} p.)`,
     present: n => `values: ${n}`,
@@ -58,8 +59,9 @@ const TXT = {
     perPage: s => `${s < 0.1 ? s.toFixed(3) : s.toFixed(2)} s/p.`,
     own: "Your PDF…", ownLoaded: name => `Your PDF: ${name}`,
     live: "live", loadingMd: "Loading…",
-    reading: (i, n) => `PDFo Converto is reading page ${i} of ${n}…`,
-    convertoDone: s => `PDFo Converto: ${fmtS(s)}.`,
+    reading: (i, n) => `MarkDownO is reading page ${i} of ${n}…`,
+    ocring: (i, n) => `MarkDownO: OCR of image areas, ${i + 1} of ${n}…`,
+    convertoDone: s => `MarkDownO: ${fmtS(s)}.`,
     engineLoad: "Loading MarkItDown (Python in the browser, about 30 MB, only once)…",
     engineRun: "MarkItDown is converting the PDF…",
     engineDone: s => `MarkItDown: ${fmtS(s)}.`,
@@ -90,7 +92,7 @@ const status = (msg, warn = false) => { $("status").textContent = msg; $("status
 const state = {
   data: null, resDoc: "all",
   doc: null, pdf: null, page: 1, view: "render",
-  tools: ["converto", "pymupdf4llm"],
+  tools: ["markdowno", "docling"],
   md: new Map(),      // `${doc}|${tool}` → { md, time }
   own: null           // { name, bytes, pdf, outputs: Map(tool → { md, time }) }
 };
@@ -177,7 +179,7 @@ function docList() {
 function toolsFor(doc) {
   const x = t();
   if (doc === OWN) {
-    const out = [{ id: "converto", label: `PDFo Converto (${x.live})` }];
+    const out = [{ id: "markdowno", label: `MarkDownO (${x.live})` }];
     out.push({ id: "markitdown", label: state.own?.outputs.has("markitdown") ? `MarkItDown (${x.live})` : x.pickMarkitdown });
     return out;
   }
@@ -418,15 +420,15 @@ async function loadOwn(file) {
   try { pdf = await openPdf(bytes, null, { fontExtraProperties: true }); } catch { status(x.openFail(file.name), true); return; }
   if (state.own?.pdf && state.own.pdf !== state.pdf) closePdf(state.own.pdf);
   state.own = { name: file.name, bytes, pdf, outputs: new Map() };
-  state.tools = ["converto", "markitdown"];
-  // PDFo Converto : le moteur du site, chargé à la demande.
-  const [{ extract }, { toMarkdown }] = await Promise.all([import("../../pdfo-converto/extract.js"), import("../../pdfo-converto/writers.js")]);
+  state.tools = ["markdowno", "markitdown"];
+  // MarkDownO : le moteur PDF du site (structure de PDFo Converto, OCR des zones en image), chargé à la demande.
+  const { convertPdf } = await import("../pdf.js");
   const t0 = performance.now();
-  const idx = [...Array(pdf.numPages).keys()];
-  const r = await extract(pdf, idx, { tables: true, margins: true, styles: true, figures: true, onProgress: (i, n) => status(x.reading(i, n)) });
-  const md = toMarkdown(r.blocks, { figures: "text", tableFmt: "auto" });
+  const r = await convertPdf(bytes, file.name, { ocr: "auto", figures: "text", split: "one", pageMarkers: false },
+    { onStep: (k, i, n) => status(k === "ocr" ? x.ocring(i, n) : x.reading(i, n)) });
+  const md = r.md;
   const time = (performance.now() - t0) / 1000;
-  state.own.outputs.set("converto", { md, time });
+  state.own.outputs.set("markdowno", { md, time });
   status(x.convertoDone(time));
   await loadDoc(OWN);
 }

@@ -29,6 +29,7 @@ python run_tool.py pymupdf4llm pdfs/hif18046-extrait.pdf out/pymupdf4llm        
 python run_tool.py pymupdf4llm-classic pdfs/hif18046-extrait.pdf out/pymupdf4llm-classic
 python run_tool.py opendataloader pdfs/hif18046-extrait.pdf out/opendataloader      # Java 11+
 node run_converto.js pdfs/hif18046-extrait.pdf out/converto/hif18046-extrait.md     # Playwright
+node run_markdowno.js pdfs/hif18046-extrait.pdf out/markdowno/hif18046-extrait.md   # MarkDownO : structure + OCR (Tesseract.js depuis jsDelivr)
 
 pip install docling      # autre environnement
 python run_tool.py docling pdfs/hif18046-extrait.pdf out/docling
@@ -40,6 +41,14 @@ python exporter.py ../comparateur/donnees   # met à jour le comparateur
 ```
 
 Docling et Marker téléchargent leurs modèles depuis Hugging Face au premier lancement.
+
+- Les deux exécutants Node demandent un Chromium récent (pdf.js 6.4) : avec Playwright, `chromium.launch({ channel: "msedge" })`
+  ou `"chrome"` utilise le navigateur installé. Ils servent le dépôt sur un port local.
+- Sous Windows, `run_tool.py` mesure la mémoire avec `psutil`, et Marker tourne avec `pdftext_workers=1`
+  (sinon ses processus fils relancent le script).
+- `run_granite.py <pdf> <sortie.md>` : Granite-Docling 258M (le modèle de Parsade) par le pipeline VLM de
+  Docling, sur CPU ; essayé sur 7 pages à tableaux (`pdfs/tableaux7.pdf` : pages 10, 14, 17, 25, 27 de
+  l'extrait IF-12-027, 23 et 31 de l'extrait HIF-18-046).
 
 ## Ce qui est noté (`score.py`)
 

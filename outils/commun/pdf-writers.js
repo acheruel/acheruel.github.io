@@ -1,7 +1,7 @@
 // PDFo Converto : écriture des fichiers de sortie à partir des blocs extraits.
 // Markdown (un fichier ou un par chapitre) et Word .docx (Office Open XML écrit directement,
 // sans bibliothèque : texte modifiable ou images des pages).
-import { fflate } from "../commun/pdf-outils.js";
+import { fflate } from "./pdf-outils.js";
 
 // ---------------------------------------------------------------- Markdown
 const mdEsc = s => s.replace(/([\\`*_<])/g, "\\$1");
@@ -45,7 +45,10 @@ function htmlTable(b) {
 
 const FIG_LABELS = {
   figure: "Figure", page: "p.", text: "Texte dans la figure", none: "texte de l'image non extractible du PDF : voir l'image",
-  kind: { image: "image", vector: "dessin", scan: "page numérisée" }, tableImage: "image du tableau"
+  kind: { image: "image", vector: "dessin", scan: "page numérisée" }, tableImage: "image du tableau",
+  ocrText: "Texte lu par OCR", ocrScan: "texte lu par OCR ci-dessous, à vérifier",
+  ocrTable: "Tableau lu par OCR dans une image (p. {p}) : vérifier les valeurs avant de s'en servir.",
+  ocrUncertain: "Lectures divergentes, à vérifier sur l'image", ocrRow: "ligne", ocrCol: "colonne"
 };
 
 /**
@@ -56,8 +59,9 @@ function figureMd(b, mode, L) {
   const head = `**${L.figure} ${b.n}** · ${L.kind[b.kind] || b.kind} · ${L.page} ${b.page + 1}`;
   const lines = [`> ${head}${b.caption ? ` : ${mdEsc(b.caption)}` : ""}`];
   const labels = (b.labels || []).join(" · ").replace(/\s+/g, " ").trim();
-  if (labels) lines.push(">", `> *${L.text} :* ${mdEsc(labels.length > 1500 ? labels.slice(0, 1497) + "…" : labels)}`);
-  else if (b.kind !== "vector") lines.push(">", `> *${L.none}*`);
+  if (b.ocr && b.kind === "scan") lines.push(">", `> *${L.ocrScan}*`);
+  else if (labels) lines.push(">", `> *${b.ocr ? L.ocrText : L.text} :* ${mdEsc(labels.length > 1500 ? labels.slice(0, 1497) + "…" : labels)}`);
+  else if (b.kind !== "vector" && !b.ocr) lines.push(">", `> *${L.none}*`);
   const card = lines.join("\n");
   if (mode !== "images") return card;
   const alt = (b.caption || `${L.figure} ${b.n}, ${L.page} ${b.page + 1}`).replace(/[[\]]/g, "");
@@ -82,6 +86,7 @@ export function toMarkdown(blocks, opts = {}) {
       if ((opts.figures || "text") !== "none") parts.push({ t: figureMd(b, opts.figures || "text", { ...FIG_LABELS, ...opts.labels }), type: "figure" });
       continue;
     }
+    if (b.type === "table" && b.caption) parts.push({ t: `**${mdEsc(b.caption)}**`, type: "p" });
     if (b.type === "h") parts.push({ t: `${"#".repeat(b.level)} ${mdEsc(b.text)}`, type: "h" });
     else if (b.type === "p") parts.push({ t: mdRuns(b.runs), type: "p" });
     else if (b.type === "li") {
@@ -100,7 +105,17 @@ export function toMarkdown(blocks, opts = {}) {
       ];
       parts.push({ t: lines.join("\n"), type: "table" });
     }
-    if (b.type === "table" && opts.figures === "images" && opts.tableImages) {
+    if (b.type === "table" && b.ocr) {
+      // Tableau lu dans une image : l'IA doit savoir que les valeurs viennent de l'OCR.
+      const L = { ...FIG_LABELS, ...opts.labels };
+      let note = `> *${L.ocrTable.replace("{p}", b.page + 1)}*`;
+      if (b.ocr.uncertain?.length) {
+        const list = b.ocr.uncertain.map(u => `${L.ocrRow} ${u.r0 + 1}, ${L.ocrCol} ${u.c0 + 1} : « ${mdEsc(u.value)} » ou « ${mdEsc(u.alt)} »`).join(" ; ");
+        note += `\n> *${L.ocrUncertain} :* ${list}`;
+      }
+      parts.push({ t: note, type: "p" });
+    }
+    if (b.type === "table" && opts.figures === "images" && (opts.tableImages || b.ocr)) {
       const L = { ...FIG_LABELS, ...opts.labels };
       for (const part of b.parts || []) parts.push({ t: `![${L.tableImage}, ${L.page} ${part.page + 1}](${part.asset})`, type: "p" });
     }
@@ -122,7 +137,7 @@ export function blockAssets(blocks, { figures, tableImages } = {}) {
   const out = [];
   for (const b of blocks) {
     if (b.type === "figure") out.push({ path: b.asset, page: b.page, box: b.box, kind: b.kind });
-    else if (b.type === "table" && tableImages) for (const p of b.parts || []) if (p.box) out.push({ path: p.asset, page: p.page, box: p.box, kind: "table" });
+    else if (b.type === "table" && (tableImages || b.ocr)) for (const p of b.parts || []) if (p.box) out.push({ path: p.asset, page: p.page, box: p.box, kind: "table" });
   }
   return out;
 }

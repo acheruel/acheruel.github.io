@@ -1,8 +1,9 @@
 // PDFo Converto : interface. Un PDF → Markdown, images, pages séparées, Word ou PowerPoint.
 import { openPdf, readFile, looksLikePdf, renderPage, dropCanvas, download, zip, safeName, fmtBytes, parseRange, esc, pdfLib, pptxgen, idle } from "../commun/pdf-outils.js";
 import { renderMarkdown } from "../commun/markdown.js";
-import { extract } from "./extract.js";
-import { toMarkdown, splitChapters, chapterFiles, toDocx, blockAssets } from "./writers.js";
+import { extract } from "../commun/pdf-extract.js";
+import { toMarkdown, splitChapters, chapterFiles, toDocx, blockAssets } from "../commun/pdf-writers.js";
+import { deposer } from "../commun/relais.js";
 
 const $ = id => document.getElementById(id);
 const LS = "pdfo-converto:opts";
@@ -218,6 +219,17 @@ $("example").addEventListener("click", async () => {
   status(t().opening, { busy: true });
   const bytes = new Uint8Array(await (await fetch(EXAMPLE)).arrayBuffer());
   load({ name: EXAMPLE.split("/").pop(), bytes });
+});
+// Markdown pour une IA : le même PDF (et la même plage de pages) ouvert dans MarkDownO, avec OCR.
+$("to-markdowno").addEventListener("click", async () => {
+  if (!state.file) return;
+  try {
+    await deposer({ name: state.file.name, bytes: state.file.bytes, pages: $("range").value.trim() });
+    location.href = "../markdowno/#converto";
+  } catch (err) {
+    console.error(err);
+    window.open("../markdowno/", "_blank", "noopener");
+  }
 });
 $("range").addEventListener("input", e => {
   const idx = state.pdf ? parseRange(e.target.value, state.n) : null;

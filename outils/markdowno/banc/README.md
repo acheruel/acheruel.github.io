@@ -48,7 +48,7 @@ Docling et Marker téléchargent leurs modèles depuis Hugging Face au premier l
 | Vitesse | secondes de conversion (chargement des modèles exclu), un seul processus |
 | Texte | part des mots du PDF retrouvés dans la sortie ; ordre de lecture (plus longue sous-suite commune) |
 | Titres | titres du sommaire (signets) retrouvés comme titres Markdown `#` |
-| Tableaux | `verite.json` : 39 lignes de 11 tableaux. Une ligne compte si toutes ses valeurs sont dans une même ligne de tableau (Markdown ou HTML) ; « valeurs » si elles sont présentes n'importe où |
+| Tableaux | `verite.json` : 33 lignes de 11 tableaux. Une ligne compte si toutes ses valeurs sont dans une même ligne de tableau (Markdown ou HTML) ; « valeurs » si elles sont présentes n'importe où |
 | Équations | 3 équations dessinées en image : leurs nombres sont-ils lus ? |
 | Figures | images extraites et liées ; légendes « Figure N. » retrouvées |
 | Questions RAG | la sortie est coupée en morceaux d'environ 1 200 caractères ; la réponse doit être dans un des 3 morceaux les mieux classés (BM25) |

@@ -38,7 +38,7 @@ const TXT = {
     ready: "Choisissez une page ou déposez votre PDF.",
     method: [
       "<b>Documents</b> : <a href=\"https://www.fhwa.dot.gov/bridge/pubs/hif18046.pdf\" target=\"_blank\" rel=\"noopener\">FHWA-HIF-18-046</a> (analyse raffinée des ponts, 709 pages : tableaux vectoriels, cellules fusionnées, équations en image) et <a href=\"https://www.fhwa.dot.gov/bridge/pubs/if12027/if12027.pdf\" target=\"_blank\" rel=\"noopener\">FHWA-IF-12-027</a> (dalles orthotropes, 291 pages : <b>tableaux insérés comme images</b>). Les extraits gardent les signets du PDF.",
-      "<b>Vérité terrain</b> : 11 tableaux, 39 lignes de cellules relevées à l'œil sur les pages rendues ; 3 équations ; 16 questions de fait. Les titres attendus sont ceux du sommaire du PDF.",
+      "<b>Vérité terrain</b> : 11 tableaux, 33 lignes de cellules relevées à l'œil sur les pages rendues ; 3 équations ; 15 questions de fait. Les titres attendus sont ceux du sommaire du PDF.",
       "<b>Tableaux</b> : une ligne compte si toutes ses valeurs sont dans <i>une même</i> ligne de tableau de la sortie (Markdown ou HTML). « Valeurs » : présentes n'importe où, même en vrac.",
       "<b>Questions RAG</b> : la sortie est coupée en morceaux d'environ 1 200 caractères, comme dans un assistant qui cherche dans un document ; la réponse doit être dans un des 3 morceaux les mieux classés (BM25) pour la question.",
       "<b>Vitesse</b> : un seul fil, 4 cœurs, sans carte graphique. Les scripts du banc d'essai sont dans <a href=\"https://github.com/acheruel/acheruel.github.io/tree/main/outils/markdowno/banc\" target=\"_blank\" rel=\"noopener\">outils/markdowno/banc</a>, pour rejouer les tests ou en ajouter un outil."
@@ -73,7 +73,7 @@ const TXT = {
     ready: "Pick a page or drop your PDF.",
     method: [
       "<b>Documents</b>: <a href=\"https://www.fhwa.dot.gov/bridge/pubs/hif18046.pdf\" target=\"_blank\" rel=\"noopener\">FHWA-HIF-18-046</a> (refined bridge analysis, 709 pages: vector tables, merged cells, equations as images) and <a href=\"https://www.fhwa.dot.gov/bridge/pubs/if12027/if12027.pdf\" target=\"_blank\" rel=\"noopener\">FHWA-IF-12-027</a> (orthotropic decks, 291 pages: <b>tables inserted as images</b>). The excerpts keep the PDF bookmarks.",
-      "<b>Ground truth</b>: 11 tables, 39 cell rows read by eye on the rendered pages; 3 equations; 16 fact questions. Expected headings are the PDF's table of contents.",
+      "<b>Ground truth</b>: 11 tables, 33 cell rows read by eye on the rendered pages; 3 equations; 15 fact questions. Expected headings are the PDF's table of contents.",
       "<b>Tables</b>: a row counts if all its values are in <i>one</i> table row of the output (Markdown or HTML). \"Values\": present anywhere, even jumbled.",
       "<b>RAG questions</b>: the output is cut into chunks of about 1,200 characters, as an assistant searching a document does; the answer must be in one of the 3 best-ranked chunks (BM25) for the question.",
       "<b>Speed</b>: one thread, 4 cores, no GPU. The test scripts are in <a href=\"https://github.com/acheruel/acheruel.github.io/tree/main/outils/markdowno/banc\" target=\"_blank\" rel=\"noopener\">outils/markdowno/banc</a>, to replay the tests or add a tool."

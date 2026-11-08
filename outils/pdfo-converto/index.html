@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="fr" data-root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PDFo Converto · Anthony Chéruel</title>
+  <meta name="description" content="PDFo Converto : convertissez un PDF en Markdown (un fichier ou un par chapitre), en images JPG ou PNG, en pages séparées, en Word ou en PowerPoint, avec aperçu. Tout reste sur votre appareil.">
+  <meta property="og:title" content="PDFo Converto">
+  <meta property="og:url" content="https://acheruel.github.io/outils/pdfo-converto/">
+  <link rel="icon" href="../../assets/logos/pdfo-converto.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/css/site.css">
+  <link rel="stylesheet" href="../commun/outil.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="../../assets/js/content.js" defer></script>
+  <script src="../../assets/js/site.js" defer></script>
+  <script src="app.js" type="module"></script>
+</head>
+<body data-page="pdfo-converto" data-section="outils">
+  <a class="skip" href="#main" data-i18n="skip">Aller au contenu</a>
+
+  <header class="topbar">
+    <a class="brand" href="../../">Anthony Chéruel</a>
+    <div class="language" role="group" aria-label="Langue / Language">
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" data-lang="fr" aria-pressed="true" class="selected">FR</button>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Sections" data-i18n-aria="navLabel">
+    <div class="tabs-inner" id="tabs"></div>
+  </nav>
+
+  <main id="main" class="page ot-page cv-page">
+    <nav class="crumbs" aria-label="Fil d'Ariane" data-en-label="Breadcrumb">
+      <a href="../../" data-en="Tools">Outils</a>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span aria-current="page">PDFo Converto</span>
+    </nav>
+
+    <header class="ot-head">
+      <img src="../../assets/logos/pdfo-converto.svg" alt="" width="48" height="48">
+      <div>
+        <h1>PDFo Converto <small class="ot-version">v1.0</small></h1>
+        <p data-en="Convert a PDF to Markdown (one file or one per chapter), JPG or PNG images, separate pages, Word or PowerPoint, with a preview before you download.">Convertissez un PDF en Markdown (un fichier ou un par chapitre), en images JPG ou PNG, en pages séparées, en Word ou en PowerPoint, avec un aperçu avant de télécharger.</p>
+      </div>
+    </header>
+
+    <p class="ot-local">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 2.75 3.5v4c0 3.2 2.2 5.6 5.25 7 3.05-1.4 5.25-3.8 5.25-7v-4L8 1.5Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="m5.6 8 1.7 1.7 3.2-3.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span data-en="100% local: your PDF is converted by your browser and never sent anywhere.">100 % local : votre PDF est converti par votre navigateur et n'est envoyé nulle part.</span>
+    </p>
+
+    <!-- Fichier -->
+    <section class="drop cv-drop" id="drop" aria-labelledby="drop-title">
+      <input type="file" id="file-input" accept="application/pdf,.pdf" hidden>
+      <svg class="drop-icon" viewBox="0 0 40 40" aria-hidden="true"><path d="M10 6h13l7 7v21H10Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M23 6v7h7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M15 21h10M15 26h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <div class="drop-text">
+        <strong id="drop-title" data-en="Drop a PDF here">Déposez un PDF ici</strong>
+        <span data-en="or choose a file · try the example report">ou choisissez un fichier · essayez le rapport d'exemple</span>
+      </div>
+      <div class="drop-actions">
+        <button type="button" class="btn btn-quiet" id="example" data-en="Example report">Rapport d'exemple</button>
+        <button type="button" class="btn btn-primary" id="pick">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          <span data-en="Choose a PDF">Choisir un PDF</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="card cv-file" id="file-card" hidden aria-label="Fichier" data-en-label="File">
+      <span class="cv-file-thumb" id="file-thumb" aria-hidden="true"></span>
+      <div class="cv-file-text">
+        <strong id="file-name"></strong>
+        <span id="file-meta"></span>
+      </div>
+      <label class="cv-range"><span data-en="Pages">Pages</span><input type="text" id="range" inputmode="numeric" autocomplete="off" placeholder="toutes" data-en-placeholder="all" title="Ex. : 1-10, 15, 18-20" data-en-title="E.g. 1-10, 15, 18-20"></label>
+      <button type="button" class="btn btn-quiet" id="change" data-en="Change file">Changer de fichier</button>
+    </section>
+
+    <!-- Formats -->
+    <div class="cv-formats" role="tablist" aria-label="Format de sortie" data-en-label="Output format" id="formats" hidden>
+      <button type="button" role="tab" data-format="md" aria-selected="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 15V9l2.5 3L11 9v6M16.5 9v5.5m-2-2 2 2 2-2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span><b>Markdown</b><small>.md</small></span>
+      </button>
+      <button type="button" role="tab" data-format="img" aria-selected="false" tabindex="-1">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m5.5 17 4.5-5 3 3 2-2 3.5 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="15.5" cy="9" r="1.6" fill="currentColor"/></svg>
+        <span><b data-en="Images">Images</b><small>.jpg · .png</small></span>
+      </button>
+      <button type="button" role="tab" data-format="split" aria-selected="false" tabindex="-1">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3.5h8l3 3v14H4Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M15 9.5h5v11h-9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-dasharray="2 2"/></svg>
+        <span><b data-en="Split">Diviser</b><small>.pdf</small></span>
+      </button>
+      <button type="button" role="tab" data-format="docx" aria-selected="false" tabindex="-1">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5h10l4 4v13H5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m8 11 1.3 5 1.7-4 1.7 4 1.3-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span><b>Word</b><small>.docx</small></span>
+      </button>
+      <button type="button" role="tab" data-format="pptx" aria-selected="false" tabindex="-1">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 17v3M8.5 20.5h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M7 13.5V8h2.5a1.8 1.8 0 0 1 0 3.6H7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <span><b>PowerPoint</b><small>.pptx</small></span>
+      </button>
+    </div>
+
+    <div class="cv-work" id="work" hidden>
+      <!-- Options -->
+      <aside class="card cv-opts">
+        <div data-panel="md">
+          <h2 data-en="Markdown">Markdown</h2>
+          <div class="opt">
+            <span class="opt-label" id="lbl-split" data-en="Output">Sortie</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-split" data-opt="mdSplit">
+              <button type="button" role="radio" data-value="auto" data-en="Automatic">Automatique</button>
+              <button type="button" role="radio" data-value="one" data-en="One file">Un fichier</button>
+              <button type="button" role="radio" data-value="chapters" data-en="Per chapter">Par chapitre</button>
+            </div>
+            <p class="cv-hint" id="chapters-hint"></p>
+          </div>
+          <label class="check"><input type="checkbox" data-opt="tables"><span><span data-en="Detect tables">Détecter les tableaux</span><small data-en="From the ruled lines of the PDF.">À partir des filets du PDF.</small></span></label>
+          <label class="check"><input type="checkbox" data-opt="margins"><span data-en="Remove repeated headers and footers">Retirer les en-têtes et pieds de page répétés</span></label>
+          <label class="check"><input type="checkbox" data-opt="styles"><span data-en="Keep bold and italics">Garder le gras et l'italique</span></label>
+          <label class="check"><input type="checkbox" data-opt="pageMarkers"><span><span data-en="Page markers">Repères de page</span><small data-en="A comment &lt;!-- page 3 --&gt; at each new page.">Un commentaire &lt;!-- page 3 --&gt; à chaque nouvelle page.</small></span></label>
+        </div>
+
+        <div data-panel="img" hidden>
+          <h2 data-en="Images">Images</h2>
+          <div class="opt">
+            <span class="opt-label" id="lbl-imgfmt" data-en="Format">Format</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-imgfmt" data-opt="imgFormat">
+              <button type="button" role="radio" data-value="jpg">JPG</button>
+              <button type="button" role="radio" data-value="png">PNG</button>
+            </div>
+          </div>
+          <div class="opt">
+            <span class="opt-label" id="lbl-dpi" data-en="Resolution">Résolution</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-dpi" data-opt="dpi">
+              <button type="button" role="radio" data-value="96">96 ppp</button>
+              <button type="button" role="radio" data-value="150">150 ppp</button>
+              <button type="button" role="radio" data-value="300">300 ppp</button>
+            </div>
+          </div>
+          <label class="cv-slider" data-only-jpg><span data-en="JPG quality">Qualité JPG</span><input type="range" min="0.5" max="0.98" step="0.02" data-opt="quality"><output data-out="quality"></output></label>
+          <p class="cv-hint" data-en="One image per page, grouped in a .zip file (a single image is downloaded as is).">Une image par page, regroupées dans un fichier .zip (une seule image est téléchargée telle quelle).</p>
+        </div>
+
+        <div data-panel="split" hidden>
+          <h2 data-en="Split the PDF">Diviser le PDF</h2>
+          <div class="opt">
+            <span class="opt-label" id="lbl-splitmode" data-en="Split">Découpage</span>
+            <div class="seg cv-seg-wrap" role="radiogroup" aria-labelledby="lbl-splitmode" data-opt="splitMode">
+              <button type="button" role="radio" data-value="each" data-en="Each page">Chaque page</button>
+              <button type="button" role="radio" data-value="every" data-en="Every N pages">Toutes les N pages</button>
+              <button type="button" role="radio" data-value="ranges" data-en="Custom ranges">Plages</button>
+            </div>
+          </div>
+          <label class="field" data-split="every"><span data-en="Pages per file">Pages par fichier</span><input type="number" min="1" step="1" data-opt="every"></label>
+          <label class="field" data-split="ranges"><span data-en="Ranges (one file each)">Plages (un fichier chacune)</span><input type="text" data-opt="ranges" placeholder="1-3, 4-10, 11-20" autocomplete="off"></label>
+          <p class="cv-hint" data-en="The pages keep their content as is (text, vectors, links): nothing is converted.">Les pages gardent leur contenu tel quel (texte, vecteurs) : rien n'est converti.</p>
+        </div>
+
+        <div data-panel="docx" hidden>
+          <h2>Word</h2>
+          <div class="opt">
+            <span class="opt-label" id="lbl-docx" data-en="Content">Contenu</span>
+            <div class="seg cv-seg-wrap" role="radiogroup" aria-labelledby="lbl-docx" data-opt="docxMode">
+              <button type="button" role="radio" data-value="text" data-en="Editable text">Texte modifiable</button>
+              <button type="button" role="radio" data-value="images" data-en="Page images">Images des pages</button>
+            </div>
+            <p class="cv-hint" id="docx-hint"></p>
+          </div>
+          <label class="check" data-docx="text"><input type="checkbox" data-opt="pageBreaks"><span data-en="Keep the page breaks of the PDF">Garder les sauts de page du PDF</span></label>
+          <label class="check" data-docx="text"><input type="checkbox" data-opt="tables"><span data-en="Detect tables">Détecter les tableaux</span></label>
+          <label class="check" data-docx="text"><input type="checkbox" data-opt="margins"><span data-en="Remove repeated headers and footers">Retirer les en-têtes et pieds de page répétés</span></label>
+        </div>
+
+        <div data-panel="pptx" hidden>
+          <h2>PowerPoint</h2>
+          <div class="opt">
+            <span class="opt-label" id="lbl-pdpi" data-en="Image quality">Qualité des images</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-pdpi" data-opt="pptDpi">
+              <button type="button" role="radio" data-value="110" data-en="Light">Légère</button>
+              <button type="button" role="radio" data-value="170" data-en="Standard">Standard</button>
+              <button type="button" role="radio" data-value="240" data-en="High">Haute</button>
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" data-opt="notes"><span><span data-en="Page text in the speaker notes">Texte de la page dans les notes</span><small data-en="Searchable, and handy to copy from.">Cherchable, et pratique à copier.</small></span></label>
+          <p class="cv-hint" data-en="One slide per page, at the size of the page: the layout is exactly that of the PDF.">Une diapositive par page, au format de la page : la mise en page est exactement celle du PDF.</p>
+        </div>
+      </aside>
+
+      <!-- Aperçu -->
+      <section class="card cv-preview" aria-labelledby="preview-title">
+        <header class="cv-preview-head">
+          <h2 id="preview-title" data-en="Preview">Aperçu</h2>
+          <div class="cv-preview-tools">
+            <select id="chapter" hidden aria-label="Chapitre" data-en-label="Chapter"></select>
+            <div class="seg" role="radiogroup" aria-label="Affichage" data-en-label="Display" id="md-view">
+              <button type="button" role="radio" data-value="render" class="selected" aria-checked="true" data-en="Rendered">Rendu</button>
+              <button type="button" role="radio" data-value="source" aria-checked="false" data-en="Markdown">Markdown</button>
+            </div>
+          </div>
+        </header>
+        <div class="cv-preview-body" id="preview" aria-live="polite"></div>
+      </section>
+    </div>
+
+    <!-- Barre d'action -->
+    <div class="actionbar" id="actionbar">
+      <div class="actionbar-status-wrap">
+        <p class="actionbar-status" id="status" aria-live="polite"></p>
+        <div class="progress" id="progress" hidden><i></i></div>
+      </div>
+      <button type="button" class="btn" id="copy" hidden>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8.5" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 10.5V3.5A1.5 1.5 0 0 1 4.5 2H10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span data-en="Copy">Copier</span>
+      </button>
+      <button type="button" class="btn btn-primary btn-big" id="download" disabled>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0L5 7m3 3 3-3M3 12.5v1h10v-1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="download-label">Télécharger</span>
+      </button>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© <span id="year">2026</span> Anthony Chéruel</span>
+      <time id="site-date"></time>
+      <a href="https://github.com/acheruel" target="_blank" rel="noopener noreferrer">github.com/acheruel</a>
+    </div>
+  </footer>
+</body>
+</html>

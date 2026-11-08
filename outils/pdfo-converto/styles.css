@@ -1,0 +1,85 @@
+/* PDFo Converto : complète site.css et commun/outil.css. */
+.cv-page { --page: 1320px; max-width: var(--page); }
+
+/* Fichier */
+.cv-drop { margin-bottom: 16px; }
+.cv-file { display: flex; align-items: center; gap: 14px; padding: 12px 14px; margin-bottom: 14px; }
+.cv-file-thumb { width: 44px; height: 56px; flex: none; border-radius: 4px; border: 1px solid var(--line); background: #e8eef2 center / contain no-repeat; box-shadow: 0 1px 2px #15354a1f; }
+.cv-file-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.cv-file-text strong { color: var(--navy); overflow-wrap: anywhere; }
+.cv-file-text span { font-size: .8125rem; color: var(--muted); }
+.cv-range { display: flex; flex-direction: column; gap: 3px; font-size: .6875rem; font-weight: 700; color: var(--muted); }
+.cv-range input { width: 150px; font-size: .875rem; padding: 5px 8px; }
+.cv-range input.is-invalid { border-color: #d0675a; background: #fff6f4; }
+
+/* Formats */
+.cv-formats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+.cv-formats button { display: flex; align-items: center; gap: 11px; min-width: 0; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--muted); text-align: left; box-shadow: var(--shadow); transition: border-color .15s, background .15s, color .15s; }
+.cv-formats button svg { width: 26px; height: 26px; flex: none; }
+.cv-formats button span { display: flex; flex-direction: column; min-width: 0; }
+.cv-formats button b { font-size: .9375rem; font-weight: 650; color: var(--ink); }
+.cv-formats button small { font-size: .75rem; font-variant-numeric: tabular-nums; }
+.cv-formats button:hover { border-color: var(--field); color: var(--ink); }
+.cv-formats button[aria-selected="true"] { border-color: #9fcfcb; border-left: 3px solid var(--teal); background: linear-gradient(100deg, #e9f8f2, #fff); color: var(--teal); }
+.cv-formats button[aria-selected="true"] b { color: #0c5f59; }
+
+/* Options et aperçu */
+.cv-work { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 14px; align-items: start; }
+.cv-opts { position: sticky; top: 12px; }
+.cv-opts > div { display: flex; flex-direction: column; gap: 12px; }
+.cv-opts h2 { margin: 0; font-size: 1.0625rem; font-weight: 650; color: var(--navy); }
+.cv-hint { margin: 0; font-size: .75rem; line-height: 1.45; color: var(--muted); }
+.cv-hint b { color: var(--ink); }
+.cv-seg-wrap { flex-wrap: wrap; }
+.cv-slider { display: grid; grid-template-columns: 90px minmax(0, 1fr) 42px; align-items: center; gap: 8px; font-size: .8125rem; }
+.cv-slider output { font-size: .75rem; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.cv-opts .field input { width: 100%; }
+
+.cv-preview { display: flex; flex-direction: column; padding: 0; min-height: 420px; overflow: hidden; }
+.cv-preview-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.cv-preview-head h2 { margin: 0; font-size: 1rem; font-weight: 650; color: var(--navy); }
+.cv-preview-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.cv-preview-tools select { max-width: 320px; font-size: .8125rem; padding: 5px 8px; }
+.cv-preview-body { flex: 1; padding: 18px 22px; max-height: calc(100vh - 210px); min-height: 380px; overflow: auto; }
+.cv-preview-body.is-grid { background: #dfe7ec; }
+.cv-preview-body .md-preview { max-width: 82ch; }
+.cv-preview-body .md-source { max-width: 100ch; }
+.cv-empty { margin: 40px auto; max-width: 46ch; text-align: center; font-size: .875rem; color: var(--muted); }
+
+/* Grilles de pages (images, diapositives, fichiers) */
+.cv-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.cv-grid li { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.cv-grid .cv-sheet { width: 100%; aspect-ratio: var(--ratio, .773); background: #fff center / contain no-repeat; border-radius: 2px; box-shadow: 0 1px 2px #15354a33, 0 6px 16px -8px #15354a4d; }
+.cv-grid.is-slides .cv-sheet { border-radius: 4px; outline: 4px solid #fff; outline-offset: 0; background-color: #fff; }
+.cv-grid figcaption, .cv-grid .cv-cap { max-width: 100%; font-size: .75rem; color: var(--muted); text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cv-files { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.cv-files li { display: flex; align-items: center; gap: 12px; padding: 8px 10px; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; }
+.cv-files .cv-sheet { width: 34px; height: 44px; flex: none; background: #fff center / contain no-repeat; border: 1px solid var(--line); border-radius: 3px; }
+.cv-files b { font-size: .875rem; color: var(--navy); font-variant-numeric: tabular-nums; }
+.cv-files span { margin-left: auto; font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Aperçu Word : page blanche */
+.cv-docpage { max-width: 760px; margin: 0 auto; padding: 46px 56px; background: #fff; box-shadow: 0 1px 2px #15354a33, 0 8px 22px -8px #15354a4d; font-family: Arial, sans-serif; }
+.cv-docpage.md-preview h1 { border-bottom: 0; }
+
+@media (max-width: 1100px) {
+  .cv-formats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .cv-work { grid-template-columns: 1fr; }
+  .cv-opts { position: static; }
+  .cv-preview-body { max-height: none; }
+}
+@media (max-width: 800px) {
+  .cv-file { flex-wrap: wrap; }
+  .cv-range { order: 3; }
+  .cv-formats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cv-formats button { padding: 9px 10px; gap: 8px; }
+  .cv-preview-body { padding: 14px; }
+  .cv-docpage { padding: 24px 20px; }
+  .actionbar-status-wrap { flex-basis: 100%; }
+  .actionbar-status { white-space: normal; }
+}
+@media (pointer: coarse) {
+  .cv-formats button { min-height: 52px; }
+}

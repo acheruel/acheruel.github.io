@@ -1,7 +1,7 @@
 // Contenu du site. Pour ajouter un outil : une entrée dans TOOLS (avec sa catégorie).
 // Pour ouvrir une section : passer ready à true et créer la page indiquée par href.
 window.SITE = {
-  version: "0.4",
+  version: "0.5",
   date: "2026-11-07",
   github: "acheruel",
   pages: "https://acheruel.github.io"
@@ -114,6 +114,45 @@ window.TOOLS = [
       fr: "Téléversez vos photos de chantier, réordonnez-les, légendez-les et exportez un rapport PDF soigné : page de garde, numéros de projet et de contrat, date, 1 à 6 photos par page, mode compact pour l'envoi par courriel. Rien ne quitte votre appareil.",
       en: "Upload your site photos, reorder and caption them, then export a clean PDF report: cover page, project and contract numbers, date, 1 to 6 photos per page, compact mode for email. Nothing leaves your device."
     }
+  },
+  {
+    repo: "PDFoComparo",
+    category: "productivite",
+    name: ["", "PDFo Comparo"],
+    logo: "assets/logos/pdfo-comparo.svg",
+    href: "outils/pdfo-comparo/",
+    code: "https://github.com/acheruel/acheruel.github.io/tree/main/outils/pdfo-comparo",
+    tagline: { fr: "Comparaison de deux versions d'un PDF", en: "Compare two versions of a PDF" },
+    desc: {
+      fr: "Superposez deux révisions d'un plan ou d'un document : changements en couleurs et numérotés, recalage automatique du décalage d'impression, pages insérées ou supprimées, comparaison du texte et PDF comparé à télécharger. Rien ne quitte votre appareil.",
+      en: "Overlay two revisions of a drawing or document: colour-coded, numbered changes, automatic correction of print offsets, inserted or removed pages, text comparison and a downloadable compared PDF. Nothing leaves your device."
+    }
+  },
+  {
+    repo: "PDFoConverto",
+    category: "productivite",
+    name: ["", "PDFo Converto"],
+    logo: "assets/logos/pdfo-converto.svg",
+    href: "outils/pdfo-converto/",
+    code: "https://github.com/acheruel/acheruel.github.io/tree/main/outils/pdfo-converto",
+    tagline: { fr: "PDF vers Markdown, images, Word, PowerPoint", en: "PDF to Markdown, images, Word, PowerPoint" },
+    desc: {
+      fr: "Convertissez un PDF en Markdown (titres, listes, tableaux, un fichier par chapitre au besoin), en images JPG ou PNG, en pages séparées, en Word ou en PowerPoint, avec un aperçu avant de télécharger. Rien ne quitte votre appareil.",
+      en: "Convert a PDF to Markdown (headings, lists, tables, one file per chapter if needed), JPG or PNG images, separate pages, Word or PowerPoint, with a preview before you download. Nothing leaves your device."
+    }
+  },
+  {
+    repo: "MarkDownO",
+    category: "productivite",
+    name: ["", "MarkDownO"],
+    logo: "assets/logos/markdowno.svg",
+    href: "outils/markdowno/",
+    code: "https://github.com/acheruel/acheruel.github.io/tree/main/outils/markdowno",
+    tagline: { fr: "Tout en Markdown, avec MarkItDown", en: "Everything to Markdown, with MarkItDown" },
+    desc: {
+      fr: "Word, PowerPoint, Excel, PDF, pages web, CSV, EPUB ou courriels Outlook convertis en Markdown par MarkItDown de Microsoft, qui tourne dans le navigateur. Aperçu, copie et téléchargement ; vos fichiers restent sur votre appareil.",
+      en: "Word, PowerPoint, Excel, PDF, web pages, CSV, EPUB or Outlook e-mails converted to Markdown by Microsoft's MarkItDown, running in your browser. Preview, copy and download; your files stay on your device."
+    }
   }
 ];
 
@@ -126,7 +165,10 @@ window.I18N = {
       ressources: "Anthony Chéruel · Ressources",
       "aide-memoire": "Aide-mémoire de mathématiques · Anthony Chéruel",
       respiro: "Respiro · Anthony Chéruel",
-      "photo-rapporto": "Photo Rapporto · Anthony Chéruel"
+      "photo-rapporto": "Photo Rapporto · Anthony Chéruel",
+      "pdfo-comparo": "PDFo Comparo · Anthony Chéruel",
+      "pdfo-converto": "PDFo Converto · Anthony Chéruel",
+      markdowno: "MarkDownO · Anthony Chéruel"
     },
     skip: "Aller au contenu",
     navLabel: "Sections",
@@ -150,7 +192,10 @@ window.I18N = {
       ressources: "Anthony Chéruel · Resources",
       "aide-memoire": "Math reference sheet · Anthony Chéruel",
       respiro: "Respiro · Anthony Chéruel",
-      "photo-rapporto": "Photo Rapporto · Anthony Chéruel"
+      "photo-rapporto": "Photo Rapporto · Anthony Chéruel",
+      "pdfo-comparo": "PDFo Comparo · Anthony Chéruel",
+      "pdfo-converto": "PDFo Converto · Anthony Chéruel",
+      markdowno: "MarkDownO · Anthony Chéruel"
     },
     skip: "Skip to content",
     navLabel: "Sections",

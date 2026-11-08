@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="fr" data-root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PDFo Comparo · Anthony Chéruel</title>
+  <meta name="description" content="PDFo Comparo : comparez deux versions d'un PDF (plans techniques, devis, documents de référence). Superposition en couleurs, recalage automatique du décalage d'impression, pages insérées ou supprimées, comparaison du texte et export du PDF comparé. Tout reste sur votre appareil.">
+  <meta property="og:title" content="PDFo Comparo">
+  <meta property="og:url" content="https://acheruel.github.io/outils/pdfo-comparo/">
+  <link rel="icon" href="../../assets/logos/pdfo-comparo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/css/site.css">
+  <link rel="stylesheet" href="../commun/outil.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="../../assets/js/content.js" defer></script>
+  <script src="../../assets/js/site.js" defer></script>
+  <script src="app.js" type="module"></script>
+</head>
+<body data-page="pdfo-comparo" data-section="outils">
+  <a class="skip" href="#main" data-i18n="skip">Aller au contenu</a>
+
+  <header class="topbar">
+    <a class="brand" href="../../">Anthony Chéruel</a>
+    <div class="language" role="group" aria-label="Langue / Language">
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" data-lang="fr" aria-pressed="true" class="selected">FR</button>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Sections" data-i18n-aria="navLabel">
+    <div class="tabs-inner" id="tabs"></div>
+  </nav>
+
+  <main id="main" class="page ot-page pc-page">
+    <nav class="crumbs" aria-label="Fil d'Ariane" data-en-label="Breadcrumb">
+      <a href="../../" data-en="Tools">Outils</a>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span aria-current="page">PDFo Comparo</span>
+    </nav>
+
+    <header class="ot-head">
+      <img src="../../assets/logos/pdfo-comparo.svg" alt="" width="48" height="48">
+      <div>
+        <h1>PDFo Comparo <small class="ot-version">v1.0</small></h1>
+        <p data-en="Compare two versions of a PDF: technical drawings, specifications or reference documents. Colour overlay, automatic correction of print offsets, inserted or removed pages, text comparison, and a downloadable compared PDF.">Comparez deux versions d'un PDF : plans techniques, devis ou documents de référence. Superposition en couleurs, recalage automatique du décalage d'impression, pages insérées ou supprimées, comparaison du texte et PDF comparé à télécharger.</p>
+      </div>
+    </header>
+
+    <p class="ot-local">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 2.75 3.5v4c0 3.2 2.2 5.6 5.25 7 3.05-1.4 5.25-3.8 5.25-7v-4L8 1.5Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="m5.6 8 1.7 1.7 3.2-3.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span data-en="100% local: your PDFs are read by your browser and never sent anywhere.">100 % local : vos PDF sont lus par votre navigateur et ne sont envoyés nulle part.</span>
+    </p>
+
+    <!-- 1. Fichiers et options -->
+    <section class="card pc-setup" aria-labelledby="setup-title">
+      <h2 class="sr-only" id="setup-title" data-en="Files and options">Fichiers et options</h2>
+      <div class="pc-files">
+        <div class="drop pc-slot" data-side="a" id="slot-a">
+          <input type="file" accept="application/pdf,.pdf" hidden>
+          <span class="pc-slot-tag"><i class="sw sw-del"></i><span data-en="Old version">Ancienne version</span></span>
+          <div class="drop-text">
+            <strong class="pc-slot-name" data-en="Drop the old PDF here">Déposez l'ancien PDF ici</strong>
+            <span class="pc-slot-meta" data-en="or choose a file · revision A, 2024 edition…">ou choisissez un fichier · révision A, édition 2024…</span>
+          </div>
+          <div class="pc-slot-foot">
+            <label class="pc-range" hidden><span data-en="Pages">Pages</span><input type="text" inputmode="numeric" autocomplete="off" placeholder="toutes" data-en-placeholder="all" title="Ex. : 1-10, 15, 18-20" data-en-title="E.g. 1-10, 15, 18-20"></label>
+            <button type="button" class="btn pc-pick">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              <span data-en="Choose…">Choisir…</span>
+            </button>
+          </div>
+        </div>
+
+        <button type="button" class="icon-btn pc-swap" id="swap" aria-label="Inverser l'ancienne et la nouvelle version" data-en-label="Swap old and new versions" title="Inverser" data-en-title="Swap">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5.5h9.5M10 3l2.5 2.5L10 8M13 10.5H3.5M6 8l-2.5 2.5L6 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div class="drop pc-slot" data-side="b" id="slot-b">
+          <input type="file" accept="application/pdf,.pdf" hidden>
+          <span class="pc-slot-tag"><i class="sw sw-add"></i><span data-en="New version">Nouvelle version</span></span>
+          <div class="drop-text">
+            <strong class="pc-slot-name" data-en="Drop the new PDF here">Déposez le nouveau PDF ici</strong>
+            <span class="pc-slot-meta" data-en="or choose a file · revision B, 2025 edition…">ou choisissez un fichier · révision B, édition 2025…</span>
+          </div>
+          <div class="pc-slot-foot">
+            <label class="pc-range" hidden><span data-en="Pages">Pages</span><input type="text" inputmode="numeric" autocomplete="off" placeholder="toutes" data-en-placeholder="all" title="Ex. : 1-10, 15, 18-20" data-en-title="E.g. 1-10, 15, 18-20"></label>
+            <button type="button" class="btn pc-pick">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              <span data-en="Choose…">Choisir…</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pc-opts">
+        <div class="pc-optcol">
+          <div class="opt">
+            <span class="opt-label" id="lbl-mode" data-en="Comparison">Comparaison</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-mode" data-opt="mode">
+              <button type="button" role="radio" data-value="visual" data-en="Visual (drawings)">Visuelle (plans)</button>
+              <button type="button" role="radio" data-value="text" data-en="Text only">Texte seulement</button>
+            </div>
+            <p class="pc-hint" id="mode-hint"></p>
+          </div>
+          <label class="check"><input type="checkbox" data-opt="detect"><span><span data-en="Detect inserted or removed pages">Détecter les pages insérées ou supprimées</span><small data-en="Otherwise pages are compared one to one.">Sinon, les pages sont comparées une à une.</small></span></label>
+          <label class="check" data-only="visual"><input type="checkbox" data-opt="align"><span><span data-en="Correct the print offset automatically">Recaler automatiquement le décalage d'impression</span><small data-en="Shift and scale between the two prints, e.g. another plotter or another PDF printer.">Décalage et échelle entre les deux impressions, ex. autre traceur ou autre imprimante PDF.</small></span></label>
+          <label class="check" data-only="text"><input type="checkbox" data-opt="skipMargins"><span><span data-en="Ignore repeated headers and footers">Ignorer les en-têtes et pieds de page répétés</span><small data-en="Page numbers and running titles, which move when the text reflows.">Numéros de page et titres courants, qui bougent quand le texte glisse.</small></span></label>
+          <label class="check" data-only="text"><input type="checkbox" data-opt="ignoreCase"><span data-en="Ignore upper / lower case">Ignorer les majuscules et minuscules</span></label>
+        </div>
+
+        <div class="pc-optcol" data-only="visual">
+          <div class="opt">
+            <span class="opt-label" id="lbl-tol" data-en="Position tolerance">Tolérance de position</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-tol" data-opt="tol">
+              <button type="button" role="radio" data-value="0.15" title="0,15 mm" data-en-title="0.15 mm" data-en="Strict">Stricte</button>
+              <button type="button" role="radio" data-value="0.4" title="0,4 mm" data-en-title="0.4 mm" data-en="Normal">Normale</button>
+              <button type="button" role="radio" data-value="1" title="1 mm" data-en-title="1 mm" data-en="Loose">Souple</button>
+            </div>
+          </div>
+          <div class="opt">
+            <span class="opt-label" id="lbl-res" data-en="Analysis resolution">Résolution d'analyse</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-res" data-opt="res">
+              <button type="button" role="radio" data-value="1600" data-en="Fast">Rapide</button>
+              <button type="button" role="radio" data-value="2600" data-en="Standard">Standard</button>
+              <button type="button" role="radio" data-value="4000" data-en="Fine">Fine</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc-optcol">
+          <span class="opt-label" data-en="Display">Affichage</span>
+          <div class="pc-colors">
+            <label><input type="color" data-opt="colDel"><span data-en="Removed (old)">Supprimé (ancienne)</span></label>
+            <label><input type="color" data-opt="colAdd"><span data-en="Added (new)">Ajouté (nouvelle)</span></label>
+          </div>
+          <label class="pc-range-opt" data-only="visual"><span data-en="Unchanged">Inchangé</span><input type="range" min="0.08" max="1" step="0.02" data-opt="fade"><output data-out="fade"></output></label>
+          <label class="pc-range-opt" data-only="visual"><span data-en="Line weight">Épaisseur des traits</span><input type="range" min="0" max="3" step="1" data-opt="thick"><output data-out="thick"></output></label>
+        </div>
+      </div>
+
+      <div class="pc-go">
+        <div class="pc-examples">
+          <span class="opt-label" data-en="Try an example:">Essayer un exemple :</span>
+          <button type="button" class="btn btn-quiet" data-example="plans" data-en="Bridge drawings rev. A / B">Plans de pont rév. A / B</button>
+          <button type="button" class="btn btn-quiet" data-example="devis" data-en="Specification v1 / v2">Devis v1 / v2</button>
+        </div>
+        <button type="button" class="btn btn-primary btn-big" id="compare" disabled>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.8" y="2.5" width="7.5" height="10" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="6.7" y="3.5" width="7.5" height="10" rx="1.2" fill="currentColor" fill-opacity=".25" stroke="currentColor" stroke-width="1.4"/></svg>
+          <span data-en="Compare">Comparer</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. Résultats -->
+    <section class="pc-results" id="results" hidden aria-labelledby="results-title">
+      <h2 class="sr-only" id="results-title" data-en="Results">Résultats</h2>
+      <div class="pc-summary" id="summary"></div>
+
+      <div class="pc-work">
+        <aside class="pc-side card">
+          <div class="pc-side-tabs" role="tablist" aria-label="Liste" data-en-label="List">
+            <button type="button" role="tab" id="tab-pairs" aria-controls="pane-pairs" aria-selected="true"><span data-en="Pages">Pages</span><small id="count-pairs">0</small></button>
+            <button type="button" role="tab" id="tab-changes" aria-controls="pane-changes" aria-selected="false" tabindex="-1"><span data-en="Changes">Changements</span><small id="count-changes">0</small></button>
+          </div>
+          <div class="pc-pane" id="pane-pairs" role="tabpanel" aria-labelledby="tab-pairs">
+            <ol class="pc-pairs" id="pairs"></ol>
+          </div>
+          <div class="pc-pane" id="pane-changes" role="tabpanel" aria-labelledby="tab-changes" hidden>
+            <div class="search">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m10.5 10.5 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <input type="search" id="search" placeholder="Rechercher un texte, une page…" data-en-placeholder="Search text, a page…" aria-label="Rechercher dans les changements" data-en-label="Search changes">
+            </div>
+            <div class="pc-kinds seg" role="group" aria-label="Type de changement" data-en-label="Change type" id="kinds">
+              <button type="button" data-kind="all" class="selected" data-en="All">Tous</button>
+              <button type="button" data-kind="add" data-en="Added">Ajouts</button>
+              <button type="button" data-kind="del" data-en="Removed">Suppr.</button>
+              <button type="button" data-kind="mod" data-en="Modified">Modif.</button>
+            </div>
+            <ol class="pc-changes" id="changes"></ol>
+          </div>
+        </aside>
+
+        <div class="pc-viewer card">
+          <div class="pc-toolbar">
+            <div class="pc-nav">
+              <button type="button" class="icon-btn" id="prev" aria-label="Page précédente" data-en-label="Previous page">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button type="button" class="pc-pairlabel" id="pair-label" aria-haspopup="dialog" aria-expanded="false" aria-controls="pop-pair"></button>
+              <button type="button" class="icon-btn" id="next" aria-label="Page suivante" data-en-label="Next page">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+            <div class="seg" role="radiogroup" aria-label="Vue" data-en-label="View" id="views">
+              <button type="button" role="radio" data-view="overlay" data-en="Overlay">Superposition</button>
+              <button type="button" role="radio" data-view="side" data-en="Side by side">Côte à côte</button>
+              <button type="button" role="radio" data-view="curtain" data-en="Curtain">Rideau</button>
+              <button type="button" role="radio" data-view="old" data-en="Old">Ancienne</button>
+              <button type="button" role="radio" data-view="new" data-en="New">Nouvelle</button>
+            </div>
+            <div class="pc-zoom">
+              <button type="button" class="icon-btn" id="zoom-out" aria-label="Zoom arrière" data-en-label="Zoom out"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+              <button type="button" class="pc-zoomval" id="zoom-fit" title="Ajuster à la fenêtre (0)" data-en-title="Fit to window (0)"></button>
+              <button type="button" class="icon-btn" id="zoom-in" aria-label="Zoom avant" data-en-label="Zoom in"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9M8 3.5v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+            </div>
+            <div class="pc-tools">
+              <button type="button" class="btn btn-quiet pc-alignbtn" id="align-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="pop-align" data-only="visual">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5v3M8 11.5v3M1.5 8h3M11.5 8h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+                <span id="align-label"></span>
+              </button>
+              <label class="check pc-zonecheck"><input type="checkbox" data-opt="zones"><span data-en="Outline changes">Encadrer</span></label>
+            </div>
+          </div>
+
+          <div class="pc-viewport" id="viewport" tabindex="0" aria-label="Vue de la comparaison : glisser pour déplacer, molette pour zoomer" data-en-label="Comparison view: drag to pan, wheel to zoom">
+            <div class="pc-stage" id="stage"></div>
+            <div class="pc-curtain" id="curtain" hidden role="slider" tabindex="0" aria-label="Position du rideau" data-en-label="Curtain position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><span></span></div>
+            <div class="pc-busy" id="viewer-busy" hidden><span></span></div>
+          </div>
+          <div class="pc-legend" id="legend"></div>
+
+          <!-- Paire courante : choisir les pages comparées -->
+          <div class="pc-pop" id="pop-pair" role="dialog" aria-labelledby="pop-pair-title" hidden>
+            <h3 id="pop-pair-title" data-en="Pages compared">Pages comparées</h3>
+            <p data-en="Choose another sheet to compare, e.g. the same sheet at another position in a large set.">Choisissez un autre feuillet à comparer, par exemple le même feuillet placé ailleurs dans un gros document.</p>
+            <div class="pc-pop-row">
+              <label class="field"><span data-en="Old">Ancienne</span><select id="pick-a"></select></label>
+              <label class="field"><span data-en="New">Nouvelle</span><select id="pick-b"></select></label>
+            </div>
+            <div class="pc-pop-actions">
+              <button type="button" class="btn btn-quiet" data-close data-en="Cancel">Annuler</button>
+              <button type="button" class="btn btn-primary" id="pick-apply" data-en="Compare these pages">Comparer ces pages</button>
+            </div>
+          </div>
+
+          <!-- Recalage manuel -->
+          <div class="pc-pop pc-pop-align" id="pop-align" role="dialog" aria-labelledby="pop-align-title" hidden>
+            <h3 id="pop-align-title" data-en="Alignment of the old page">Recalage de l'ancienne page</h3>
+            <p id="align-method"></p>
+            <div class="pc-pop-row pc-pop-3">
+              <label class="field"><span data-en="Shift X (mm)">Décalage X (mm)</span><input type="number" step="0.1" id="al-dx"></label>
+              <label class="field"><span data-en="Shift Y (mm)">Décalage Y (mm)</span><input type="number" step="0.1" id="al-dy"></label>
+              <label class="field"><span data-en="Scale (%)">Échelle (%)</span><input type="number" step="0.05" id="al-s"></label>
+            </div>
+            <div class="pc-nudge" role="group" aria-label="Déplacer de 0,5 mm (Maj : 2 mm)" data-en-label="Move by 0.5 mm (Shift: 2 mm)">
+              <button type="button" class="icon-btn" data-nudge="0,-1" aria-label="Vers le haut" data-en-label="Up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 10 8 5.5l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button type="button" class="icon-btn" data-nudge="-1,0" aria-label="Vers la gauche" data-en-label="Left"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button type="button" class="icon-btn" data-nudge="1,0" aria-label="Vers la droite" data-en-label="Right"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button type="button" class="icon-btn" data-nudge="0,1" aria-label="Vers le bas" data-en-label="Down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <small data-en="0.5 mm per click, 2 mm with Shift">0,5 mm par clic, 2 mm avec Maj</small>
+            </div>
+            <div class="pc-pop-actions">
+              <button type="button" class="btn btn-quiet" id="al-auto" data-en="Automatic">Automatique</button>
+              <button type="button" class="btn btn-quiet" id="al-none" data-en="No shift">Aucun décalage</button>
+              <button type="button" class="btn btn-quiet" id="al-all" data-en="Apply to all pages">Appliquer à toutes les pages</button>
+              <button type="button" class="btn btn-primary" id="al-apply" data-en="Apply">Appliquer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Barre d'action -->
+    <div class="actionbar" id="actionbar">
+      <div class="actionbar-status-wrap">
+        <p class="actionbar-status" id="status" aria-live="polite"></p>
+        <div class="progress" id="progress" hidden><i></i></div>
+      </div>
+      <details class="pc-exportopts" id="export-opts">
+        <summary class="btn btn-quiet">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="5.5" cy="4.5" r="1.6" fill="#fff" stroke="currentColor" stroke-width="1.3"/><circle cx="10.5" cy="8" r="1.6" fill="#fff" stroke="currentColor" stroke-width="1.3"/><circle cx="6.5" cy="11.5" r="1.6" fill="#fff" stroke="currentColor" stroke-width="1.3"/></svg>
+          <span data-en="Export options">Options d'export</span>
+        </summary>
+        <div class="pc-exportpanel">
+          <label class="check"><input type="checkbox" data-opt="summary"><span data-en="Summary page and list of changes">Page de synthèse et liste des changements</span></label>
+          <label class="check"><input type="checkbox" data-opt="includeSame"><span data-en="Include identical pages">Inclure les pages identiques</span></label>
+          <label class="check" data-only="visual"><input type="checkbox" data-opt="exportZones"><span data-en="Outline and number the changes">Encadrer et numéroter les changements</span></label>
+          <div class="opt">
+            <span class="opt-label" id="lbl-vector" data-en="Pages of the compared PDF">Pages du PDF comparé</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-vector" data-opt="vector">
+              <button type="button" role="radio" data-value="1" data-en="Vector (sharp, light)">Vectorielles (nettes, légères)</button>
+              <button type="button" role="radio" data-value="0" data-en="Images (as on screen)">Images (comme à l'écran)</button>
+            </div>
+          </div>
+        </div>
+      </details>
+      <button type="button" class="btn" id="export-csv" disabled>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2" width="11" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 6h11M2.5 10h11M7 2v12" stroke="currentColor" stroke-width="1.2"/></svg>
+        <span data-en="List (CSV)">Liste (CSV)</span>
+      </button>
+      <button type="button" class="btn btn-primary btn-big" id="export-pdf" disabled>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0L5 7m3 3 3-3M3 12.5v1h10v-1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span data-en="Download the compared PDF">Télécharger le PDF comparé</span>
+      </button>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© <span id="year">2026</span> Anthony Chéruel</span>
+      <time id="site-date"></time>
+      <a href="https://github.com/acheruel" target="_blank" rel="noopener noreferrer">github.com/acheruel</a>
+    </div>
+  </footer>
+</body>
+</html>

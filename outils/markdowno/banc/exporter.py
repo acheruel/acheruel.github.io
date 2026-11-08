@@ -3,7 +3,7 @@ import json, shutil, pathlib, datetime, sys
 
 ROOT = pathlib.Path(__file__).parent
 DEST = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ROOT.parent / "acheruel.github.io/outils/markdowno/comparateur/donnees")
-R = json.load(open(ROOT / "resultats.json"))
+R = json.load(open(ROOT / "resultats.json", encoding="utf-8"))
 
 DOCS = [
     {"id": "hif18046-extrait", "full": "hif18046", "short": "FHWA-HIF-18-046",
@@ -18,8 +18,8 @@ FULL_PAGES = {"hif18046": 709, "if12027": 291}
 TOOLS = [
     {"id": "markdowno", "name": "MarkDownO 1.1", "where": "browser", "license": "",
      "engine": {"fr": "structure de PDFo Converto + OCR des zones en image (Tesseract.js), ce site", "en": "PDFo Converto structure + OCR of image areas (Tesseract.js), this site"},
-     "note": {"fr": "Le meilleur sur les tableaux (vectoriels et en image), dans le navigateur. Grille retrouvée dans l'image, cellule par cellule ; valeurs douteuses signalées sous le tableau. Limites : « 1,2, or 3 » lu « 1.2. 0r3 », croquis seulement marqués [dessin], 1 équation sur 3.",
-              "en": "Best on tables (vector and image), in the browser. Grid found in the image, cell by cell; doubtful values flagged under the table. Limits: \"1,2, or 3\" read as \"1.2. 0r3\", sketches only marked [drawing], 1 equation out of 3."}},
+     "note": {"fr": "Le meilleur sur les tableaux (vectoriels et en image), dans le navigateur. Grille retrouvée dans l'image, cellule par cellule ; valeurs douteuses signalées sous le tableau. Limites : « 1,2, or 3 » lu « 1.2. 0r3 », croquis seulement marqués [dessin], équations lues mais sans leur forme (« bh? · 12 »).",
+              "en": "Best on tables (vector and image), in the browser. Grid found in the image, cell by cell; doubtful values flagged under the table. Limits: \"1,2, or 3\" read as \"1.2. 0r3\", sketches only marked [drawing], equations read without their layout (\"bh? · 12\")."}},
     {"id": "converto", "name": "PDFo Converto 1.1", "where": "browser", "license": "",
      "engine": {"fr": "règles, pdf.js (ce site), sans OCR", "en": "rules, pdf.js (this site), no OCR"},
      "note": {"fr": "Le plus rapide ; tableaux vectoriels exacts (HTML, cellules fusionnées, libellés de ligne hors grille depuis la 1.1). Pas d'OCR : tableaux en image et équations perdus ; d'où MarkDownO.",
@@ -50,14 +50,14 @@ TOOLS = [
               "en": "Could run in the browser (PyMuPDF ships with Pyodide 0.29); measured in native Python. Adds nothing over Converto."}},
     {"id": "pymupdf4llm", "name": "pymupdf4llm 2.1 + Layout + OCR", "where": "python", "license": "AGPL-3.0",
      "engine": {"fr": "modèle de mise en page + RapidOCR (MuPDF)", "en": "layout model + RapidOCR (MuPDF)"},
-     "note": {"fr": "Le seul à lire les 3 équations en image ; presque tous les titres. Mais il a faussé le tableau 13 à cellules fusionnées (« 0.61 » devient « 0.6 | 1 ») et lit les tableaux en image moins bien que MarkDownO et Docling.",
-              "en": "The only one that reads the 3 image equations; nearly all headings. But it corrupted merged-cell table 13 (\"0.61\" became \"0.6 | 1\") and reads image tables less well than MarkDownO and Docling."}},
-    {"id": "marker", "name": "Marker", "where": "python", "license": "GPL-3.0 (code) / poids OpenRAIL-M modifiés",
+     "note": {"fr": "Lit les 3 équations en image avec leur forme ; presque tous les titres. Mais il a faussé le tableau 13 à cellules fusionnées (« 0.61 » devient « 0.6 | 1 ») et lit les tableaux en image moins bien que MarkDownO et Docling.",
+              "en": "Reads the 3 image equations with their layout; nearly all headings. But it corrupted merged-cell table 13 (\"0.61\" became \"0.6 | 1\") and reads image tables less well than MarkDownO and Docling."}},
+    {"id": "marker", "name": "Marker", "where": "python", "license": "GPL-3.0 (1.10), Apache-2.0 (2.1)",
      "engine": {"fr": "modèles Surya (mise en page, OCR, tableaux, équations)", "en": "Surya models (layout, OCR, tables, equations)"},
-     "why": {"fr": "MARKER_WHY_FR", "en": "MARKER_WHY_EN"}},
+     "why": {"fr": "Essayé sur un portable sans carte graphique, sans résultat : Marker 2.1 exige le serveur llama.cpp (binaire non installé) ; Marker 1.10 n'avait pas fini les 32 premières pages après 45 min (reconnaissance du texte estimée à plus de 3 h). Inutilisable sans carte graphique.", "en": "Tried on a laptop without a GPU, no result: Marker 2.1 needs the llama.cpp server (binary not installed); Marker 1.10 had not finished the first 32 pages after 45 min (text recognition estimated at over 3 h). Unusable without a GPU."}},
     {"id": "parsade", "name": "Parsade (Granite-Docling 258M)", "where": "browser", "license": "Apache-2.0 (modèle)",
      "engine": {"fr": "modèle vision-langage dans le navigateur (WebGPU)", "en": "vision-language model in the browser (WebGPU)"},
-     "why": {"fr": "PARSADE_WHY_FR", "en": "PARSADE_WHY_EN"}},
+     "why": {"fr": "Service en ligne non lancé (téléversement dans son interface, WebGPU). Son modèle, Granite-Docling 258M, essayé via Docling sur CPU : 7 pages à tableaux non terminées en 33 min.", "en": "Online service not run (upload in its interface, WebGPU). Its model, Granite-Docling 258M, tried through Docling on CPU: 7 table pages not finished in 33 min."}},
 ]
 
 
@@ -97,7 +97,7 @@ def main():
         docs.append({**{k: v for k, v in d.items() if k != "full"}, "pdf": f"{d['id']}.pdf",
                      "pagesSample": len(pages), "pagesFull": FULL_PAGES[d["full"]], "pageNumbers": pages})
     out = {"date": datetime.date.today().isoformat(), "docs": docs, "tools": TOOLS, "scores": scores}
-    json.dump(out, open(DEST / "resultats.json", "w"), ensure_ascii=False, indent=1)
+    json.dump(out, open(DEST / "resultats.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("exporté :", DEST, len(scores), "outils")
 
 

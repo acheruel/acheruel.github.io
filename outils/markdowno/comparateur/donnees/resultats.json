@@ -92,17 +92,45 @@
  ],
  "tools": [
   {
-   "id": "converto",
-   "name": "PDFo Converto 1.0",
+   "id": "markdowno",
+   "name": "MarkDownO 1.1",
    "where": "browser",
    "license": "",
    "engine": {
-    "fr": "règles, pdf.js (ce site)",
-    "en": "rules, pdf.js (this site)"
+    "fr": "structure de PDFo Converto + OCR des zones en image (Tesseract.js), ce site",
+    "en": "PDFo Converto structure + OCR of image areas (Tesseract.js), this site"
    },
    "note": {
-    "fr": "Le plus rapide ; tableaux vectoriels exacts (HTML, cellules fusionnées). Perd les étiquettes de ligne hors grille (tableaux 60 et 62). Pas d'OCR : tableaux en image et équations perdus.",
-    "en": "Fastest; exact vector tables (HTML, merged cells). Loses row labels outside the grid (tables 60 and 62). No OCR: image tables and equations lost."
+    "fr": "Le meilleur sur les tableaux (vectoriels et en image), dans le navigateur. Grille retrouvée dans l'image, cellule par cellule ; valeurs douteuses signalées sous le tableau. Limites : « 1,2, or 3 » lu « 1.2. 0r3 », croquis seulement marqués [dessin], équations lues mais sans leur forme (« bh? · 12 »).",
+    "en": "Best on tables (vector and image), in the browser. Grid found in the image, cell by cell; doubtful values flagged under the table. Limits: \"1,2, or 3\" read as \"1.2. 0r3\", sketches only marked [drawing], equations read without their layout (\"bh? · 12\")."
+   }
+  },
+  {
+   "id": "converto",
+   "name": "PDFo Converto 1.1",
+   "where": "browser",
+   "license": "",
+   "engine": {
+    "fr": "règles, pdf.js (ce site), sans OCR",
+    "en": "rules, pdf.js (this site), no OCR"
+   },
+   "note": {
+    "fr": "Le plus rapide ; tableaux vectoriels exacts (HTML, cellules fusionnées, libellés de ligne hors grille depuis la 1.1). Pas d'OCR : tableaux en image et équations perdus ; d'où MarkDownO.",
+    "en": "Fastest; exact vector tables (HTML, merged cells, row labels outside the grid since 1.1). No OCR: image tables and equations lost; hence MarkDownO."
+   }
+  },
+  {
+   "id": "docling",
+   "name": "Docling 2.149",
+   "where": "python",
+   "license": "MIT",
+   "engine": {
+    "fr": "modèles de mise en page et TableFormer, OCR RapidOCR",
+    "en": "layout and TableFormer models, RapidOCR OCR"
+   },
+   "note": {
+    "fr": "Très bon sur les tableaux, y compris en image (avec RapidOCR, aucune décimale perdue), et tous les titres. Mais 9 s par page sur un portable (2 Go de mémoire, 1 à 2 min de chargement), cellules fusionnées répétées dans un tableau Markdown, équations non lues.",
+    "en": "Very good on tables, image ones included (with RapidOCR, no decimal lost), and every heading. But 9 s per page on a laptop (2 GB of memory, 1 to 2 min to load), merged cells repeated in a Markdown table, equations not read."
    }
   },
   {
@@ -111,8 +139,8 @@
    "where": "browser",
    "license": "MIT",
    "engine": {
-    "fr": "pdfminer (moteur actuel de MarkDownO)",
-    "en": "pdfminer (current MarkDownO engine)"
+    "fr": "pdfminer (ancien moteur PDF de MarkDownO)",
+    "en": "pdfminer (former MarkDownO PDF engine)"
    },
    "note": {
     "fr": "Texte brut : ni titres, ni tableaux Markdown, ni images. Les valeurs d'un tableau restent sur une ligne, sans en-têtes de colonnes.",
@@ -129,8 +157,8 @@
     "en": "MarkItDown + clean-up + RapidOCR OCR"
    },
    "why": {
-    "fr": "Application de bureau, pas lancée ici. Sur un PDF qui contient du texte, c'est MarkItDown suivi d'un nettoyage par règles (doublons, lignes recollées, titres devinés). Son OCR ne s'active que si le PDF entier est numérisé (moins de 30 caractères par page) : les tableaux en image d'un PDF texte restent perdus.",
-    "en": "Desktop app, not run here. On a PDF that has text, it is MarkItDown followed by rule-based clean-up (duplicates, re-joined lines, guessed headings). Its OCR only kicks in when the whole PDF is scanned (under 30 characters per page): image tables in a text PDF are still lost."
+    "fr": "Application de bureau, mesurée par l'autre banc (PR #3) : c'est MarkItDown suivi d'un nettoyage par règles. Son OCR ne s'active que si le PDF entier est numérisé : les tableaux en image d'un PDF texte restent perdus.",
+    "en": "Desktop app, measured by the other test bench (PR #3): it is MarkItDown followed by rule-based clean-up. Its OCR only kicks in when the whole PDF is scanned: image tables in a text PDF are still lost."
    }
   },
   {
@@ -143,8 +171,8 @@
     "en": "rules (Java, called from Python)"
    },
    "note": {
-    "fr": "Rapide ; tableaux vectoriels comme Converto ; extrait toutes les images. Titres incomplets, pas d'OCR en mode local.",
-    "en": "Fast; vector tables like Converto; extracts every image. Incomplete headings, no OCR in local mode."
+    "fr": "Rapide ; tableaux vectoriels comme Converto 1.0 ; extrait toutes les images. Titres incomplets, pas d'OCR en mode local.",
+    "en": "Fast; vector tables like Converto 1.0; extracts every image. Incomplete headings, no OCR in local mode."
    }
   },
   {
@@ -185,36 +213,36 @@
     "en": "layout model + RapidOCR (MuPDF)"
    },
    "note": {
-    "fr": "Le seul à lire les tableaux en image et les équations (OCR) et à trouver presque tous les titres. Mais 20 fois plus lent que Converto, et il a faussé le tableau 13 à cellules fusionnées (« 0.61 » devient « 0.6 | 1 »).",
-    "en": "The only one that reads image tables and equations (OCR) and finds nearly all headings. But 20 times slower than Converto, and it corrupted merged-cell table 13 (\"0.61\" became \"0.6 | 1\")."
-   }
-  },
-  {
-   "id": "docling",
-   "name": "Docling 2.149",
-   "where": "python",
-   "license": "MIT",
-   "engine": {
-    "fr": "modèles de mise en page et TableFormer, OCR",
-    "en": "layout and TableFormer models, OCR"
-   },
-   "why": {
-    "fr": "Non mesuré : ses modèles se téléchargent depuis Hugging Face, bloqué dans l'environnement de test. Le script du banc d'essai le lance sur un poste (banc/run_tool.py docling).",
-    "en": "Not measured: its models download from Hugging Face, which was blocked in the test environment. The test script runs it on a computer (banc/run_tool.py docling)."
+    "fr": "Lit les 3 équations en image avec leur forme ; presque tous les titres. Mais il a faussé le tableau 13 à cellules fusionnées (« 0.61 » devient « 0.6 | 1 ») et lit les tableaux en image moins bien que MarkDownO et Docling.",
+    "en": "Reads the 3 image equations with their layout; nearly all headings. But it corrupted merged-cell table 13 (\"0.61\" became \"0.6 | 1\") and reads image tables less well than MarkDownO and Docling."
    }
   },
   {
    "id": "marker",
-   "name": "Marker 2.1",
+   "name": "Marker",
    "where": "python",
-   "license": "Apache-2.0",
+   "license": "GPL-3.0 (1.10), Apache-2.0 (2.1)",
    "engine": {
     "fr": "modèles Surya (mise en page, OCR, tableaux, équations)",
     "en": "Surya models (layout, OCR, tables, equations)"
    },
    "why": {
-    "fr": "Non mesuré, même raison que Docling (modèles sur Hugging Face). Lourd sans carte graphique.",
-    "en": "Not measured, same reason as Docling (models on Hugging Face). Heavy without a GPU."
+    "fr": "Essayé sur un portable sans carte graphique, sans résultat : Marker 2.1 exige le serveur llama.cpp (binaire non installé) ; Marker 1.10 n'avait pas fini les 32 premières pages après 45 min (reconnaissance du texte estimée à plus de 3 h). Inutilisable sans carte graphique.",
+    "en": "Tried on a laptop without a GPU, no result: Marker 2.1 needs the llama.cpp server (binary not installed); Marker 1.10 had not finished the first 32 pages after 45 min (text recognition estimated at over 3 h). Unusable without a GPU."
+   }
+  },
+  {
+   "id": "parsade",
+   "name": "Parsade (Granite-Docling 258M)",
+   "where": "browser",
+   "license": "Apache-2.0 (modèle)",
+   "engine": {
+    "fr": "modèle vision-langage dans le navigateur (WebGPU)",
+    "en": "vision-language model in the browser (WebGPU)"
+   },
+   "why": {
+    "fr": "Service en ligne non lancé (téléversement dans son interface, WebGPU). Son modèle, Granite-Docling 258M, essayé via Docling sur CPU : 7 pages à tableaux non terminées en 33 min.",
+    "en": "Online service not run (upload in its interface, WebGPU). Its model, Granite-Docling 258M, tried through Docling on CPU: 7 table pages not finished in 33 min."
    }
   }
  ],
@@ -222,13 +250,13 @@
   "converto": {
    "hif18046-extrait": {
     "pages": 32,
-    "seconds": 1.51,
+    "seconds": 1.02,
     "words": 12585,
     "text_recall": 0.996,
-    "order": 0.991,
+    "order": 0.993,
     "headings_ok": 25,
     "headings_n": 30,
-    "tables_ok": 12,
+    "tables_ok": 17,
     "tables_n": 17,
     "present_ok": 17,
     "present_n": 17,
@@ -259,13 +287,13 @@
      },
      {
       "id": "Table 60 (p. 512, en-tête sur 2 lignes)",
-      "ok": 0,
+      "ok": 3,
       "present": 3,
       "n": 3
      },
      {
       "id": "Table 62 (p. 512)",
-      "ok": 0,
+      "ok": 2,
       "present": 2,
       "n": 2
      }
@@ -278,13 +306,13 @@
     "figures_n": 11,
     "rag_ok": 4,
     "rag_n": 7,
-    "tokens": 22156,
+    "tokens": 22622,
     "full_seconds": 21.12,
     "full_pages": 709
    },
    "if12027-extrait": {
     "pages": 28,
-    "seconds": 1.09,
+    "seconds": 1.26,
     "words": 9294,
     "text_recall": 0.998,
     "order": 0.995,
@@ -334,8 +362,244 @@
     "figures_n": 10,
     "rag_ok": 3,
     "rag_n": 8,
-    "tokens": 14808,
+    "tokens": 13395,
     "full_seconds": 6.64,
+    "full_pages": 291
+   }
+  },
+  "docling": {
+   "hif18046-extrait": {
+    "pages": 32,
+    "seconds": 358.58,
+    "words": 12585,
+    "text_recall": 0.985,
+    "order": 0.973,
+    "headings_ok": 30,
+    "headings_n": 30,
+    "tables_ok": 15,
+    "tables_n": 17,
+    "present_ok": 17,
+    "present_n": 17,
+    "tables_detail": [
+     {
+      "id": "Table 1 (p. 59, vectoriel)",
+      "ok": 4,
+      "present": 4,
+      "n": 4
+     },
+     {
+      "id": "Table 9 (p. 270, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 13 (p. 274, cellules fusionnées)",
+      "ok": 2,
+      "present": 2,
+      "n": 2
+     },
+     {
+      "id": "Table 28 (p. 353, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 60 (p. 512, en-tête sur 2 lignes)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 62 (p. 512)",
+      "ok": 0,
+      "present": 2,
+      "n": 2
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 3,
+    "images": 9,
+    "captions_ok": 11,
+    "captions_n": 11,
+    "figures_n": 11,
+    "rag_ok": 4,
+    "rag_n": 7,
+    "tokens": 20683
+   },
+   "if12027-extrait": {
+    "pages": 28,
+    "seconds": 176.39,
+    "words": 9294,
+    "text_recall": 0.994,
+    "order": 0.992,
+    "headings_ok": 28,
+    "headings_n": 28,
+    "tables_ok": 15,
+    "tables_n": 16,
+    "present_ok": 13,
+    "present_n": 16,
+    "tables_detail": [
+     {
+      "id": "Table 4-1 (p. 60, IMAGE)",
+      "ok": 2,
+      "present": 2,
+      "n": 3
+     },
+     {
+      "id": "Table 5-1 (p. 128, IMAGE + croquis)",
+      "ok": 2,
+      "present": 2,
+      "n": 2
+     },
+     {
+      "id": "Table 6-1 (p. 134, IMAGE)",
+      "ok": 3,
+      "present": 1,
+      "n": 3
+     },
+     {
+      "id": "Table 11-3 (p. 241, IMAGE)",
+      "ok": 5,
+      "present": 5,
+      "n": 5
+     },
+     {
+      "id": "Table 11-4 (p. 259, IMAGE)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 0,
+    "images": 12,
+    "captions_ok": 10,
+    "captions_n": 10,
+    "figures_n": 10,
+    "rag_ok": 6,
+    "rag_n": 8,
+    "tokens": 13998
+   }
+  },
+  "markdowno": {
+   "hif18046-extrait": {
+    "pages": 32,
+    "seconds": 26.79,
+    "words": 12585,
+    "text_recall": 0.997,
+    "order": 0.993,
+    "headings_ok": 25,
+    "headings_n": 30,
+    "tables_ok": 17,
+    "tables_n": 17,
+    "present_ok": 17,
+    "present_n": 17,
+    "tables_detail": [
+     {
+      "id": "Table 1 (p. 59, vectoriel)",
+      "ok": 4,
+      "present": 4,
+      "n": 4
+     },
+     {
+      "id": "Table 9 (p. 270, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 13 (p. 274, cellules fusionnées)",
+      "ok": 2,
+      "present": 2,
+      "n": 2
+     },
+     {
+      "id": "Table 28 (p. 353, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 60 (p. 512, en-tête sur 2 lignes)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 62 (p. 512)",
+      "ok": 2,
+      "present": 2,
+      "n": 2
+     }
+    ],
+    "equations_ok": 3,
+    "equations_n": 3,
+    "images": 0,
+    "captions_ok": 11,
+    "captions_n": 11,
+    "figures_n": 11,
+    "rag_ok": 4,
+    "rag_n": 7,
+    "tokens": 22980,
+    "full_seconds": 1249.47,
+    "full_pages": 709
+   },
+   "if12027-extrait": {
+    "pages": 28,
+    "seconds": 64.52,
+    "words": 9294,
+    "text_recall": 0.998,
+    "order": 0.995,
+    "headings_ok": 28,
+    "headings_n": 28,
+    "tables_ok": 14,
+    "tables_n": 16,
+    "present_ok": 12,
+    "present_n": 16,
+    "tables_detail": [
+     {
+      "id": "Table 4-1 (p. 60, IMAGE)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 5-1 (p. 128, IMAGE + croquis)",
+      "ok": 0,
+      "present": 0,
+      "n": 2
+     },
+     {
+      "id": "Table 6-1 (p. 134, IMAGE)",
+      "ok": 3,
+      "present": 1,
+      "n": 3
+     },
+     {
+      "id": "Table 11-3 (p. 241, IMAGE)",
+      "ok": 5,
+      "present": 5,
+      "n": 5
+     },
+     {
+      "id": "Table 11-4 (p. 259, IMAGE)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 0,
+    "images": 0,
+    "captions_ok": 10,
+    "captions_n": 10,
+    "figures_n": 10,
+    "rag_ok": 6,
+    "rag_n": 8,
+    "tokens": 15131,
+    "full_seconds": 406,
     "full_pages": 291
    }
   },
@@ -398,7 +662,7 @@
     "figures_n": 11,
     "rag_ok": 6,
     "rag_n": 7,
-    "tokens": 22721,
+    "tokens": 22622,
     "full_seconds": 43.88,
     "full_pages": 709
    },
@@ -454,7 +718,7 @@
     "figures_n": 10,
     "rag_ok": 3,
     "rag_n": 8,
-    "tokens": 14819,
+    "tokens": 13862,
     "full_seconds": 27.08,
     "full_pages": 291
    }
@@ -518,7 +782,7 @@
     "figures_n": 11,
     "rag_ok": 5,
     "rag_n": 7,
-    "tokens": 20446,
+    "tokens": 19710,
     "full_seconds": 28.14,
     "full_pages": 709
    },
@@ -574,7 +838,7 @@
     "figures_n": 10,
     "rag_ok": 3,
     "rag_n": 8,
-    "tokens": 14614,
+    "tokens": 13044,
     "full_seconds": 20.45,
     "full_pages": 291
    }
@@ -638,7 +902,7 @@
     "figures_n": 11,
     "rag_ok": 5,
     "rag_n": 7,
-    "tokens": 22267,
+    "tokens": 23018,
     "full_seconds": 702.25,
     "full_pages": 709
    },
@@ -694,7 +958,7 @@
     "figures_n": 10,
     "rag_ok": 6,
     "rag_n": 8,
-    "tokens": 16918,
+    "tokens": 16480,
     "full_seconds": 221.1,
     "full_pages": 291
    }
@@ -758,7 +1022,7 @@
     "figures_n": 11,
     "rag_ok": 5,
     "rag_n": 7,
-    "tokens": 21509,
+    "tokens": 23112,
     "full_seconds": 99.2,
     "full_pages": 709
    },
@@ -814,7 +1078,7 @@
     "figures_n": 10,
     "rag_ok": 3,
     "rag_n": 8,
-    "tokens": 14564,
+    "tokens": 13225,
     "full_seconds": 35.23,
     "full_pages": 291
    }
@@ -878,7 +1142,7 @@
     "figures_n": 11,
     "rag_ok": 4,
     "rag_n": 7,
-    "tokens": 21221
+    "tokens": 22362
    },
    "if12027-extrait": {
     "pages": 28,
@@ -932,7 +1196,7 @@
     "figures_n": 10,
     "rag_ok": 3,
     "rag_n": 8,
-    "tokens": 14213
+    "tokens": 12674
    }
   }
  }

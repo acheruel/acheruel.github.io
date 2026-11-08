@@ -42,7 +42,7 @@ const TXT = {
       "<b>Vérité terrain</b> : 11 tableaux, 33 lignes de cellules relevées à l'œil sur les pages rendues ; 3 équations ; 15 questions de fait. Les titres attendus sont ceux du sommaire du PDF.",
       "<b>Tableaux</b> : une ligne compte si toutes ses valeurs sont dans <i>une même</i> ligne de tableau de la sortie (Markdown ou HTML). « Valeurs » : présentes n'importe où, même en vrac.",
       "<b>Questions RAG</b> : la sortie est coupée en morceaux d'environ 1 200 caractères, comme dans un assistant qui cherche dans un document ; la réponse doit être dans un des 3 morceaux les mieux classés (BM25) pour la question.",
-      "<b>Vitesse</b> : un seul fil, 4 cœurs, sans carte graphique. Les scripts du banc d'essai sont dans <a href=\"https://github.com/acheruel/acheruel.github.io/tree/main/outils/markdowno/banc\" target=\"_blank\" rel=\"noopener\">outils/markdowno/banc</a>, pour rejouer les tests ou en ajouter un outil."
+      "<b>Vitesse</b> : sans carte graphique. MarkDownO, Converto 1.1 et Docling mesurés sur un portable (Intel i5-1335U, 16 Go), les autres sur une machine à 4 cœurs ; Converto prend le même temps sur les deux. Marker et Granite-Docling (Parsade) n'ont pas fini sur ce portable. Les scripts du banc d'essai sont dans <a href=\"https://github.com/acheruel/acheruel.github.io/tree/main/outils/markdowno/banc\" target=\"_blank\" rel=\"noopener\">outils/markdowno/banc</a>, pour rejouer les tests ou en ajouter un outil."
     ]
   },
   en: {
@@ -78,7 +78,7 @@ const TXT = {
       "<b>Ground truth</b>: 11 tables, 33 cell rows read by eye on the rendered pages; 3 equations; 15 fact questions. Expected headings are the PDF's table of contents.",
       "<b>Tables</b>: a row counts if all its values are in <i>one</i> table row of the output (Markdown or HTML). \"Values\": present anywhere, even jumbled.",
       "<b>RAG questions</b>: the output is cut into chunks of about 1,200 characters, as an assistant searching a document does; the answer must be in one of the 3 best-ranked chunks (BM25) for the question.",
-      "<b>Speed</b>: one thread, 4 cores, no GPU. The test scripts are in <a href=\"https://github.com/acheruel/acheruel.github.io/tree/main/outils/markdowno/banc\" target=\"_blank\" rel=\"noopener\">outils/markdowno/banc</a>, to replay the tests or add a tool."
+      "<b>Speed</b>: no GPU. MarkDownO, Converto 1.1 and Docling measured on a laptop (Intel i5-1335U, 16 GB), the others on a 4-core machine; Converto takes the same time on both. Marker and Granite-Docling (Parsade) did not finish on this laptop. The test scripts are in <a href=\"https://github.com/acheruel/acheruel.github.io/tree/main/outils/markdowno/banc\" target=\"_blank\" rel=\"noopener\">outils/markdowno/banc</a>, to replay the tests or add a tool."
     ]
   }
 };

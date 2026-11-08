@@ -785,67 +785,57 @@ Of the effects studied, major-axis moment, shear and deflection showed the best 
 **Table 60. 2D/3D ratios for maximum positive major-axis bending moment.**
 
 <table>
-<tr><th colspan="3">G1</th><th colspan="3">G2</th><th colspan="3">G3</th><th colspan="3">G4</th></tr>
-<tr><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td></tr>
-<tr><td>1.00</td><td>0.95</td><td>0.98</td><td>1.00</td><td>1.02</td><td>1.00</td><td>1.00</td><td>1.01</td><td>1.01</td><td>0.99</td><td>1.00</td><td>1.01</td></tr>
-<tr><td>1.12</td><td>0.95</td><td>1.03</td><td>1.00</td><td>0.96</td><td>0.99</td><td>0.98</td><td>0.99</td><td>0.97</td><td>0.97</td><td>1.00</td><td>0.99</td></tr>
-<tr><td>0.99</td><td>1.03</td><td>1.01</td><td>1.04</td><td>1.05</td><td>1.01</td><td>1.00</td><td>1.02</td><td>1.03</td><td>0.99</td><td>1.00</td><td>1.05</td></tr>
+<tr><th></th><th colspan="3">G1</th><th colspan="3">G2</th><th colspan="3">G3</th><th colspan="3">G4</th></tr>
+<tr><td></td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td></tr>
+<tr><td>DC1</td><td>1.00</td><td>0.95</td><td>0.98</td><td>1.00</td><td>1.02</td><td>1.00</td><td>1.00</td><td>1.01</td><td>1.01</td><td>0.99</td><td>1.00</td><td>1.01</td></tr>
+<tr><td>DC2+DW</td><td>1.12</td><td>0.95</td><td>1.03</td><td>1.00</td><td>0.96</td><td>0.99</td><td>0.98</td><td>0.99</td><td>0.97</td><td>0.97</td><td>1.00</td><td>0.99</td></tr>
+<tr><td>LL</td><td>0.99</td><td>1.03</td><td>1.01</td><td>1.04</td><td>1.05</td><td>1.01</td><td>1.00</td><td>1.02</td><td>1.03</td><td>0.99</td><td>1.00</td><td>1.05</td></tr>
 </table>
-
-**DC1 DC2+DW LL**
 
 **Table 61. 2D/3D ratio for maximum negative major-axis bending moment.**
 
 <table>
-<tr><th colspan="3">G1</th><th colspan="3">G2</th><th colspan="3">G3</th><th colspan="3">G4</th></tr>
-<tr><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td></tr>
-<tr><td>1.11</td><td>1.06</td><td>1.06</td><td>1.03</td><td>1.02</td><td>1.02</td><td>1.10</td><td>1.10</td><td>1.05</td><td>1.06</td><td>1.06</td><td>1.06</td></tr>
-<tr><td>1.04</td><td>0.96</td><td>0.96</td><td>0.99</td><td>0.93</td><td>0.93</td><td>1.05</td><td>1.05</td><td>1.05</td><td>1.07</td><td>1.07</td><td>1.10</td></tr>
-<tr><td>0.96</td><td>1.03</td><td>1.03</td><td>0.96</td><td>0.97</td><td>0.97</td><td>0.95</td><td>0.98</td><td>0.98</td><td>0.90</td><td>0.90</td><td>1.08</td></tr>
+<tr><th></th><th colspan="3">G1</th><th colspan="3">G2</th><th colspan="3">G3</th><th colspan="3">G4</th></tr>
+<tr><td></td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td></tr>
+<tr><td>DC1</td><td>1.11</td><td>1.06</td><td>1.06</td><td>1.03</td><td>1.02</td><td>1.02</td><td>1.10</td><td>1.10</td><td>1.05</td><td>1.06</td><td>1.06</td><td>1.06</td></tr>
+<tr><td>DC2+DW</td><td>1.04</td><td>0.96</td><td>0.96</td><td>0.99</td><td>0.93</td><td>0.93</td><td>1.05</td><td>1.05</td><td>1.05</td><td>1.07</td><td>1.07</td><td>1.10</td></tr>
+<tr><td>LL</td><td>0.96</td><td>1.03</td><td>1.03</td><td>0.96</td><td>0.97</td><td>0.97</td><td>0.95</td><td>0.98</td><td>0.98</td><td>0.90</td><td>0.90</td><td>1.08</td></tr>
 </table>
-
-**DC1 DC2+DW LL**
 
 Table 62 shows the ratio of the 2D model to the 3D model for shear in each span. The results for shear are similar to those for major-axis bending moment, with most results from the two models being within 10 percent, but with a few cases in the 20-25 percent range. If the 2D model were used for design, the design live loads would, in most cases, be conservative. The exceptions would be Span 3 for Girder G1, Span 2 for Girder G3, and Span 1 for Girder G4.
 
 **Table 62. 2D/3D ratios for shear.**
 
 <table>
-<tr><th colspan="3">G1</th><th colspan="3">G2</th><th colspan="3">G3</th><th colspan="3">G4</th></tr>
-<tr><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td></tr>
-<tr><td>1.00</td><td>1.02</td><td>1.02</td><td>0.97</td><td>0.97</td><td>0.97</td><td>1.05</td><td>1.05</td><td>1.05</td><td>1.01</td><td>1.01</td><td>1.02</td></tr>
-<tr><td>0.98</td><td>0.84</td><td>0.84</td><td>0.97</td><td>0.97</td><td>0.96</td><td>0.98</td><td>1.02</td><td>1.09</td><td>0.97</td><td>0.93</td><td>1.00</td></tr>
-<tr><td>1.19</td><td>1.11</td><td>0.95</td><td>1.21</td><td>1.01</td><td>1.00</td><td>1.23</td><td>0.98</td><td>1.14</td><td>0.80</td><td>1.10</td><td>1.10</td></tr>
+<tr><th></th><th colspan="3">G1</th><th colspan="3">G2</th><th colspan="3">G3</th><th colspan="3">G4</th></tr>
+<tr><td></td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td></tr>
+<tr><td>DC1</td><td>1.00</td><td>1.02</td><td>1.02</td><td>0.97</td><td>0.97</td><td>0.97</td><td>1.05</td><td>1.05</td><td>1.05</td><td>1.01</td><td>1.01</td><td>1.02</td></tr>
+<tr><td>DC2+DW</td><td>0.98</td><td>0.84</td><td>0.84</td><td>0.97</td><td>0.97</td><td>0.96</td><td>0.98</td><td>1.02</td><td>1.09</td><td>0.97</td><td>0.93</td><td>1.00</td></tr>
+<tr><td>LL</td><td>1.19</td><td>1.11</td><td>0.95</td><td>1.21</td><td>1.01</td><td>1.00</td><td>1.23</td><td>0.98</td><td>1.14</td><td>0.80</td><td>1.10</td><td>1.10</td></tr>
 </table>
-
-# DC1 DC2+DW LL
 
 From Table 63 it can be seen that the vertical system of the two-dimensional model is effectively slightly more flexible than the three-dimensional case. For non-composite dead load the results are mostly within 5 percent, however, as composite action develops the variation in deflection increases. Ideally the modifications made to the two-dimensional cross-frame elements would perfectly capture the stiffness of the three-dimensional system, but they are approximate methods and do a satisfactory job for a complex case.
 
 **Table 63. 2D/3D ratios for deflection.**
 
 <table>
-<tr><th colspan="3">G1</th><th colspan="3">G2</th><th colspan="3">G3</th><th colspan="3">G4</th></tr>
-<tr><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td></tr>
-<tr><td>1.06</td><td>1.00</td><td>1.02</td><td>1.03</td><td>1.03</td><td>1.04</td><td>1.02</td><td>1.02</td><td>1.05</td><td>1.01</td><td>1.01</td><td>1.05</td></tr>
-<tr><td>1.19</td><td>1.02</td><td>1.11</td><td>1.09</td><td>1.06</td><td>1.10</td><td>1.06</td><td>1.12</td><td>1.05</td><td>1.05</td><td>1.15</td><td>0.97</td></tr>
-<tr><td>1.03</td><td>1.10</td><td>1.09</td><td>1.07</td><td>1.09</td><td>1.08</td><td>1.04</td><td>1.08</td><td>1.10</td><td>1.02</td><td>1.08</td><td>1.14</td></tr>
+<tr><th></th><th colspan="3">G1</th><th colspan="3">G2</th><th colspan="3">G3</th><th colspan="3">G4</th></tr>
+<tr><td></td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td></tr>
+<tr><td>DC1</td><td>1.06</td><td>1.00</td><td>1.02</td><td>1.03</td><td>1.03</td><td>1.04</td><td>1.02</td><td>1.02</td><td>1.05</td><td>1.01</td><td>1.01</td><td>1.05</td></tr>
+<tr><td>DC2+DW</td><td>1.19</td><td>1.02</td><td>1.11</td><td>1.09</td><td>1.06</td><td>1.10</td><td>1.06</td><td>1.12</td><td>1.05</td><td>1.05</td><td>1.15</td><td>0.97</td></tr>
+<tr><td>LL</td><td>1.03</td><td>1.10</td><td>1.09</td><td>1.07</td><td>1.09</td><td>1.08</td><td>1.04</td><td>1.08</td><td>1.10</td><td>1.02</td><td>1.08</td><td>1.14</td></tr>
 </table>
-
-# DC1 DC2+DW LL
 
 In general lateral behavior is not well predicted in two-dimensional models and agreement with actual behavior varies widely between bridges. The approximate equation which appears in AASHTO and is given by the V-Load method provides variable accuracy, which typically diminishes further when there are skewed supports, variable stiffness between girders, and away from cross-frame locations.
 
 **Table 64. 2D/3D ratios for flange lateral bending moment.**
 
 <table>
-<tr><th colspan="3">G1</th><th colspan="3">G2</th><th colspan="3">G3</th><th colspan="3">G4</th></tr>
-<tr><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td></tr>
-<tr><td>0.33</td><td>0.49</td><td>3.59</td><td>3.40</td><td>1.13</td><td>2.76</td><td>6.85</td><td>2.56</td><td>2.52</td><td>3.60</td><td>3.02</td><td>2.87</td></tr>
-<tr><td>1.71</td><td>1.12</td><td>5.67</td><td>0.25</td><td>0.54</td><td>1.10</td><td>2.78</td><td>0.78</td><td>2.00</td><td>1.66</td><td>1.75</td><td>6.21</td></tr>
-<tr><td>10.46</td><td>5.13</td><td>4.85</td><td>4.36</td><td>1.54</td><td>2.59</td><td>4.78</td><td>5.87</td><td>4.73</td><td>2.69</td><td>5.29</td><td>6.97</td></tr>
+<tr><th></th><th colspan="3">G1</th><th colspan="3">G2</th><th colspan="3">G3</th><th colspan="3">G4</th></tr>
+<tr><td></td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td><td>Span<br>1</td><td>Span<br>2</td><td>Span<br>3</td></tr>
+<tr><td>DC1</td><td>0.33</td><td>0.49</td><td>3.59</td><td>3.40</td><td>1.13</td><td>2.76</td><td>6.85</td><td>2.56</td><td>2.52</td><td>3.60</td><td>3.02</td><td>2.87</td></tr>
+<tr><td>DC2+DW</td><td>1.71</td><td>1.12</td><td>5.67</td><td>0.25</td><td>0.54</td><td>1.10</td><td>2.78</td><td>0.78</td><td>2.00</td><td>1.66</td><td>1.75</td><td>6.21</td></tr>
+<tr><td>LL</td><td>10.46</td><td>5.13</td><td>4.85</td><td>4.36</td><td>1.54</td><td>2.59</td><td>4.78</td><td>5.87</td><td>4.73</td><td>2.69</td><td>5.29</td><td>6.97</td></tr>
 </table>
-
-# DC1 DC2+DW LL
 
 The cross-frame forces compare reasonably well between the 2D and 3D models as shown in the previous section.

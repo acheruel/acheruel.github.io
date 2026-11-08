@@ -124,8 +124,20 @@ async function readTable(w, img, grid, L) {
     }
     texts.push(text);
   }
+  // Un dessin quadrillé (modèle en grille, plan, graphique) n'est pas un tableau : il faut qu'au
+  // moins 60 % des cases marquées soient du texte net (mots ou nombres, pas des bribes « += = »),
+  // et deux lignes d'au moins deux cellules de texte.
+  const real = x => {
+    if (!x || x === L.drawing) return false;
+    const tok = x.split(/\s+/);
+    // Mots, sigles d'une lettre (catégorie « C »), nombres.
+    const good = tok.filter(s => /^(\p{L}{2,}|\p{Lu})[.,:;)]?$/u.test(s.replace(/^[(“"'«]/, "")) || /^[-+±−(]?\d[\d.,/%)]*$/.test(s)).length;
+    return good / tok.length >= 0.6;
+  };
+  const nReal = texts.filter(real).length;
+  if (nReal < 4 || nReal < 0.6 * texts.filter(Boolean).length) return null;
   const t = gridTable(grid, texts);
-  if (t.rows.length < 2 || Math.max(...t.rows.map(r => r.filter(Boolean).length)) < 2) return null;
+  if (t.rows.filter(r => r.filter(real).length >= 2).length < 2) return null;
   // Position (ligne, colonne) des valeurs incertaines, pour les citer.
   const where = k => { const cl = grid.cells[k]; return { r0: cl.r0, c0: cl.c0 }; };
   return { ...t, uncertain: uncertain.map(u => ({ ...where(u.cell), value: u.value, alt: u.alt })) };

@@ -3,7 +3,7 @@ import json, re, sys, html, glob, pathlib, difflib, collections
 import pymupdf
 
 ROOT = pathlib.Path(__file__).parent
-GT = json.load(open(ROOT / "verite.json"))
+GT = json.load(open(ROOT / "verite.json", encoding="utf-8"))
 DOCS = ["hif18046-extrait", "if12027-extrait"]
 
 try:
@@ -182,7 +182,7 @@ def main():
             s["pages"] = REF_PAGES[doc]
             s["peak_rss_mb"] = meta.get("peak_rss_mb")
             out.setdefault(tool, {})[doc] = s
-    json.dump(out, open(ROOT / "resultats.json", "w"), indent=1, ensure_ascii=False)
+    json.dump(out, open(ROOT / "resultats.json", "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     hdr = f"{'outil':22} {'doc':6} {'s':>6} {'rappel':>6} {'préc':>5} {'ordre':>5} {'titres':>7} {'légend':>7} {'img':>4} {'tab strict':>10} {'tab ligne':>9} {'tab prés':>8} {'éq':>3} {'rép':>4} {'jetons':>7} rag"
     print(hdr)
     for tool, docs in out.items():

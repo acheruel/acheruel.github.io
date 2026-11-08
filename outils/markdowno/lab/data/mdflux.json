@@ -1,0 +1,168 @@
+{
+  "engine": "mdflux",
+  "date": "2026-11-08T08:44:01Z",
+  "python": "3.12.14",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "versions": {
+    "markitdown": "0.1.9",
+    "pdfminer.six": "20260107",
+    "pdfplumber": "0.11.10",
+    "pymupdf": "2.1",
+    "pymupdf4llm": "2.1",
+    "docling": "2.149.0",
+    "docling-core": "2.106.0",
+    "rapidocr": "3.10.0",
+    "onnxruntime": "1.31.1",
+    "torch": "2.10.0+cpu"
+  },
+  "threads": 4,
+  "runs": [
+    {
+      "document": "hif18046",
+      "pages": [
+        54,
+        85,
+        598,
+        660
+      ],
+      "input_sha256": "db9ac9edcd10b993345024927b7d5d37f720c707995dc26df5eb6ea1ea18ec09",
+      "status": "ok",
+      "seconds": [
+        0.3008,
+        0.3156,
+        0.3232
+      ],
+      "characters": 11434,
+      "headings": 0,
+      "table_rows": 29,
+      "image_links": 0,
+      "probes": null,
+      "stable_output": true,
+      "warm_median_s": 0.3194,
+      "output": "mdflux/hif18046/output.md",
+      "process_peak_rss_mib": 168.8,
+      "real_probes": {
+        "table93_first_row_167_33_and_146_5": false,
+        "table94_first_row_118_353_and_106_557": true
+      }
+    },
+    {
+      "document": "if12027",
+      "pages": [
+        34,
+        60,
+        128,
+        241
+      ],
+      "input_sha256": "5797bce976d1d699d3a12b6677a27af8d0dfed195b036d5765fd761a54ed1df6",
+      "status": "ok",
+      "seconds": [
+        0.3537,
+        0.3236,
+        0.2826
+      ],
+      "characters": 4320,
+      "headings": 4,
+      "table_rows": 0,
+      "image_links": 0,
+      "probes": null,
+      "stable_output": true,
+      "warm_median_s": 0.30310000000000004,
+      "output": "mdflux/if12027/output.md",
+      "process_peak_rss_mib": 169.5,
+      "real_probes": {
+        "table11_3_rd_deck_55_9_69_0": false,
+        "table11_3_rib_max_34_3_48_0": false,
+        "table11_3_deck_splice_40_0_69_0": false,
+        "table11_3_rf_fb_28_3_69_0": false
+      }
+    },
+    {
+      "document": "native",
+      "pages": [
+        1
+      ],
+      "input_sha256": "066f759afc4072ebbf4977bf2b9695c241398d4df9b33e088371db4d0b07380a",
+      "status": "ok",
+      "seconds": [
+        0.019,
+        0.0184,
+        0.0185
+      ],
+      "characters": 447,
+      "headings": 0,
+      "table_rows": 4,
+      "image_links": 0,
+      "probes": {
+        "values_present": true,
+        "beam_a_row": true,
+        "beam_b_row": true,
+        "column_order": false,
+        "figure_labels": true
+      },
+      "stable_output": true,
+      "warm_median_s": 0.01845,
+      "output": "mdflux/native/output.md",
+      "process_peak_rss_mib": 169.7,
+      "real_probes": null
+    },
+    {
+      "document": "scan",
+      "pages": [
+        1
+      ],
+      "input_sha256": "1a30158692aabd68b3db334901f06fd921dcb2ef953ab73aa940da3d9356aac3",
+      "status": "ok",
+      "seconds": [
+        3.1772,
+        2.482,
+        2.6872
+      ],
+      "characters": 403,
+      "headings": 3,
+      "table_rows": 0,
+      "image_links": 0,
+      "probes": {
+        "values_present": true,
+        "beam_a_row": false,
+        "beam_b_row": false,
+        "column_order": false,
+        "figure_labels": true
+      },
+      "stable_output": true,
+      "warm_median_s": 2.5846,
+      "output": "mdflux/scan/output.md",
+      "process_peak_rss_mib": 729.2,
+      "real_probes": null
+    },
+    {
+      "document": "mixed",
+      "pages": [
+        1
+      ],
+      "input_sha256": "bf3991b45fadefafcc5871d8ebae1e465f1770376c35548eca8901ae2b2bfc73",
+      "status": "ok",
+      "seconds": [
+        0.0123,
+        0.0115,
+        0.0119
+      ],
+      "characters": 162,
+      "headings": 0,
+      "table_rows": 0,
+      "image_links": 0,
+      "probes": {
+        "values_present": false,
+        "beam_a_row": false,
+        "beam_b_row": false
+      },
+      "stable_output": true,
+      "warm_median_s": 0.0117,
+      "output": "mdflux/mixed/output.md",
+      "process_peak_rss_mib": 729.2,
+      "real_probes": null
+    }
+  ],
+  "timing": "Conversion + Markdown/assets export; excludes imports/setup, network install and browser UI. First call may include model download. warm_median_s uses repetitions 2..N. RSS is process lifetime high-water mark, not incremental per-file memory.",
+  "setup_s": 0.5423656730000062
+}

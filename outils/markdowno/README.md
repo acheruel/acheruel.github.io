@@ -16,8 +16,12 @@ Jupyter (.ipynb), texte et archives ZIP (chaque fichier de l'archive est convert
 Non pris en charge dans le navigateur : audio (transcription), description d'images (ExifTool ou IA),
 pages YouTube ou Wikipédia par adresse.
 
-Pour un PDF, [PDFo Converto](../pdfo-converto/) donne en général un meilleur Markdown (titres, tableaux,
-découpage par chapitres) ; MarkDownO le signale.
+Pour un PDF riche en tableaux et figures, [MarkDownO Lab 0.3](lab/) permet de comparer cinq moteurs
+sur des extraits FHWA et des cas contrôlés. [Protocole](benchmark/README.md),
+[rapport](benchmark/REPORT.md), mesures et sorties dans `lab/data/`.
+Le lab accepte aussi des PDF locaux pour comparer PDFo et MarkItDown dans le navigateur.
+Docling, MDFlux et PyMuPDF sont exécutés via les scripts Python ; leurs résultats peuvent être importés.
+Les convertisseurs existants sont conservés pendant cette évaluation.
 
 ## Fonctionnement
 

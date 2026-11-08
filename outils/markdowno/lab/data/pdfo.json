@@ -1,0 +1,152 @@
+{
+  "engine": "pdfo",
+  "version": "240dd23 (extract.js / writers.js), pdf.js 6.4.299",
+  "runs": [
+    {
+      "document": "hif18046",
+      "pages": [
+        54,
+        85,
+        598,
+        660
+      ],
+      "input_sha256": "db9ac9edcd10b993345024927b7d5d37f720c707995dc26df5eb6ea1ea18ec09",
+      "seconds": [
+        0.6745,
+        0.5311,
+        0.5098
+      ],
+      "status": "ok",
+      "characters": 10740,
+      "headings": 2,
+      "table_rows": 30,
+      "image_links": 6,
+      "warm_median_s": 0.5204500000000001,
+      "stable_output": true,
+      "probes": null,
+      "output": "pdfo/hif18046/output.md",
+      "real_probes": {
+        "table93_first_row_167_33_and_146_5": true,
+        "table94_first_row_118_353_and_106_557": true
+      }
+    },
+    {
+      "document": "if12027",
+      "pages": [
+        34,
+        60,
+        128,
+        241
+      ],
+      "input_sha256": "5797bce976d1d699d3a12b6677a27af8d0dfed195b036d5765fd761a54ed1df6",
+      "seconds": [
+        0.686,
+        0.6291,
+        0.5912
+      ],
+      "status": "ok",
+      "characters": 4982,
+      "headings": 7,
+      "table_rows": 0,
+      "image_links": 5,
+      "warm_median_s": 0.61015,
+      "stable_output": true,
+      "probes": null,
+      "output": "pdfo/if12027/output.md",
+      "real_probes": {
+        "table11_3_rd_deck_55_9_69_0": false,
+        "table11_3_rib_max_34_3_48_0": false,
+        "table11_3_deck_splice_40_0_69_0": false,
+        "table11_3_rf_fb_28_3_69_0": false
+      }
+    },
+    {
+      "document": "native",
+      "pages": [
+        1
+      ],
+      "input_sha256": "066f759afc4072ebbf4977bf2b9695c241398d4df9b33e088371db4d0b07380a",
+      "seconds": [
+        0.1195,
+        0.1122,
+        0.1254
+      ],
+      "status": "ok",
+      "characters": 480,
+      "headings": 1,
+      "table_rows": 4,
+      "image_links": 1,
+      "warm_median_s": 0.1188,
+      "stable_output": true,
+      "probes": {
+        "values_present": true,
+        "beam_a_row": true,
+        "beam_b_row": true,
+        "column_order": false,
+        "figure_labels": true
+      },
+      "output": "pdfo/native/output.md",
+      "real_probes": null
+    },
+    {
+      "document": "scan",
+      "pages": [
+        1
+      ],
+      "input_sha256": "1a30158692aabd68b3db334901f06fd921dcb2ef953ab73aa940da3d9356aac3",
+      "seconds": [
+        0.191,
+        0.1678,
+        0.1734
+      ],
+      "status": "ok",
+      "characters": 161,
+      "headings": 0,
+      "table_rows": 0,
+      "image_links": 1,
+      "warm_median_s": 0.1706,
+      "stable_output": true,
+      "probes": {
+        "values_present": false,
+        "beam_a_row": false,
+        "beam_b_row": false,
+        "column_order": false,
+        "figure_labels": false
+      },
+      "output": "pdfo/scan/output.md",
+      "real_probes": null
+    },
+    {
+      "document": "mixed",
+      "pages": [
+        1
+      ],
+      "input_sha256": "bf3991b45fadefafcc5871d8ebae1e465f1770376c35548eca8901ae2b2bfc73",
+      "seconds": [
+        0.1184,
+        0.1358,
+        0.1176
+      ],
+      "status": "ok",
+      "characters": 282,
+      "headings": 0,
+      "table_rows": 0,
+      "image_links": 1,
+      "warm_median_s": 0.1267,
+      "stable_output": true,
+      "probes": {
+        "values_present": false,
+        "beam_a_row": false,
+        "beam_b_row": false
+      },
+      "output": "pdfo/mixed/output.md",
+      "real_probes": null
+    }
+  ],
+  "timing": "Browser: PDF loading + extraction + Markdown + image crops. No Python imports; not directly equivalent to native Python execution.",
+  "browser": "156.0.8078.79",
+  "webgpu": {
+    "api": true,
+    "adapter": false
+  }
+}

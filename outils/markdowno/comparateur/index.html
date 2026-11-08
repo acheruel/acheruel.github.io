@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr" data-root="../../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Comparateur PDF vers Markdown · Anthony Chéruel</title>
+  <meta name="description" content="Prototype : comparez les outils de conversion PDF vers Markdown (MarkDownO, MarkItDown, Docling, Marker, pymupdf4llm, OpenDataLoader…) sur de vrais manuels techniques : résultats du banc d'essai et sorties côte à côte avec la page du PDF.">
+  <meta property="og:title" content="Comparateur PDF vers Markdown">
+  <meta property="og:url" content="https://acheruel.github.io/outils/markdowno/comparateur/">
+  <link rel="icon" href="../../../assets/logos/markdowno.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../assets/css/site.css">
+  <link rel="stylesheet" href="../../commun/outil.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="../../../assets/js/content.js" defer></script>
+  <script src="../../../assets/js/site.js" defer></script>
+  <script src="app.js" type="module"></script>
+</head>
+<body data-page="markdowno-comparateur" data-section="outils">
+  <a class="skip" href="#main" data-i18n="skip">Aller au contenu</a>
+
+  <header class="topbar">
+    <a class="brand" href="../../../">Anthony Chéruel</a>
+    <div class="language" role="group" aria-label="Langue / Language">
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" data-lang="fr" aria-pressed="true" class="selected">FR</button>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Sections" data-i18n-aria="navLabel">
+    <div class="tabs-inner" id="tabs"></div>
+  </nav>
+
+  <main id="main" class="page ot-page cmp-page">
+    <nav class="crumbs" aria-label="Fil d'Ariane" data-en-label="Breadcrumb">
+      <a href="../../../" data-en="Tools">Outils</a>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <a href="../">MarkDownO</a>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span aria-current="page" data-en="Comparator">Comparateur</span>
+    </nav>
+
+    <header class="ot-head">
+      <img src="../../../assets/logos/markdowno.svg" alt="" width="48" height="48">
+      <div>
+        <h1><span data-en="PDF to Markdown comparator">Comparateur PDF vers Markdown</span> <small class="ot-version" data-en="prototype">prototype</small></h1>
+        <p data-en="Which tool turns a technical manual full of tables and figures into Markdown an AI can really use? Test results on two FHWA bridge manuals, then the outputs side by side with the PDF page. You can also drop your own PDF.">Quel outil transforme le mieux un manuel technique plein de tableaux et de figures en Markdown vraiment utilisable par une IA ? Résultats d'un banc d'essai sur deux manuels de ponts de la FHWA, puis les sorties côte à côte avec la page du PDF. Vous pouvez aussi déposer votre propre PDF.</p>
+      </div>
+    </header>
+
+    <!-- 1. Résultats -->
+    <section class="card cmp-results" aria-labelledby="res-title">
+      <header class="cmp-sec-head">
+        <div>
+          <h2 id="res-title" data-en="Test results">Résultats du banc d'essai</h2>
+          <p id="res-sub"></p>
+        </div>
+        <div class="seg" role="radiogroup" id="res-doc" aria-label="Document" data-en-label="Document"></div>
+      </header>
+      <div class="cmp-table-wrap">
+        <table class="cmp-table" id="res-table"></table>
+      </div>
+      <details class="cmp-method">
+        <summary data-en="How the tests work">Comment sont faits les tests</summary>
+        <div id="method"></div>
+      </details>
+    </section>
+
+    <!-- 2. Côte à côte -->
+    <section class="card cmp-side" aria-labelledby="side-title">
+      <header class="cmp-sec-head">
+        <div>
+          <h2 id="side-title" data-en="Side by side">Côte à côte</h2>
+          <p data-en="Pick a page: each output scrolls to the same passage. Drop a PDF to compare the engines that run in your browser.">Choisissez une page : chaque sortie se place sur le même passage. Déposez un PDF pour comparer les moteurs qui tournent dans votre navigateur.</p>
+        </div>
+      </header>
+
+      <div class="cmp-controls">
+        <label class="field">
+          <span data-en="Document">Document</span>
+          <select id="doc"></select>
+        </label>
+        <div class="field">
+          <span data-en="Page">Page</span>
+          <div class="cmp-pager">
+            <button type="button" class="icon-btn" id="prev" aria-label="Page précédente" data-en-label="Previous page"><svg viewBox="0 0 16 16"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <input type="number" id="page" min="1" value="1" inputmode="numeric" aria-label="Page">
+            <span id="page-of" class="cmp-page-of"></span>
+            <button type="button" class="icon-btn" id="next" aria-label="Page suivante" data-en-label="Next page"><svg viewBox="0 0 16 16"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+        <div class="field">
+          <span data-en="Display">Affichage</span>
+          <div class="seg" role="radiogroup" id="view">
+            <button type="button" role="radio" data-value="render" class="selected" aria-checked="true" data-en="Rendered">Rendu</button>
+            <button type="button" role="radio" data-value="source" aria-checked="false" data-en="Markdown">Markdown</button>
+          </div>
+        </div>
+        <div class="cmp-own">
+          <input type="file" id="file-input" accept="application/pdf,.pdf" hidden>
+          <button type="button" class="btn" id="pick">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <span data-en="Your PDF">Votre PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="cmp-grid" id="grid">
+        <figure class="cmp-pane cmp-pdf">
+          <figcaption class="cmp-pane-head"><strong data-en="PDF page">Page du PDF</strong><span id="pdf-meta"></span></figcaption>
+          <div class="cmp-pane-body" id="pdf-body"><canvas id="pdf-canvas"></canvas></div>
+        </figure>
+        <section class="cmp-pane" data-pane="0">
+          <header class="cmp-pane-head"><select class="cmp-tool" aria-label="Outil A" data-en-label="Tool A"></select><span class="cmp-stats"></span></header>
+          <div class="cmp-pane-body"><div class="md-preview"></div></div>
+        </section>
+        <section class="cmp-pane" data-pane="1">
+          <header class="cmp-pane-head"><select class="cmp-tool" aria-label="Outil B" data-en-label="Tool B"></select><span class="cmp-stats"></span></header>
+          <div class="cmp-pane-body"><div class="md-preview"></div></div>
+        </section>
+      </div>
+    </section>
+
+    <div class="actionbar">
+      <div class="actionbar-status-wrap">
+        <p class="actionbar-status" id="status" aria-live="polite"></p>
+      </div>
+      <a class="btn" href="../" data-en="Back to MarkDownO">Retour à MarkDownO</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© <span id="year">2026</span> Anthony Chéruel</span>
+      <time id="site-date"></time>
+      <a href="https://github.com/acheruel" target="_blank" rel="noopener noreferrer">github.com/acheruel</a>
+    </div>
+  </footer>
+</body>
+</html>

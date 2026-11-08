@@ -1,16 +1,21 @@
-// MarkDownO : interface. Les fichiers sont convertis un à un par MarkItDown dans un travailleur.
+// MarkDownO : interface. Les PDF passent par le moteur PDF du site (structure de PDFo Converto et
+// OCR local des zones en image, pdf.js) ; les autres formats par MarkItDown, dans un travailleur.
 import { download, zip, safeName, fmtBytes, esc } from "../commun/pdf-outils.js";
 import { renderMarkdown } from "../commun/markdown.js";
+import { reprendre } from "../commun/relais.js";
+import { OCR_ENGINE } from "../commun/ocr.js";
+import { convertPdf } from "./pdf.js";
 
 const $ = id => document.getElementById(id);
-const LS = "markdowno:view";
+const LS = "markdowno:view", LS_PDF = "markdowno:pdf";
+const PDF_DEFAULTS = { pdfEngine: "pdfo", ocr: "auto", figures: "text", split: "one", pageMarkers: true };
 
 // Formats pris en charge par MarkItDown dans le navigateur (sans audio, image avec ExifTool ni URL).
 const FORMATS = [
+  { exts: ["pdf"], fr: "PDF", en: "PDF" },
   { exts: ["docx"], fr: "Word", en: "Word" },
   { exts: ["pptx"], fr: "PowerPoint", en: "PowerPoint" },
   { exts: ["xlsx", "xls"], fr: "Excel", en: "Excel" },
-  { exts: ["pdf"], fr: "PDF", en: "PDF" },
   { exts: ["html", "htm"], fr: "Page web", en: "Web page" },
   { exts: ["csv", "tsv"], fr: "CSV", en: "CSV" },
   { exts: ["json", "jsonl"], fr: "JSON", en: "JSON" },
@@ -27,7 +32,7 @@ const TXT = {
   fr: {
     locale: "fr-CA",
     engine: {
-      idle: ["Moteur MarkItDown : pas encore chargé", "Il se charge au premier fichier (environ 30 Mo, une seule fois), ou dès maintenant."],
+      idle: ["Moteur MarkItDown : pas encore chargé", "Pour Word, Excel, PowerPoint, HTML, EPUB… Il se charge au premier fichier de ce type (environ 30 Mo, une seule fois), ou dès maintenant. Les PDF n'en ont pas besoin."],
       loading: ["Chargement du moteur MarkItDown…", ["Python (Pyodide)", "Bibliothèques (pandas, lxml…)", "MarkItDown et convertisseurs", "Démarrage"]],
       ready: v => ["Moteur prêt", `MarkItDown ${v.version} · Python ${v.python} dans le navigateur`],
       error: e => ["Le moteur n'a pas pu se charger", `${e} · Vérifiez la connexion (jsDelivr, PyPI), puis réessayez.`],
@@ -37,21 +42,44 @@ const TXT = {
     waiting: "En attente", converting: "Conversion…", done: "Converti", failed: "Erreur",
     unsupported: ext => `Format .${ext} non pris en charge.`,
     chars: n => `${new Intl.NumberFormat("fr-CA").format(n)} caractères`,
-    pdfTip: 'Pour un PDF, <a href="../pdfo-converto/" target="_blank" rel="noopener">PDFo Converto</a> donne en général un meilleur Markdown (titres, tableaux, chapitres).',
+    pdfSteps: {
+      read: (i, n) => `Lecture de la structure… page ${i} sur ${n}`,
+      ocr: (i, n) => `OCR des zones en image… ${i + 1} sur ${n}`,
+      images: (i, n) => `Images des figures… ${i + 1} sur ${n}`
+    },
+    ocrLoad: p => `Chargement de l'OCR (${OCR_ENGINE}, environ 6 Mo, une seule fois)… ${p}`,
+    pdfInfo: i => {
+      const parts = [`${i.pages < i.of ? `${i.pages} p. sur ${i.of}` : `${i.pages} p.`}`, `${i.tables} tableau${i.tables > 1 ? "x" : ""}${i.ocrTables ? ` (dont ${i.ocrTables} lu${i.ocrTables > 1 ? "s" : ""} par OCR)` : ""}`, `${i.figures} figure${i.figures > 1 ? "s" : ""}`];
+      if (i.chapters) parts.push(`${i.chapters} chapitres`);
+      parts.push(`${i.seconds.toFixed(1).replace(".", ",")} s`);
+      return parts.join(" · ");
+    },
+    pdfWarn: n => `${n} valeur${n > 1 ? "s" : ""} lue${n > 1 ? "s" : ""} par OCR à vérifier (signalée${n > 1 ? "s" : ""} sous le tableau).`,
+    pdfMarkitdown: "PDF converti par MarkItDown : texte brut, sans titres, tableaux ni figures.",
+    pdfNoOcr: "OCR désactivé : les tableaux en image et les pages numérisées ne sont pas lus.",
     emptyMd: "Le fichier a été lu, mais aucun texte n'en est sorti (image, document numérisé ou protégé ?).",
     select: "Choisissez un fichier dans la liste.",
     progress: (d, n) => `${d} fichier${d > 1 ? "s" : ""} converti${d > 1 ? "s" : ""} sur ${n}`,
     allDone: (n, errs) => `${n} fichier${n > 1 ? "s" : ""} converti${n > 1 ? "s" : ""}${errs ? `, ${errs} en erreur` : ""}.`,
-    saveAll: n => (n > 1 ? `Tout télécharger (.zip, ${n})` : "Télécharger le .md"),
+    saveAll: n => (n > 1 ? `Tout télécharger (.zip, ${n})` : "Télécharger"),
     saved: name => `Enregistré : ${name}.`,
     copied: "Markdown copié dans le presse-papiers.",
     copyFail: "Copie impossible : utilisez le téléchargement.",
-    preview: "Aperçu"
+    preview: "Aperçu",
+    fromConverto: name => `« ${name} » reçu de PDFo Converto.`,
+    figLabels: {
+      figure: "Figure", page: "p.", text: "Texte dans la figure", none: "texte de l'image non extractible du PDF : voir l'image",
+      kind: { image: "image", vector: "dessin", scan: "page numérisée" }, tableImage: "image du tableau",
+      ocrText: "Texte lu par OCR", ocrScan: "texte lu par OCR ci-dessous, à vérifier",
+      ocrTable: "Tableau lu par OCR dans une image (p. {p}) : vérifier les valeurs avant de s'en servir.",
+      ocrUncertain: "Lectures divergentes, à vérifier sur l'image", ocrRow: "ligne", ocrCol: "colonne", drawing: "[dessin]"
+    },
+    chapterLabels: { intro: "Début du document", toc: "Sommaire :", tocFile: "Sommaire", pages: (a, b) => a === b ? `p. ${a}` : `p. ${a}–${b}` }
   },
   en: {
     locale: "en-CA",
     engine: {
-      idle: ["MarkItDown engine: not loaded yet", "It loads with the first file (about 30 MB, only once), or right now."],
+      idle: ["MarkItDown engine: not loaded yet", "For Word, Excel, PowerPoint, HTML, EPUB… It loads with the first file of that kind (about 30 MB, only once), or right now. PDFs don't need it."],
       loading: ["Loading the MarkItDown engine…", ["Python (Pyodide)", "Libraries (pandas, lxml…)", "MarkItDown and converters", "Starting"]],
       ready: v => ["Engine ready", `MarkItDown ${v.version} · Python ${v.python} in the browser`],
       error: e => ["The engine could not load", `${e} · Check the connection (jsDelivr, PyPI), then try again.`],
@@ -61,30 +89,55 @@ const TXT = {
     waiting: "Waiting", converting: "Converting…", done: "Converted", failed: "Error",
     unsupported: ext => `.${ext} files are not supported.`,
     chars: n => `${new Intl.NumberFormat("en-CA").format(n)} characters`,
-    pdfTip: 'For a PDF, <a href="../pdfo-converto/" target="_blank" rel="noopener">PDFo Converto</a> usually gives better Markdown (headings, tables, chapters).',
+    pdfSteps: {
+      read: (i, n) => `Reading the structure… page ${i} of ${n}`,
+      ocr: (i, n) => `OCR of image areas… ${i + 1} of ${n}`,
+      images: (i, n) => `Figure images… ${i + 1} of ${n}`
+    },
+    ocrLoad: p => `Loading OCR (${OCR_ENGINE}, about 6 MB, only once)… ${p}`,
+    pdfInfo: i => {
+      const parts = [`${i.pages < i.of ? `${i.pages} of ${i.of} pp.` : `${i.pages} pp.`}`, `${i.tables} table${i.tables > 1 ? "s" : ""}${i.ocrTables ? ` (${i.ocrTables} read by OCR)` : ""}`, `${i.figures} figure${i.figures > 1 ? "s" : ""}`];
+      if (i.chapters) parts.push(`${i.chapters} chapters`);
+      parts.push(`${i.seconds.toFixed(1)} s`);
+      return parts.join(" · ");
+    },
+    pdfWarn: n => `${n} OCR value${n > 1 ? "s" : ""} to check (flagged under the table).`,
+    pdfMarkitdown: "PDF converted by MarkItDown: plain text, no headings, tables or figures.",
+    pdfNoOcr: "OCR off: image tables and scanned pages are not read.",
     emptyMd: "The file was read, but no text came out of it (image, scanned or protected document?).",
     select: "Choose a file in the list.",
     progress: (d, n) => `${d} of ${n} file${n > 1 ? "s" : ""} converted`,
     allDone: (n, errs) => `${n} file${n > 1 ? "s" : ""} converted${errs ? `, ${errs} with errors` : ""}.`,
-    saveAll: n => (n > 1 ? `Download all (.zip, ${n})` : "Download the .md"),
+    saveAll: n => (n > 1 ? `Download all (.zip, ${n})` : "Download"),
     saved: name => `Saved: ${name}.`,
     copied: "Markdown copied to the clipboard.",
     copyFail: "Could not copy: use the download instead.",
-    preview: "Preview"
+    preview: "Preview",
+    fromConverto: name => `“${name}” received from PDFo Converto.`,
+    figLabels: {
+      figure: "Figure", page: "p.", text: "Text in the figure", none: "the image's text cannot be extracted from the PDF: see the image",
+      kind: { image: "image", vector: "drawing", scan: "scanned page" }, tableImage: "table image",
+      ocrText: "Text read by OCR", ocrScan: "text read by OCR below, to be checked",
+      ocrTable: "Table read by OCR from an image (p. {p}): check the values before using them.",
+      ocrUncertain: "Readings disagree, check against the image", ocrRow: "row", ocrCol: "column", drawing: "[drawing]"
+    },
+    chapterLabels: { intro: "Front matter", toc: "Contents:", tocFile: "Contents", pages: (a, b) => a === b ? `p. ${a}` : `pp. ${a}–${b}` }
   }
 };
 const lang = () => (window.siteLang && window.siteLang() === "en" ? "en" : "fr");
 const t = () => TXT[lang()];
 
+const loadPdfOpts = () => { try { return { ...PDF_DEFAULTS, ...JSON.parse(localStorage.getItem(LS_PDF) || "{}") }; } catch { return { ...PDF_DEFAULTS }; } };
 const state = {
   engine: "idle", engineInfo: null, engineError: "", step: 0,
-  files: [], cur: -1, nextId: 1,
+  files: [], cur: -1, nextId: 1, pdf: { ...loadPdfOpts(), pages: "" },
   view: (() => { try { return localStorage.getItem(LS) === "source" ? "source" : "render"; } catch { return "render"; } })()
 };
 const status = (msg, warn = false) => { $("status").textContent = msg; $("status").classList.toggle("is-warn", warn); };
 const extOf = name => (name.includes(".") ? name.split(".").pop().toLowerCase() : "");
+const viaPdfEngine = f => f.ext === "pdf" && state.pdf.pdfEngine === "pdfo";
 
-// ---------------------------------------------------------------- Moteur (travailleur)
+// ---------------------------------------------------------------- Moteur MarkItDown (travailleur)
 let worker = null;
 const pending = new Map();
 function ensureWorker() {
@@ -151,6 +204,46 @@ function renderEngine() {
 }
 $("engine-start").addEventListener("click", startEngine);
 
+// ---------------------------------------------------------------- Options PDF
+function renderPdfOpts() {
+  document.querySelectorAll("#pdf-opts .seg[data-opt]").forEach(seg => seg.querySelectorAll("button").forEach(b => {
+    const on = b.dataset.value === String(state.pdf[seg.dataset.opt]);
+    b.classList.toggle("selected", on);
+    b.setAttribute("aria-checked", String(on));
+    b.tabIndex = on ? 0 : -1;
+    b.disabled = seg.dataset.opt !== "pdfEngine" && state.pdf.pdfEngine !== "pdfo";
+  }));
+  $("pdf-markers").checked = !!state.pdf.pageMarkers;
+  $("pdf-markers").disabled = state.pdf.pdfEngine !== "pdfo";
+  if (document.activeElement !== $("pdf-pages")) $("pdf-pages").value = state.pdf.pages;
+}
+function setPdfOpt(key, value) {
+  if (state.pdf[key] === value) return;
+  state.pdf[key] = value;
+  try { const { pages, ...keep } = state.pdf; void pages; localStorage.setItem(LS_PDF, JSON.stringify(keep)); } catch { /* stockage indisponible */ }
+  renderPdfOpts();
+  // Les PDF déjà convertis le sont à nouveau avec les nouvelles options.
+  let again = false;
+  for (const f of state.files) if (f.ext === "pdf" && (f.status === "ok" || f.status === "err") && f.file) { dropResult(f); f.status = "wait"; again = true; }
+  if (again) { renderFiles(); showCurrent(); if (state.files.some(f => f.status === "wait" && !viaPdfEngine(f))) startEngine(); processQueue(); }
+}
+document.querySelectorAll("#pdf-opts .seg[data-opt]").forEach(seg => {
+  seg.addEventListener("click", e => { const b = e.target.closest("button"); if (b && !b.disabled) setPdfOpt(seg.dataset.opt, b.dataset.value); });
+  seg.addEventListener("keydown", e => {
+    if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+    const bs = [...seg.querySelectorAll("button")];
+    const i = bs.findIndex(b => b.classList.contains("selected"));
+    const n = bs[(i + (e.key === "ArrowRight" ? 1 : bs.length - 1)) % bs.length];
+    if (n.disabled) return;
+    setPdfOpt(seg.dataset.opt, n.dataset.value);
+    n.focus();
+    e.preventDefault();
+  });
+});
+$("pdf-markers").addEventListener("change", e => setPdfOpt("pageMarkers", e.target.checked));
+let pagesTimer = 0;
+$("pdf-pages").addEventListener("input", e => { clearTimeout(pagesTimer); pagesTimer = setTimeout(() => setPdfOpt("pages", e.target.value.trim()), 600); });
+
 // ---------------------------------------------------------------- Fichiers
 $("pick").addEventListener("click", () => $("file-input").click());
 $("file-input").setAttribute("accept", [...ACCEPTED].map(e => "." + e).join(","));
@@ -174,8 +267,13 @@ async function addFiles(list) {
   $("work").hidden = false;
   renderFiles();
   showCurrent();
-  if (state.files.some(f => f.status === "wait")) startEngine();
+  if (state.files.some(f => f.status === "wait" && !viaPdfEngine(f))) startEngine();
   processQueue();
+}
+
+function dropResult(f) {
+  if (f.urls) for (const u of f.urls.values()) URL.revokeObjectURL(u);
+  Object.assign(f, { md: "", files: null, assets: null, urls: null, info: null, note: "", error: "" });
 }
 
 let running = false;
@@ -187,13 +285,19 @@ async function processQueue() {
     while ((f = state.files.find(x => x.status === "wait"))) {
       f.status = "run";
       renderFiles();
+      if (state.files.indexOf(f) === state.cur) showCurrent();
       try {
         f.bytes = new Uint8Array(await f.file.arrayBuffer());
-        const r = await convertInWorker(f);
-        f.md = r.markdown.replace(/\r\n/g, "\n").trim() + "\n";
-        f.title = r.title;
+        if (viaPdfEngine(f)) await convertPdfFile(f);
+        else {
+          const r = await convertInWorker(f);
+          f.md = r.markdown.replace(/\r\n/g, "\n").trim() + "\n";
+          f.title = r.title;
+          if (f.ext === "pdf") f.note = t().pdfMarkitdown;
+        }
         f.status = "ok";
       } catch (err) {
+        console.error(err);
         f.status = "err";
         f.error = String(err.message || err);
       }
@@ -209,6 +313,23 @@ async function processQueue() {
     running = false;
     renderSaveAll();
   }
+}
+
+async function convertPdfFile(f) {
+  const x = t();
+  const r = await convertPdf(f.bytes, f.name, {
+    ocr: state.pdf.ocr, figures: state.pdf.figures, split: state.pdf.split, pages: state.pdf.pages,
+    pageMarkers: state.pdf.pageMarkers, labels: x.figLabels, chapterLabels: x.chapterLabels
+  }, {
+    onStep: (key, i, n) => status(t().pdfSteps[key](i, n)),
+    onOcrStatus: m => { if (m.status && m.status !== "recognizing text") status(t().ocrLoad(m.progress ? `${Math.round(m.progress * 100)} %` : "")); }
+  });
+  f.md = r.md;
+  f.files = r.files;
+  f.assets = r.assets;
+  f.info = r.info;
+  f.urls = new Map(r.assets.map(a => [a.path, URL.createObjectURL(new Blob([a.bytes], { type: a.type }))]));
+  f.note = state.pdf.ocr === "off" ? x.pdfNoOcr : "";
 }
 
 function renderFiles() {
@@ -233,6 +354,7 @@ $("files").addEventListener("click", e => {
   showCurrent();
 });
 $("clear").addEventListener("click", () => {
+  for (const f of state.files) if (f.status !== "run" && f.status !== "wait") dropResult(f);
   state.files = state.files.filter(f => f.status === "run" || f.status === "wait");
   state.cur = state.files.length ? 0 : -1;
   if (!state.files.length) $("work").hidden = true;
@@ -245,10 +367,17 @@ async function showCurrent() {
   const x = t();
   const f = state.files[state.cur];
   const body = $("preview");
-  $("tip").hidden = !(f && f.ext === "pdf");
-  $("tip").innerHTML = x.pdfTip;
+  const tip = [];
+  if (f?.status === "ok" && f.info) {
+    tip.push(esc(x.pdfInfo(f.info)));
+    if (f.info.uncertain) tip.push(`<b>${esc(x.pdfWarn(f.info.uncertain))}</b>`);
+  }
+  if (f?.status === "ok" && f.note) tip.push(esc(f.note));
+  $("tip").hidden = !tip.length;
+  $("tip").innerHTML = tip.join("<br>");
   $("preview-title").textContent = f ? f.name : x.preview;
   $("copy").disabled = $("save-one").disabled = !(f && f.status === "ok");
+  $("save-one-label").textContent = f && isBundle(f) ? ".zip" : ".md";
   if (!f) { body.innerHTML = `<p class="md-empty">${esc(x.select)}</p>`; return; }
   if (f.status === "err") { body.innerHTML = `<p class="md-error">${esc(f.error)}</p>`; return; }
   if (f.status !== "ok") { body.innerHTML = `<p class="md-empty">${esc(f.status === "run" ? x.converting : x.waiting)}</p>`; return; }
@@ -261,7 +390,7 @@ async function showCurrent() {
   } else {
     const div = document.createElement("div");
     div.className = "md-preview";
-    div.append(await renderMarkdown(f.md));
+    div.append(await renderMarkdown(f.md, { images: f.urls || undefined }));
     if (state.files[state.cur] === f) body.replaceChildren(div);
   }
 }
@@ -279,28 +408,42 @@ function renderView() {
 
 // ---------------------------------------------------------------- Téléchargements
 const mdName = f => `${safeName(f.name)}.md`;
+// Un PDF converti en plusieurs fichiers (chapitres) ou avec des images : un .zip.
+const isBundle = f => !!(f.files && (f.files.length > 1 || f.assets?.length));
+const bundleEntries = (f, dir = "") => [
+  ...f.files.map(x => ({ name: dir + x.name, data: x.md })),
+  ...(f.assets || []).map(a => ({ name: dir + a.path, data: a.bytes }))
+];
 function renderSaveAll() {
   const ok = state.files.filter(f => f.status === "ok");
   $("save-all").disabled = !ok.length;
   $("save-all-label").textContent = t().saveAll(Math.max(ok.length, 1));
 }
-$("save-one").addEventListener("click", () => {
+async function saveFile(f) {
+  if (isBundle(f)) {
+    const name = `${safeName(f.name.replace(/\.pdf$/i, ""))}.zip`;
+    download(await zip(bundleEntries(f)), name);
+    return name;
+  }
+  download(new Blob([f.md], { type: "text/markdown;charset=utf-8" }), mdName(f));
+  return mdName(f);
+}
+$("save-one").addEventListener("click", async () => {
   const f = state.files[state.cur];
   if (!f || f.status !== "ok") return;
-  download(new Blob([f.md], { type: "text/markdown;charset=utf-8" }), mdName(f));
-  status(t().saved(mdName(f)));
+  status(t().saved(await saveFile(f)));
 });
 $("save-all").addEventListener("click", async () => {
   const ok = state.files.filter(f => f.status === "ok");
   if (!ok.length) return;
-  if (ok.length === 1) { download(new Blob([ok[0].md], { type: "text/markdown;charset=utf-8" }), mdName(ok[0])); status(t().saved(mdName(ok[0]))); return; }
+  if (ok.length === 1) { status(t().saved(await saveFile(ok[0]))); return; }
   const used = new Set();
-  const entries = ok.map(f => {
-    let n = mdName(f), k = 2;
-    while (used.has(n)) n = `${safeName(f.name)}-${k++}.md`;
-    used.add(n);
-    return { name: n, data: f.md };
-  });
+  const unique = (stem, ext) => { let n = stem + ext, k = 2; while (used.has(n)) n = `${stem}-${k++}${ext}`; used.add(n); return n; };
+  const entries = [];
+  for (const f of ok) {
+    if (isBundle(f)) entries.push(...bundleEntries(f, unique(safeName(f.name.replace(/\.pdf$/i, "")), "") + "/"));
+    else entries.push({ name: unique(safeName(f.name), ".md"), data: f.md });
+  }
   const name = "markdown.zip";
   download(await zip(entries), name);
   status(t().saved(name));
@@ -319,4 +462,16 @@ document.addEventListener("langchange", () => { renderFormats(); renderEngine();
 renderFormats();
 renderEngine();
 renderView();
+renderPdfOpts();
 renderSaveAll();
+
+// PDF envoyé par PDFo Converto (même appareil, stockage local du navigateur).
+if (location.hash === "#converto") {
+  history.replaceState(null, "", location.pathname + location.search);
+  reprendre().then(r => {
+    if (!r) return;
+    if (r.pages) { state.pdf.pages = r.pages; renderPdfOpts(); }
+    addFiles([r.file]);
+    status(t().fromConverto(r.file.name));
+  }).catch(err => console.warn(err));
+}

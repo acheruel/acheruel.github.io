@@ -64,3 +64,20 @@
 @media (prefers-reduced-motion: reduce) {
   .md-engine[data-state="loading"] .md-engine-dot, .md-fstate .spin { animation: none; }
 }
+
+/* Lien vers le comparateur */
+.md-labo { margin: -6px 0 14px; font-size: .8125rem; }
+.md-labo a { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; }
+.md-labo a:hover span { text-decoration: underline; text-underline-offset: 2px; }
+.md-labo svg { width: 16px; height: 16px; flex: none; }
+
+/* Options PDF */
+.md-pdf-opts { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 22px; padding: 12px 16px 14px; margin-bottom: 14px; }
+.md-pdf-opts h2 { flex-basis: 100%; margin: 0 0 -4px; font-size: 1rem; font-weight: 650; color: var(--navy); }
+.md-pages input { width: 130px; }
+.md-markers { align-self: center; }
+@media (max-width: 800px) {
+  .md-pdf-opts .seg { flex-wrap: wrap; }
+  .md-pages { flex-basis: 100%; }
+  .md-pages input { width: 100%; }
+}

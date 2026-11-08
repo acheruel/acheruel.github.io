@@ -2,7 +2,7 @@
 // Titres (taille et graisse des polices, signets), paragraphes (mots coupés recomposés), listes,
 // tableaux (détectés grâce aux filets vectoriels), en-têtes et pieds de page répétés, deux colonnes.
 // Le résultat est une liste de blocs utilisée pour le Markdown et le Word.
-import { mul, idle, pdfjs } from "../commun/pdf-outils.js";
+import { mul, idle, pdfjs } from "./pdf-outils.js";
 
 const SUPER = { "1": "¹", "2": "²", "3": "³", "o": "º", "e": "ᵉ", "er": "ᵉʳ" };
 const BULLET = /^([•▪◦●○■□►▶➢➤✓✔·\-–—*])\s+/;
@@ -126,6 +126,7 @@ async function readPage(page, index, OPS, opts) {
 
   // Tableaux à partir des filets.
   const tables = opts.tables === false ? [] : findTables(ol, OPS, vt, W, H);
+  for (const tb of tables) rowLabels(tb, frags);
   const inTable = new Array(frags.length).fill(-1);
   frags.forEach((f, k) => {
     const cx = (f.x0 + f.x1) / 2, cy = f.y - 0.3 * f.size;
@@ -370,6 +371,33 @@ function findTables(ol, OPS, vt, W, H) {
     tables.push({ xs, ys, h: g.h, v: g.v, x0: xs[0], x1: xs[xs.length - 1], y0: ys[0], y1: ys[ys.length - 1] });
   }
   return tables;
+}
+
+/**
+ * Étiquettes de ligne posées à gauche de la grille, sans filets (« DC1 », « DC2+DW », « LL ») :
+ * sans elles, les chiffres d'une ligne ne disent plus à quoi ils correspondent. Si au moins deux
+ * lignes de la grille ont un libellé court juste à gauche, la grille gagne une première colonne
+ * (filets virtuels), et ces libellés y entrent.
+ */
+function rowLabels(tb, frags) {
+  const { xs, ys } = tb;
+  const R = ys.length - 1;
+  if (R < 2) return;
+  const near = frags.filter(f => {
+    const cy = f.y - 0.3 * f.size;
+    return f.x1 <= tb.x0 + 1 && f.x1 >= tb.x0 - 24 && cy > ys[0] && cy < ys[R] && f.t.trim().length <= 24;
+  });
+  const rowOf = f => ys.findIndex((y, k) => k < R && f.y - 0.3 * f.size >= y && f.y - 0.3 * f.size < ys[k + 1]);
+  const rows = new Set(near.map(rowOf).filter(r => r >= 0));
+  if (rows.size < 2) return;
+  // Pas un paragraphe voisin : rien d'autre dans la bande à gauche, à la hauteur de la grille.
+  const x = Math.min(...near.map(f => f.x0)) - 2;
+  const crowd = frags.some(f => !near.includes(f) && f.x1 > x && f.x0 < tb.x0 - 1 && f.y - 0.3 * f.size > ys[0] && f.y - 0.3 * f.size < ys[R]);
+  if (crowd) return;
+  tb.xs = [x, ...xs];
+  tb.x0 = x;
+  tb.v = [...tb.v, { x, a: ys[0], b: ys[R] }];
+  tb.h = [...tb.h, ...ys.map(y => ({ y, a: x, b: xs[0] }))];
 }
 
 /** Remplit la grille : cellules fusionnées (filet absent), texte de chaque cellule. */

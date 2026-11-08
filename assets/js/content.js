@@ -1,8 +1,8 @@
 // Contenu du site. Pour ajouter un outil : une entrée dans TOOLS (avec sa catégorie).
 // Pour ouvrir une section : passer ready à true et créer la page indiquée par href.
 window.SITE = {
-  version: "0.5.1",
-  date: "2026-11-07",
+  version: "0.6",
+  date: "2026-11-08",
   github: "acheruel",
   pages: "https://acheruel.github.io"
 };
@@ -148,10 +148,10 @@ window.TOOLS = [
     logo: "assets/logos/markdowno.svg",
     href: "outils/markdowno/",
     code: "https://github.com/acheruel/acheruel.github.io/tree/main/outils/markdowno",
-    tagline: { fr: "Tout en Markdown, avec MarkItDown", en: "Everything to Markdown, with MarkItDown" },
+    tagline: { fr: "PDF et documents en Markdown pour les IA", en: "PDFs and documents to Markdown for AI" },
     desc: {
-      fr: "Word, PowerPoint, Excel, PDF, pages web, CSV, EPUB ou courriels Outlook convertis en Markdown par MarkItDown de Microsoft, qui tourne dans le navigateur. Aperçu, copie et téléchargement ; vos fichiers restent sur votre appareil.",
-      en: "Word, PowerPoint, Excel, PDF, web pages, CSV, EPUB or Outlook e-mails converted to Markdown by Microsoft's MarkItDown, running in your browser. Preview, copy and download; your files stay on your device."
+      fr: "PDF de normes et de manuels convertis en Markdown utilisable par une IA : titres, tableaux à cellules fusionnées, tableaux insérés comme images lus par OCR (valeurs douteuses signalées), figures, chapitres et repères de page. Word, PowerPoint, Excel, pages web, EPUB ou courriels Outlook passent par MarkItDown. Tout tourne dans le navigateur ; vos fichiers restent sur votre appareil.",
+      en: "PDFs of standards and manuals converted to Markdown an AI can use: headings, merged-cell tables, tables pasted as images read by OCR (doubtful values flagged), figures, chapters and page markers. Word, PowerPoint, Excel, web pages, EPUB or Outlook e-mails go through MarkItDown. Everything runs in the browser; your files stay on your device."
     }
   }
 ];
@@ -168,7 +168,8 @@ window.I18N = {
       "photo-rapporto": "Photo Rapporto · Anthony Chéruel",
       "pdfo-comparo": "PDFo Comparo · Anthony Chéruel",
       "pdfo-converto": "PDFo Converto · Anthony Chéruel",
-      markdowno: "MarkDownO · Anthony Chéruel"
+      markdowno: "MarkDownO · Anthony Chéruel",
+      "markdowno-comparateur": "Comparateur PDF vers Markdown · Anthony Chéruel"
     },
     skip: "Aller au contenu",
     navLabel: "Sections",
@@ -195,7 +196,8 @@ window.I18N = {
       "photo-rapporto": "Photo Rapporto · Anthony Chéruel",
       "pdfo-comparo": "PDFo Comparo · Anthony Chéruel",
       "pdfo-converto": "PDFo Converto · Anthony Chéruel",
-      markdowno: "MarkDownO · Anthony Chéruel"
+      markdowno: "MarkDownO · Anthony Chéruel",
+      "markdowno-comparateur": "PDF to Markdown comparator · Anthony Chéruel"
     },
     skip: "Skip to content",
     navLabel: "Sections",

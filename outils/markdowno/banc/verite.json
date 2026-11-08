@@ -1,0 +1,418 @@
+{
+ "_note": "33 lignes de tableaux relevées à l'œil sur les pages rendues. Chaque ligne : valeurs qui doivent se trouver dans une même ligne de tableau de la sortie.",
+ "hif18046-extrait": {
+  "tables": [
+   {
+    "id": "Table 1 (p. 59, vectoriel)",
+    "rows": [
+     [
+      "Solid Rectangular Section",
+      "5/6 bd"
+     ],
+     [
+      "Thin-walled Hollow Rectangular Section",
+      "2 tD"
+     ],
+     [
+      "Thin-Walled Hollow Circular Section",
+      "Rt (=A/2)"
+     ],
+     [
+      "No Shear Deformation",
+      "1000A"
+     ]
+    ]
+   },
+   {
+    "id": "Table 9 (p. 270, vectoriel)",
+    "rows": [
+     [
+      "A1",
+      "42",
+      "210",
+      "69.5",
+      "14595.0",
+      "33.12",
+      "230347.25",
+      "437.5",
+      "230785"
+     ],
+     [
+      "A6",
+      "10",
+      "100",
+      "11.3",
+      "1133.3",
+      "-25.05",
+      "62736.78",
+      "555.56",
+      "63292"
+     ],
+     [
+      "A7",
+      "28",
+      "224",
+      "896.0",
+      "-32.38",
+      "234865.38",
+      "1194.67",
+      "236060"
+     ]
+    ]
+   },
+   {
+    "id": "Table 13 (p. 274, cellules fusionnées)",
+    "rows": [
+     [
+      "M+ and M- not between POCs",
+      "0.61",
+      "0.60"
+     ],
+     [
+      "M- between POCs",
+      "0.61"
+     ]
+    ]
+   },
+   {
+    "id": "Table 28 (p. 353, vectoriel)",
+    "rows": [
+     [
+      "Section A-A",
+      "93.50",
+      "118401"
+     ],
+     [
+      "Section B-B",
+      "112.75",
+      "160309"
+     ],
+     [
+      "Section C-C",
+      "168.00",
+      "286524"
+     ]
+    ]
+   },
+   {
+    "id": "Table 60 (p. 512, en-tête sur 2 lignes)",
+    "rows": [
+     [
+      "DC1",
+      "1.00",
+      "0.95",
+      "0.98",
+      "1.00",
+      "1.02",
+      "1.00",
+      "1.00",
+      "1.01",
+      "1.01",
+      "0.99",
+      "1.00",
+      "1.01"
+     ],
+     [
+      "DC2+DW",
+      "1.12",
+      "0.95",
+      "1.03",
+      "1.00",
+      "0.96",
+      "0.99",
+      "0.98",
+      "0.99",
+      "0.97",
+      "0.97",
+      "1.00",
+      "0.99"
+     ],
+     [
+      "LL",
+      "0.99",
+      "1.03",
+      "1.01",
+      "1.04",
+      "1.05",
+      "1.01",
+      "1.00",
+      "1.02",
+      "1.03",
+      "0.99",
+      "1.00",
+      "1.05"
+     ]
+    ]
+   },
+   {
+    "id": "Table 62 (p. 512)",
+    "rows": [
+     [
+      "DC1",
+      "1.00",
+      "1.02",
+      "1.02",
+      "0.97",
+      "0.97",
+      "0.97",
+      "1.05",
+      "1.05",
+      "1.05",
+      "1.01",
+      "1.01",
+      "1.02"
+     ],
+     [
+      "LL",
+      "1.19",
+      "1.11",
+      "0.95",
+      "1.21",
+      "1.01",
+      "1.00",
+      "1.23",
+      "0.98",
+      "1.14",
+      "0.80",
+      "1.10",
+      "1.10"
+     ]
+    ]
+   }
+  ],
+  "equations": [
+   {
+    "id": "Éq. 32 (image)",
+    "all": [
+     "12",
+     "bh"
+    ],
+    "any": [
+     "rectangle"
+    ]
+   },
+   {
+    "id": "Éq. 33 (image)",
+    "all": [
+     "36",
+     "bh"
+    ],
+    "any": [
+     "triangle"
+    ]
+   },
+   {
+    "id": "g_SIM p. 274 (image)",
+    "all": [
+     "0.06",
+     "3557176"
+    ],
+    "any": [
+     "0.61"
+    ]
+   }
+  ],
+  "questions": [
+   {
+    "q": "effective shear area of a solid rectangular section",
+    "a": [
+     "5/6 bd"
+    ]
+   },
+   {
+    "q": "effective shear area thin-walled hollow circular section",
+    "a": [
+     "Rt (=A/2)"
+    ]
+   },
+   {
+    "q": "non-composite section property calculation component A5 moment of inertia I",
+    "a": [
+     "137510"
+    ]
+   },
+   {
+    "q": "Example 2 non-composite section properties Section B-B moment of inertia",
+    "a": [
+     "160309"
+    ]
+   },
+   {
+    "q": "2D/3D ratios for shear live load LL girder G3 span 1",
+    "a": [
+     "1.23",
+     "0.98",
+     "1.14"
+    ]
+   },
+   {
+    "q": "value of Kg longitudinal stiffness parameter in4",
+    "a": [
+     "3557176"
+    ]
+   },
+   {
+    "q": "interior girder moment distribution factor one lane loaded spans 1 and 3",
+    "a": [
+     "0.61"
+    ]
+   }
+  ]
+ },
+ "if12027-extrait": {
+  "tables": [
+   {
+    "id": "Table 4-1 (p. 60, IMAGE)",
+    "rows": [
+     [
+      "Local Deck Plate Deformation",
+      "Transverse flexural stress in deck and rib plates"
+     ],
+     [
+      "Floorbeam In-plane Flexure",
+      "Flexure and shear in FB acting as beam"
+     ],
+     [
+      "Global",
+      "Axial, flexural, and shear stresses"
+     ]
+    ]
+   },
+   {
+    "id": "Table 5-1 (p. 128, IMAGE + croquis)",
+    "rows": [
+     [
+      "Rib Splice (Bolted)",
+      "B",
+      "1,2, or 3"
+     ],
+     [
+      "Deck Plate Splice",
+      "1,2, or 3"
+     ]
+    ]
+   },
+   {
+    "id": "Table 6-1 (p. 134, IMAGE)",
+    "rows": [
+     [
+      "Deck Plate Thickness",
+      "14 mm"
+     ],
+     [
+      "Floorbeam Spacing",
+      "6000 mm"
+     ],
+     [
+      "Ratio of Cut-out to Rib Depth",
+      "0.33"
+     ]
+    ]
+   },
+   {
+    "id": "Table 11-3 (p. 241, IMAGE)",
+    "rows": [
+     [
+      "RD (Deck)",
+      "55.9",
+      "69.0"
+     ],
+     [
+      "RD (Rib)",
+      "33.9",
+      "69.0"
+     ],
+     [
+      "Deck Plate Splice",
+      "40.0",
+      "69.0"
+     ],
+     [
+      "RF (Rib)",
+      "39.5",
+      "69.0"
+     ],
+     [
+      "RF (FB.)",
+      "28.3",
+      "69.0"
+     ]
+    ]
+   },
+   {
+    "id": "Table 11-4 (p. 259, IMAGE)",
+    "rows": [
+     [
+      "RF (Rib)",
+      "At start of cut-out",
+      "38.6",
+      "47.7"
+     ],
+     [
+      "RF (Floorbeam)",
+      "17.9",
+      "47.7"
+     ],
+     [
+      "Floorbeam Cut-out",
+      "65.3",
+      "85.2"
+     ]
+    ]
+   }
+  ],
+  "equations": [],
+  "questions": [
+   {
+    "q": "recommended minimum deck plate thickness orthotropic panel",
+    "a": [
+     "14 mm"
+    ]
+   },
+   {
+    "q": "maximum floorbeam spacing recommended limit",
+    "a": [
+     "6000 mm"
+    ]
+   },
+   {
+    "q": "Example 1 fatigue check RD (Deck) stress range Sr",
+    "a": [
+     "55.9"
+    ]
+   },
+   {
+    "q": "Example 2 floorbeam cut-out stress range around free edge",
+    "a": [
+     "65.3",
+     "85.2"
+    ]
+   },
+   {
+    "q": "rib splice bolted fatigue category detail",
+    "a": [
+     "Bolted",
+     "B"
+    ]
+   },
+   {
+    "q": "floorbeam distortion system 5 result out-of-plane flexure of FB web",
+    "a": [
+     "rib rotation"
+    ]
+   },
+   {
+    "q": "Example 1 RF (Rib) lower half of rib at FB connection stress range",
+    "a": [
+     "39.5"
+    ]
+   },
+   {
+    "q": "rib spacing direct wheel load limit",
+    "a": [
+     "762 mm"
+    ]
+   }
+  ]
+ }
+}

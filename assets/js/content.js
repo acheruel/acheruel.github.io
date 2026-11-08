@@ -1,7 +1,7 @@
 // Contenu du site. Pour ajouter un outil : une entrée dans TOOLS (avec sa catégorie).
 // Pour ouvrir une section : passer ready à true et créer la page indiquée par href.
 window.SITE = {
-  version: "0.5",
+  version: "0.5.1",
   date: "2026-11-07",
   github: "acheruel",
   pages: "https://acheruel.github.io"
@@ -137,8 +137,8 @@ window.TOOLS = [
     code: "https://github.com/acheruel/acheruel.github.io/tree/main/outils/pdfo-converto",
     tagline: { fr: "PDF vers Markdown, images, Word, PowerPoint", en: "PDF to Markdown, images, Word, PowerPoint" },
     desc: {
-      fr: "Convertissez un PDF en Markdown (titres, listes, tableaux, un fichier par chapitre au besoin), en images JPG ou PNG, en pages séparées, en Word ou en PowerPoint, avec un aperçu avant de télécharger. Rien ne quitte votre appareil.",
-      en: "Convert a PDF to Markdown (headings, lists, tables, one file per chapter if needed), JPG or PNG images, separate pages, Word or PowerPoint, with a preview before you download. Nothing leaves your device."
+      fr: "Convertissez un PDF en Markdown (titres, listes, tableaux avec leurs cellules fusionnées, figures en fiches ou en images, un fichier par chapitre au besoin), en images JPG ou PNG, en pages séparées, en Word ou en PowerPoint, avec un aperçu avant de télécharger. Rien ne quitte votre appareil.",
+      en: "Convert a PDF to Markdown (headings, lists, tables with their merged cells, figures as cards or images, one file per chapter if needed), JPG or PNG images, separate pages, Word or PowerPoint, with a preview before you download. Nothing leaves your device."
     }
   },
   {

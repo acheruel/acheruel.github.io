@@ -55,6 +55,7 @@ const TXT = {
     zones: n => n ? `${n} zone${n > 1 ? "s" : ""}` : "aucun changement",
     textChanges: n => n ? `${n} changement${n > 1 ? "s" : ""}` : "aucun changement",
     graphic: "Changement graphique",
+    close: "Fermer",
     moved: "déplacé :",
     none: "— aucune —",
     pageN: n => `Page ${n}`,
@@ -131,6 +132,7 @@ const TXT = {
     zones: n => n ? `${n} area${n > 1 ? "s" : ""}` : "no changes",
     textChanges: n => n ? `${n} change${n > 1 ? "s" : ""}` : "no changes",
     graphic: "Graphic change",
+    close: "Close",
     moved: "moved:",
     none: "— none —",
     pageN: n => `Page ${n}`,
@@ -720,7 +722,8 @@ function setTransform() {
   }
 }
 function afterTransform() {
-  $("zoom-fit").textContent = `${Math.round((V.z / V.k) * 75)} %`;
+  // 100 % = taille réelle du papier à l'écran (96 px par pouce, soit 4/3 px par point).
+  $("zoom-fit").textContent = `${Math.round(V.z * V.k * 75)} %`;
   // Libellés à taille constante à l'écran.
   const fs = 12 / V.z;
   stage.querySelectorAll(".pc-sheet-tag").forEach(el => { el.style.fontSize = `${13 / V.z}px`; });
@@ -736,20 +739,23 @@ function afterTransform() {
     });
   });
   if (state.view === "curtain") placeCurtain();
+  placeZoneCard();
   clearTimeout(detailTimer);
-  detailTimer = setTimeout(renderDetail, 260);
+  detailTimer = setTimeout(renderDetail, 150);
 }
 
-// Netteté au zoom : au-delà de la résolution d'analyse, la partie visible est recalculée
-// en haute définition (rendu, comparaison et couleurs), puis posée sur le feuillet.
+// Netteté à tous les zooms : la partie visible est recalculée à la résolution de l'écran
+// (rendu vectoriel pdf.js, comparaison et couleurs), puis posée sur le feuillet. Le feuillet de
+// base (résolution d'analyse, ≈ 2 600 px) n'est vu que pendant un geste : réduit 3 à 4 fois par
+// le navigateur, il crénelait le texte ; agrandi, il devenait flou.
 let detailTimer = 0, detailToken = 0;
 async function renderDetail() {
   const token = ++detailToken;
   const p = state.pairs[state.cur];
   if (!p || !V.sheets.length) return;
-  const need = V.z * (window.devicePixelRatio || 1);
+  const dpr = window.devicePixelRatio || 1;
+  const need = V.z * dpr; // pixels d'écran par pixel du feuillet
   const clear = sheet => sheet.querySelectorAll(".pc-detail").forEach(c => { dropCanvas(c); c.remove(); });
-  if (need <= 1.15 || state.view === "curtain") { V.sheets.forEach(clear); return; }
   const r = vp.getBoundingClientRect();
   const vx0 = -V.x / V.z, vy0 = -V.y / V.z, vx1 = (r.width - V.x) / V.z, vy1 = (r.height - V.y) / V.z;
   const isText = state.opts.mode === "text";
@@ -762,31 +768,40 @@ async function renderDetail() {
     const wpt = (x1 - x0) / k, hpt = (y1 - y0) / k;
     let kd = k * Math.min(need, 6);
     if (wpt * hpt * kd * kd > 9e6) kd = Math.sqrt(9e6 / (wpt * hpt));
-    if (kd <= k * 1.1) { clear(sheet); continue; }
-    let canvas;
+    // Feuillet de base déjà à l'échelle 1:1 de l'écran : inutile de recalculer.
+    if (Math.abs(kd / k - 1) < 0.08) { clear(sheet); continue; }
+    const place = (canvas, cls = "") => {
+      canvas.className = `pc-detail pc-layer ${cls}`.trim();
+      Object.assign(canvas.style, { left: `${x0}px`, top: `${y0}px`, width: `${x1 - x0}px`, height: `${y1 - y0}px` });
+      sheet.insertBefore(canvas, sheet.querySelector("svg"));
+    };
+    let canvases;
     try {
       if (isText) {
         const D = sheet.dataset.side === "A" ? state.A : state.B;
-        canvas = await renderPage(await D.page(+sheet.dataset.idx), {
+        canvases = [await renderPage(await D.page(+sheet.dataset.idx), {
           scale: kd, offsetX: -(x0 / k) * kd, offsetY: -(y0 / k) * kd, width: wpt * kd, height: hpt * kd
-        });
+        })];
       } else {
         const rr = await renderRegion(state.A, p.a, state.B, p.b, p.T || { s: 1, tx: 0, ty: 0 }, kd, x0 / k, y0 / k, wpt, hpt);
         if (token !== detailToken) { dropCanvas(rr.cA); dropCanvas(rr.cB); return; }
-        const m = diffMasks(rr, tolOf());
-        canvas = imgCanvas(compose(rr, m, {
+        // Au moins 1 pixel de tolérance : deux rendus d'un même trait diffèrent sur leurs bords lissés.
+        const m = diffMasks(rr, tolOf(), 48, 1);
+        const opts = {
           colDel: hexToRgb(state.opts.colDel), colAdd: hexToRgb(state.opts.colAdd),
-          fade: state.opts.fade, thick: state.opts.thick, view: sheet.dataset.view
-        }));
+          fade: state.opts.fade, thick: Math.round(state.opts.thick * Math.max(1, dpr))
+        };
+        const views = sheet.dataset.view === "curtain" ? ["new", "old"] : [sheet.dataset.view];
+        canvases = views.map(view => imgCanvas(compose(rr, m, { ...opts, view })));
         dropCanvas(rr.cA); dropCanvas(rr.cB);
       }
     } catch { return; }
-    if (token !== detailToken || !sheet.isConnected) { dropCanvas(canvas); return; }
+    if (token !== detailToken || !sheet.isConnected) { canvases.forEach(dropCanvas); return; }
     clear(sheet);
-    canvas.className = "pc-detail pc-layer";
-    Object.assign(canvas.style, { left: `${x0}px`, top: `${y0}px`, width: `${x1 - x0}px`, height: `${y1 - y0}px` });
-    sheet.insertBefore(canvas, sheet.querySelector("svg"));
+    place(canvases[0]);
+    if (canvases[1]) place(canvases[1], "pc-curtain-top");
   }
+  if (state.view === "curtain") placeCurtain();
 }
 function fit() {
   const r = vp.getBoundingClientRect();
@@ -819,7 +834,7 @@ function zoomToBox(x0, y0, x1, y1) {
 const pointers = new Map();
 let pan = null, pinch = null, moved = 0;
 vp.addEventListener("pointerdown", e => {
-  if (e.target.closest(".pc-curtain")) return;
+  if (e.target.closest(".pc-curtain, .pc-zonecard")) return;
   vp.setPointerCapture(e.pointerId);
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   moved = 0;
@@ -852,7 +867,7 @@ const endPointer = e => {
   if (!pointers.size) { pan = null; vp.classList.remove("is-panning"); }
 };
 vp.addEventListener("pointerup", e => {
-  if (moved < 4) {
+  if (moved < 4 && !e.target.closest(".pc-zonecard")) {
     const target = document.elementsFromPoint(e.clientX, e.clientY).find(el => el.dataset && (el.dataset.zone || el.dataset.change));
     if (target?.dataset.zone) selectZone(state.cur, +target.dataset.zone, { zoom: false });
     else if (target?.dataset.change) selectText(+target.dataset.change, { zoom: false });
@@ -897,11 +912,12 @@ function placeCurtain() {
   const sx = V.curtain * r.width;
   curtain.style.left = `${sx}px`;
   curtain.setAttribute("aria-valuenow", String(Math.round(V.curtain * 100)));
-  const top = stage.querySelector(".pc-curtain-top");
-  if (top) {
-    const X = Math.min(Math.max((sx - V.x) / V.z, 0), V.W);
-    top.style.clipPath = `inset(0 ${V.W - X}px 0 0)`;
-  }
+  const X = Math.min(Math.max((sx - V.x) / V.z, 0), V.W);
+  // Feuillet entier et calque de détail (posé en x0) : la coupe se calcule dans le repère de chacun.
+  stage.querySelectorAll(".pc-curtain-top").forEach(top => {
+    const left = parseFloat(top.style.left) || 0, w = parseFloat(top.style.width) || V.W;
+    top.style.clipPath = `inset(0 ${Math.max(0, left + w - X)}px 0 0)`;
+  });
 }
 curtain.addEventListener("pointerdown", e => {
   curtain.setPointerCapture(e.pointerId);
@@ -1072,10 +1088,65 @@ async function showPair(i, { keepView = false } = {}) {
     curtain.hidden = state.view !== "curtain" || isText || p.a === null || p.b === null;
     if (!keepView || changed) { V.userMoved = false; fit(); } else setTransform();
     if (!curtain.hidden) placeCurtain();
+    renderZoneCard();
   } finally {
     if (token === showToken) $("viewer-busy").hidden = true;
   }
 }
+
+// Fiche de la zone sélectionnée : texte ancien → nouveau lisible en clair, posée sous la zone
+// (ou au-dessus faute de place) et suivie pendant le zoom et le déplacement.
+const zonecard = $("zonecard");
+function selectedZone() {
+  const s = state.sel;
+  if (state.opts.mode === "text" || s?.type !== "zone" || s.pair !== state.cur) return null;
+  return state.pairs[state.cur]?.zones?.[s.zone] || null;
+}
+function renderZoneCard() {
+  const z = selectedZone();
+  if (!z) { zonecard.hidden = true; zonecard.replaceChildren(); return; }
+  const x = t();
+  const rows = (z.text || []).filter(c => c.oldText || c.newText).map(c => {
+    const o = c.oldText ? `<del>${esc(c.oldText)}</del>` : "";
+    const n = c.newText ? `<ins>${esc(c.newText)}</ins>` : "";
+    return `<li>${o}${o && n ? '<span class="arrow">→</span>' : ""}${n}</li>`;
+  });
+  if (!rows.length) rows.push(`<li class="pc-ch-ctx">${esc(x.graphic)}</li>`);
+  zonecard.innerHTML = `<div class="pc-zc-head"><span class="pc-num k-${z.kind}">${state.sel.zone + 1}</span>
+    <b>${esc(x.kind[z.kind])}</b><button type="button" class="pc-zc-close" aria-label="${esc(x.close)}" title="${esc(x.close)}">×</button></div>
+    <ul class="pc-ch-text">${rows.join("")}</ul>`;
+  zonecard.hidden = false;
+  placeZoneCard();
+}
+function placeZoneCard() {
+  const z = selectedZone();
+  if (!z || zonecard.hidden) return;
+  // Côte à côte : la fiche suit la zone du feuillet de droite (nouvelle version).
+  const sheet = V.sheets[V.sheets.length - 1];
+  const left = sheet ? parseFloat(sheet.style.left) || 0 : 0;
+  const k = V.k;
+  const sx0 = V.x + (left + z.x0 * k) * V.z, sx1 = V.x + (left + z.x1 * k) * V.z;
+  const sy0 = V.y + z.y0 * k * V.z, sy1 = V.y + z.y1 * k * V.z;
+  const r = vp.getBoundingClientRect();
+  const w = zonecard.offsetWidth, h = zonecard.offsetHeight, m = 8;
+  let top = sy1 + m;
+  if (top + h > r.height - m && sy0 - m - h >= m) top = sy0 - m - h;
+  top = Math.min(Math.max(top, m), Math.max(m, r.height - h - m));
+  const lft = Math.min(Math.max(sx0, m), Math.max(m, r.width - w - m));
+  // Zone entièrement hors champ : la fiche s'efface plutôt que de flotter sans repère.
+  const off = sx1 < 0 || sx0 > r.width || sy1 < 0 || sy0 > r.height;
+  zonecard.style.visibility = off ? "hidden" : "";
+  zonecard.style.left = `${lft}px`;
+  zonecard.style.top = `${top}px`;
+}
+zonecard.addEventListener("click", e => {
+  if (!e.target.closest(".pc-zc-close")) return;
+  state.sel = null;
+  stage.querySelectorAll(".pc-zone.is-active").forEach(r => r.classList.remove("is-active"));
+  renderZoneCard();
+  renderChanges();
+  vp.focus();
+});
 
 async function visualSheets(p) {
   let h = heavy.get(p.id);
@@ -1105,6 +1176,7 @@ async function visualSheets(p) {
     const s = sheetEl(composed(h, "new"), 0, W, H);
     const top = composed(h, "old");
     top.classList.add("pc-layer", "pc-curtain-top");
+    Object.assign(s.dataset, { k, view: "curtain" });
     s.append(top, zonesSvg(zones, k, W, H));
     return { els: [s], W, H, k };
   }
@@ -1169,6 +1241,7 @@ async function selectZone(pi, zi, { zoom = true } = {}) {
   else if (state.opts.zones) stage.querySelectorAll(".pc-zone").forEach(r => r.classList.toggle("is-active", +r.dataset.zone === zi));
   renderChanges();
   markCurrentChange();
+  renderZoneCard();
   const z = state.pairs[pi].zones[zi];
   if (zoom && z) {
     const k = V.k;
@@ -1248,7 +1321,12 @@ function togglePop(pop, btn, fill) {
   $(pop).querySelector("select, input, button")?.focus();
 }
 document.querySelectorAll(".pc-pop [data-close]").forEach(b => b.addEventListener("click", closePops));
-document.addEventListener("keydown", e => { if (e.key === "Escape") closePops(); });
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  const open = !$("pop-pair").hidden || !$("pop-align").hidden;
+  closePops();
+  if (!open && !zonecard.hidden) zonecard.querySelector(".pc-zc-close").click();
+});
 
 $("pair-label").addEventListener("click", () => togglePop("pop-pair", "pair-label", () => {
   const p = state.pairs[state.cur];

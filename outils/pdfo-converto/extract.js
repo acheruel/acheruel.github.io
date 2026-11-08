@@ -10,11 +10,14 @@ const NUMBERED = /^((?:\d{1,3}|[a-zA-Z]|[ivxlcdm]{1,5})[.)])\s+/i;
 
 /**
  * Extrait la structure des pages retenues.
- * opts : { tables, margins, styles, onProgress(i, n) }
+ * opts : { tables, margins, styles, figures, onProgress(i, n) }
  * Retourne { blocks, outline, bodySize, pages }.
  * Bloc : { type: "h", level, text, page } | { type: "p", runs: [{ t, b, i }], page }
- *        | { type: "li", ordered, marker, level, runs, page } | { type: "table", rows: [[cell]], page }
+ *        | { type: "li", ordered, marker, level, runs, page }
+ *        | { type: "table", rows: [[cell]], spans: [[[rs, cs]]], parts: [{ page, box, asset }], page }
+ *        | { type: "figure", kind: "image" | "vector" | "scan", caption, labels: [texte], box, page, n, asset }
  *        | { type: "pagebreak", page }
+ * box : { x0, y0, x1, y1 } en points, repère d'affichage de la page (y vers le bas).
  */
 export async function extract(pdf, pageIdx, opts = {}) {
   const OPS = (await pdfjs()).OPS;
@@ -28,6 +31,7 @@ export async function extract(pdf, pageIdx, opts = {}) {
     await idle();
   }
   if (opts.margins !== false) dropRepeated(pages);
+  if (opts.figures) dropRepeatedFigures(pages);
 
   // Taille du corps de texte : la plus fréquente (pondérée par le nombre de caractères).
   const sizes = new Map();
@@ -55,11 +59,24 @@ export async function extract(pdf, pageIdx, opts = {}) {
   }
 
   const blocks = [];
+  let figNo = 0;
   for (const p of pages) {
     if (blocks.length) blocks.push({ type: "pagebreak", page: p.index });
     const marks = outlineByPage.get(p.index) || [];
+    let figOnPage = 0, tabOnPage = 0;
+    const tag = `p${String(p.index + 1).padStart(3, "0")}`;
     for (const it of p.flow) {
-      if (it.table) { blocks.push({ type: "table", rows: it.table, page: p.index }); continue; }
+      if (it.table) {
+        blocks.push({ type: "table", rows: it.table.rows, spans: it.table.spans, parts: [{ page: p.index, box: it.box, asset: `images/${tag}-tableau${++tabOnPage}.png` }], page: p.index });
+        continue;
+      }
+      if (it.figure) {
+        const f = it.figure;
+        // Photo ou page numérisée : JPEG ; dessin vectoriel (traits fins) : PNG.
+        const ext = f.kind === "vector" ? "png" : "jpg";
+        blocks.push({ type: "figure", kind: f.kind, caption: f.caption, labels: f.labels, box: f.box, page: p.index, n: ++figNo, asset: `images/${tag}-figure${++figOnPage}.${ext}` });
+        continue;
+      }
       buildBlocks(it.lines, p.index, { bodySize, levelOf, levelsCount: Math.min(levels.length, 3), marks, styles: opts.styles !== false }, blocks);
     }
   }
@@ -116,23 +133,47 @@ async function readPage(page, index, OPS, opts) {
   });
   const tableRows = tables.map((tb, ti) => fillTable(tb, frags.filter((_, k) => inTable[k] === ti)));
   // Grille d'une seule ligne ou colonne (simple cadre) : son texte revient dans le flux.
-  const free = frags.filter((_, k) => inTable[k] < 0 || !tableRows[inTable[k]]);
-  const lines = toLines(free);
+  let free = frags.filter((_, k) => inTable[k] < 0 || !tableRows[inTable[k]]);
 
-  // Ordre de lecture : tableaux insérés à leur hauteur, deux colonnes si détectées.
+  // Figures : images du PDF et dessins vectoriels. Leur texte (cotes, légendes d'axes) quitte le
+  // flux des paragraphes et reste attaché à la figure.
+  const realTables = tables.filter((_, ti) => tableRows[ti]);
+  const figures = opts.figures ? findFigures(graphics(ol, OPS, vt, W, H), realTables, free, W, H) : [];
+  if (figures.length) {
+    const inside = (f, b, m) => { const cx = (f.x0 + f.x1) / 2, cy = f.y - 0.3 * f.size; return cx >= b.x0 - m && cx <= b.x1 + m && cy >= b.y0 - m && cy <= b.y1 + m; };
+    for (const fg of figures) {
+      // Dessin : les libellés courts posés juste au bord (« PILE 1 », cotes) en font partie.
+      const m = fg.kind === "vector" ? 14 : 2;
+      const mine = new Set(free.filter(f => inside(f, fg.box, 2) || (m > 2 && f.t.trim().length <= 30 && inside(f, fg.box, m))));
+      free = free.filter(f => !mine.has(f));
+      for (const f of mine) {
+        if (fg.kind !== "vector") break;
+        const b = fg.box;
+        fg.box = { x0: Math.min(b.x0, f.x0), y0: Math.min(b.y0, f.y - f.size), x1: Math.max(b.x1, f.x1), y1: Math.max(b.y1, f.y + 0.25 * f.size) };
+      }
+      fg.labels = toLines([...mine]).map(l => l.text);
+    }
+  }
+  let lines = toLines(free);
+  for (const fg of figures) lines = attachCaption(fg, lines);
+
+  // Ordre de lecture : tableaux et figures insérés à leur hauteur, deux colonnes si détectées.
   const ordered = orderColumns(lines, W);
   const flow = [];
-  const tabs = tables.map((tb, ti) => ({ y: tb.y0, rows: tableRows[ti] })).filter(t => t.rows).sort((a, b) => a.y - b.y);
+  const objs = [
+    ...tables.map((tb, ti) => ({ y: tb.y0, item: tableRows[ti] && { table: tableRows[ti], box: { x0: tb.x0, y0: tb.y0, x1: tb.x1, y1: tb.y1 } } })),
+    ...figures.map(fg => ({ y: fg.box.y0, item: { figure: fg } }))
+  ].filter(o => o.item).sort((a, b) => a.y - b.y);
   let cur = [];
   for (const ln of ordered) {
-    while (tabs.length && tabs[0].y < ln.y - ln.size && !ln.col) {
+    while (objs.length && objs[0].y < ln.y - ln.size && !ln.col) {
       if (cur.length) { flow.push({ lines: cur }); cur = []; }
-      flow.push({ table: tabs.shift().rows });
+      flow.push(objs.shift().item);
     }
     cur.push(ln);
   }
   if (cur.length) flow.push({ lines: cur });
-  for (const t of tabs) flow.push({ table: t.rows });
+  for (const o of objs) flow.push(o.item);
   if (vertical.length) flow.push({ lines: [{ text: vertical.join(" "), runs: [{ t: vertical.join(" "), b: false, i: false }], x0: 0, x1: 0, y: H, size: 0, vertical: true }] });
 
   return { index, W, H, lines, flow };
@@ -375,9 +416,256 @@ function fillTable(tb, frags) {
   }
   // Colonnes et lignes entièrement vides (filets décoratifs) retirées.
   const keepC = [...Array(C).keys()].filter(c => rows.some(row => row[c]));
-  const out = rows.map(row => keepC.map(c => row[c])).filter(row => row.some(Boolean));
-  if (keepC.length < 2 || out.length < 2) return null;
+  const keepR = [...Array(R).keys()].filter(r => keepC.some(c => rows[r][c]));
+  if (keepC.length < 2 || keepR.length < 2) return null;
+  // Cellules fusionnées : étendue [lignes, colonnes] de chaque ancre, [0, 0] pour une cellule
+  // couverte. Un groupe qui n'est pas un rectangle (filet manquant isolé) reste en cellules simples.
+  const box = new Map();
+  for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
+    const g = find(id(r, c));
+    const b = box.get(g) || { r0: r, r1: r, c0: c, c1: c, n: 0 };
+    b.r0 = Math.min(b.r0, r); b.r1 = Math.max(b.r1, r); b.c0 = Math.min(b.c0, c); b.c1 = Math.max(b.c1, c); b.n++;
+    box.set(g, b);
+  }
+  const kr = new Set(keepR), kc = new Set(keepC);
+  const between = (set, a, b) => { let n = 0; for (let v = a; v <= b; v++) if (set.has(v)) n++; return n; };
+  const spans = keepR.map(r => keepC.map(c => {
+    const g = find(id(r, c)), b = box.get(g), a = anchor.get(g);
+    if (b.n === 1 || b.n !== (b.r1 - b.r0 + 1) * (b.c1 - b.c0 + 1)) return [1, 1];
+    if (a === id(r, c)) return [between(kr, b.r0, b.r1), between(kc, b.c0, b.c1)];
+    return kr.has(Math.floor(a / C)) && kc.has(a % C) ? [0, 0] : [1, 1];
+  }));
+  return { rows: keepR.map(r => keepC.map(c => rows[r][c])), spans };
+}
+
+// ---------------------------------------------------------------- Figures
+/**
+ * Éléments graphiques de la page, en espace d'affichage : tracés (boîte, courbe ou non, rempli,
+ * contour, rectangle seul) et images (photos, pages numérisées). Les XObject formulaires sont suivis.
+ */
+function graphics(ol, OPS, vt, W, H) {
+  const paths = [], images = [];
+  let ctm = [1, 0, 0, 1, 0, 0];
+  let white = false;
+  const stack = [];
+  const PAINT_STROKE = new Set([OPS.stroke, OPS.closeStroke, OPS.fillStroke, OPS.eoFillStroke, OPS.closeFillStroke, OPS.closeEOFillStroke]);
+  const PAINT_FILL = new Set([OPS.fill, OPS.eoFill, OPS.fillStroke, OPS.eoFillStroke, OPS.closeFillStroke, OPS.closeEOFillStroke]);
+  const IMAGE = new Set([OPS.paintImageXObject, OPS.paintInlineImageXObject, OPS.paintImageMaskXObject, OPS.paintJpegXObject].filter(v => v !== undefined));
+  const boxOf = pts => {
+    const m = mul(ctm, vt);
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const [x, y] of pts) {
+      const X = m[0] * x + m[2] * y + m[4], Y = m[1] * x + m[3] * y + m[5];
+      if (X < x0) x0 = X;
+      if (X > x1) x1 = X;
+      if (Y < y0) y0 = Y;
+      if (Y > y1) y1 = Y;
+    }
+    return { x0: Math.max(0, x0), y0: Math.max(0, y0), x1: Math.min(W, x1), y1: Math.min(H, y1) };
+  };
+  for (let k = 0; k < ol.fnArray.length; k++) {
+    const fn = ol.fnArray[k], args = ol.argsArray[k];
+    if (fn === OPS.save) stack.push([ctm.slice(), white]);
+    else if (fn === OPS.restore) [ctm, white] = stack.pop() || [[1, 0, 0, 1, 0, 0], false];
+    else if (fn === OPS.paintFormXObjectBegin) {
+      stack.push([ctm.slice(), white]);
+      const m = args && args[0];
+      if (m && m.length === 6) ctm = mul(Array.from(m), ctm);
+    } else if (fn === OPS.paintFormXObjectEnd) [ctm, white] = stack.pop() || [[1, 0, 0, 1, 0, 0], false];
+    else if (fn === OPS.transform) ctm = mul(args, ctm);
+    else if (fn === OPS.setFillRGBColor) {
+      const c = String(args[0] || "");
+      const v = c.startsWith("#") ? [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)) : Array.from(args).map(Number);
+      white = v.length >= 3 && v.every(x => x >= 240);
+    } else if (fn === OPS.setFillGray) white = Number(args[0]) >= 0.94;
+    else if (IMAGE.has(fn)) {
+      const b = boxOf([[0, 0], [1, 0], [0, 1], [1, 1]]);
+      if (b.x1 - b.x0 > 2 && b.y1 - b.y0 > 2) images.push(b);
+    } else if (fn === OPS.constructPath) {
+      const paint = args[0];
+      const stroke = PAINT_STROKE.has(paint), fill = PAINT_FILL.has(paint) && !white;
+      if (!stroke && !fill) continue;
+      const data = args[1] && args[1][0];
+      if (!data) continue;
+      const pts = [];
+      let curved = false, moves = 0;
+      for (let j = 0; j < data.length;) {
+        const op = data[j];
+        if (op === 0) { pts.push([data[j + 1], data[j + 2]]); moves++; j += 3; }
+        else if (op === 1) { pts.push([data[j + 1], data[j + 2]]); j += 3; }
+        else if (op === 2) { curved = true; pts.push([data[j + 1], data[j + 2]], [data[j + 3], data[j + 4]], [data[j + 5], data[j + 6]]); j += 7; }
+        else if (op === 3) { curved = true; pts.push([data[j + 1], data[j + 2]], [data[j + 3], data[j + 4]]); j += 5; }
+        else if (op === 4) j += 1;
+        else break;
+      }
+      if (!pts.length) continue;
+      const b = boxOf(pts);
+      if (b.x1 < b.x0 || b.y1 < b.y0) continue;
+      // Rectangle seul (cadre, fond de ligne) : 4 ou 5 sommets tous sur les coins de sa boîte.
+      // Repéré pour ne pas compter des fonds de cellules ou de lignes comme un dessin.
+      const onCorner = ([x, y]) => {
+        const m = mul(ctm, vt), X = m[0] * x + m[2] * y + m[4], Y = m[1] * x + m[3] * y + m[5];
+        return (Math.abs(X - b.x0) < 0.6 || Math.abs(X - b.x1) < 0.6) && (Math.abs(Y - b.y0) < 0.6 || Math.abs(Y - b.y1) < 0.6);
+      };
+      const rect = !curved && moves === 1 && (pts.length === 4 || pts.length === 5) && pts.every(onCorner);
+      paths.push({ ...b, curved, fill, stroke, rect, n: Math.max(1, moves) });
+    }
+  }
+  return { paths, images };
+}
+
+const CAPTION = /^(fig(?:ure)?s?\.?|photo(?:graphie)?s?|image|illustration|graphique|sch[ée]ma|croquis|plan|carte|diagramme|chart|graph|diagram|drawing|map|exhibit)\s*(?:n[o°º]\.?\s*)?(?:\d|[A-Z][-.]?\d)/i;
+
+/**
+ * Regroupe les éléments graphiques proches (grille d'occupation) et garde les groupes qui
+ * forment une figure : une image assez grande, ou un dessin d'au moins quelques tracés où le
+ * texte reste minoritaire (un cadre autour d'un paragraphe n'est pas une figure).
+ */
+function findFigures(g, tables, frags, W, H) {
+  const pageArea = W * H;
+  const textChars = frags.reduce((n, f) => n + f.t.length, 0);
+  const inTable = b => tables.some(t => b.x0 >= t.x0 - 3 && b.x1 <= t.x1 + 3 && b.y0 >= t.y0 - 3 && b.y1 <= t.y1 + 3);
+  const items = [];
+  for (const p of g.paths) {
+    const w = p.x1 - p.x0, h = p.y1 - p.y0;
+    if (w < 0.3 && h < 0.3) continue;
+    if (w * h > 0.8 * pageArea || inTable(p)) continue;
+    // Filets de séparation et cadres de page : ils relieraient tout ce qu'ils longent.
+    if ((h < 2.5 && w > 0.45 * W) || (w < 2.5 && h > 0.45 * H)) continue;
+    if (p.rect && (w > 0.5 * W || h > 0.5 * H)) continue;
+    items.push({ ...p, img: false });
+  }
+  let scan = false;
+  for (const im of g.images) {
+    const a = (im.x1 - im.x0) * (im.y1 - im.y0);
+    if (a > 0.6 * pageArea) {
+      // Très grande image : fond d'une page qui a du texte, page numérisée (ni texte, ni marge),
+      // sinon une grande figure (capture d'écran sur une diapositive).
+      if (textChars >= 200) continue;
+      if (a > 0.85 * pageArea && textChars < 20) { scan = true; continue; }
+    }
+    if (inTable(im)) continue;
+    items.push({ ...im, img: true, rect: false, curved: false, n: 1 });
+  }
+  if (scan) return [{ kind: "scan", box: { x0: 0, y0: 0, x1: W, y1: H }, labels: [], caption: "" }];
+  if (!items.length) return [];
+
+  // Grille d'occupation : cellules de 4 pt, éléments élargis de 6 pt pour relier les traits voisins.
+  const CELL = 4, GAP = 6;
+  const GW = Math.ceil(W / CELL) + 1, GH = Math.ceil(H / CELL) + 1;
+  const grid = new Uint8Array(GW * GH);
+  const mark = (x0, y0, x1, y1) => {
+    const a = Math.max(0, Math.floor((x0 - GAP) / CELL)), b = Math.min(GW - 1, Math.floor((x1 + GAP) / CELL));
+    const c = Math.max(0, Math.floor((y0 - GAP) / CELL)), d = Math.min(GH - 1, Math.floor((y1 + GAP) / CELL));
+    for (let y = c; y <= d; y++) grid.fill(1, y * GW + a, y * GW + b + 1);
+  };
+  for (const it of items) {
+    const w = it.x1 - it.x0, h = it.y1 - it.y0;
+    if (it.rect && it.stroke && !it.fill && w > 30 && h > 30) {
+      // Cadre : seulement son pourtour (un cadre autour d'un texte ne doit pas l'avaler).
+      mark(it.x0, it.y0, it.x1, it.y0); mark(it.x0, it.y1, it.x1, it.y1);
+      mark(it.x0, it.y0, it.x0, it.y1); mark(it.x1, it.y0, it.x1, it.y1);
+    } else mark(it.x0, it.y0, it.x1, it.y1);
+  }
+  const label = new Int32Array(GW * GH).fill(-1);
+  const comps = [];
+  const stack = [];
+  for (let s = 0; s < grid.length; s++) {
+    if (!grid[s] || label[s] >= 0) continue;
+    const id = comps.length;
+    comps.push({ x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity, n: 0, img: 0, rects: 0 });
+    label[s] = id;
+    stack.push(s);
+    while (stack.length) {
+      const q = stack.pop(), x = q % GW, y = (q / GW) | 0;
+      if (x > 0 && grid[q - 1] && label[q - 1] < 0) { label[q - 1] = id; stack.push(q - 1); }
+      if (x < GW - 1 && grid[q + 1] && label[q + 1] < 0) { label[q + 1] = id; stack.push(q + 1); }
+      if (y > 0 && grid[q - GW] && label[q - GW] < 0) { label[q - GW] = id; stack.push(q - GW); }
+      if (y < GH - 1 && grid[q + GW] && label[q + GW] < 0) { label[q + GW] = id; stack.push(q + GW); }
+    }
+  }
+  for (const it of items) {
+    const gx = Math.min(GW - 1, Math.max(0, Math.floor(it.x0 / CELL))), gy = Math.min(GH - 1, Math.max(0, Math.floor(it.y0 / CELL)));
+    const c = comps[label[gy * GW + gx]];
+    if (!c) continue;
+    c.x0 = Math.min(c.x0, it.x0); c.y0 = Math.min(c.y0, it.y0); c.x1 = Math.max(c.x1, it.x1); c.y1 = Math.max(c.y1, it.y1);
+    c.n += it.n;
+    if (it.rect) c.rects++;
+    if (it.img) c.img += (it.x1 - it.x0) * (it.y1 - it.y0);
+  }
+  const out = [];
+  for (const c of comps) {
+    if (!c.n) continue;
+    const w = c.x1 - c.x0, h = c.y1 - c.y0, area = w * h;
+    if (w < 36 || h < 24) continue;
+    const photo = c.img >= 1600 && c.img >= 0.3 * area;
+    // Dessin : assez de tracés, et pas seulement des rectangles (fonds de lignes surlignées).
+    const drawing = c.n >= 8 && c.rects < 0.8 * c.n;
+    if (!photo && !drawing) continue;
+    // Texte dans le groupe : au-delà d'un tiers de la surface, c'est une mise en page, pas une figure.
+    let textArea = 0;
+    for (const f of frags) {
+      const cx = (f.x0 + f.x1) / 2, cy = f.y - 0.3 * f.size;
+      if (cx >= c.x0 && cx <= c.x1 && cy >= c.y0 && cy <= c.y1) textArea += (f.x1 - f.x0) * f.size;
+    }
+    if (!photo && textArea > 0.33 * area) continue;
+    // Logo ou ornement dans les marges du haut et du bas.
+    if ((c.y1 < 0.1 * H || c.y0 > 0.93 * H) && area < 0.08 * pageArea) continue;
+    out.push({ kind: photo && c.n <= 3 ? "image" : "vector", box: { x0: c.x0, y0: c.y0, x1: c.x1, y1: c.y1 }, labels: [], caption: "" });
+  }
+  // Figures qui se chevauchent (dessin posé sur une photo) : réunies. Deux parties d'un même
+  // dessin (ligne de cotes au-dessus d'une élévation) sont aussi réunies si elles se touchent presque.
+  out.sort((a, b) => a.box.y0 - b.box.y0);
+  const near = (a, b, both) => {
+    const gx = Math.max(a.x0 - b.x1, b.x0 - a.x1), gy = Math.max(a.y0 - b.y1, b.y0 - a.y1);
+    if (gx < 0 && gy < 0) return true;
+    return both && ((gx <= 28 && gy < 0) || (gy <= 28 && gx < 0));
+  };
+  for (let merged = true; merged;) {
+    merged = false;
+    for (let i = 0; i < out.length && !merged; i++) for (let j = out.length - 1; j > i; j--) {
+      const a = out[i].box, b = out[j].box;
+      if (near(a, b, out[i].kind === "vector" && out[j].kind === "vector")) {
+        out[i].box = { x0: Math.min(a.x0, b.x0), y0: Math.min(a.y0, b.y0), x1: Math.max(a.x1, b.x1), y1: Math.max(a.y1, b.y1) };
+        if (out[j].kind === "vector") out[i].kind = "vector";
+        out.splice(j, 1);
+        merged = true;
+        break;
+      }
+    }
+  }
   return out;
+}
+
+/**
+ * Légende : ligne « Figure 3 – … », « Photo 2 : … » juste sous la figure ou juste au-dessus,
+ * avec ses lignes de suite ; elle quitte le flux et accompagne la figure. Une légende placée
+ * dans le cadre de la figure est reprise de son texte.
+ */
+function attachCaption(fg, lines) {
+  const k = fg.labels.findIndex(t => CAPTION.test(t));
+  if (k >= 0) { fg.caption = fg.labels[k]; fg.labels.splice(k, 1); return lines; }
+  const b = fg.box;
+  let best = -1, bestD = Infinity;
+  lines.forEach((ln, n) => {
+    if (!CAPTION.test(ln.text) || ln.x1 < b.x0 - 24 || ln.x0 > b.x1 + 24) return;
+    const top = ln.y - ln.size;
+    const d = top >= b.y1 - 2 ? top - b.y1 : b.y0 - ln.y;
+    if (d >= -2 && d <= 30 && d < bestD) { best = n; bestD = d; }
+  });
+  if (best < 0) return lines;
+  const used = [best];
+  let cap = lines[best].text, prev = lines[best];
+  for (let n = best + 1; n < lines.length && used.length < 3; n++) {
+    const ln = lines[n];
+    if (ln.y - prev.y > 1.5 * prev.size || Math.abs(ln.size - prev.size) > 0.6 || Math.abs(ln.x0 - lines[best].x0) > 2 * ln.size || CAPTION.test(ln.text)) break;
+    if (ln.y > b.y0 - 2 && ln.y < b.y1 + 2) break;
+    cap += " " + ln.text;
+    used.push(n);
+    prev = ln;
+  }
+  fg.caption = cap.replace(/\s+/g, " ").trim();
+  return lines.filter((_, n) => !used.includes(n));
 }
 
 /**
@@ -410,6 +698,8 @@ function mergeContinuedTables(blocks) {
     if (b.type === "table" && a && a.type === "table" && j < k - 1 && a.rows[0].length === b.rows[0].length) {
       const same = b.rows[0].join("|") === a.rows[0].join("|");
       a.rows.push(...(same ? b.rows.slice(1) : b.rows));
+      if (a.spans && b.spans) a.spans.push(...(same ? b.spans.slice(1) : b.spans));
+      if (a.parts && b.parts) a.parts.push(...b.parts);
       blocks.splice(j + 1, k - j); // retire les sauts de page et le tableau fusionné
       k = j + 1;
       continue;
@@ -540,8 +830,18 @@ function dropRepeated(pages) {
     if (!drop.size) continue;
     p.lines = p.lines.filter(l => !drop.has(l));
     for (const f of p.flow) if (f.lines) f.lines = f.lines.filter(l => !drop.has(l));
-    p.flow = p.flow.filter(f => f.table || f.lines.length);
+    p.flow = p.flow.filter(f => f.table || f.figure || f.lines.length);
   }
+}
+
+/** Figure au même endroit sur au moins la moitié des pages (logo, filigrane) : décor, retirée. */
+function dropRepeatedFigures(pages) {
+  if (pages.length < 2) return;
+  const key = b => [b.x0, b.y0, b.x1, b.y1].map(v => Math.round(v / 6)).join(",");
+  const count = new Map();
+  for (const p of pages) for (const k of new Set(p.flow.filter(f => f.figure && f.figure.kind !== "scan").map(f => key(f.figure.box)))) count.set(k, (count.get(k) || 0) + 1);
+  const min = pages.length === 2 ? 2 : Math.max(3, Math.ceil(pages.length / 2));
+  for (const p of pages) p.flow = p.flow.filter(f => !f.figure || f.figure.kind === "scan" || count.get(key(f.figure.box)) < min);
 }
 
 // ---------------------------------------------------------------- Signets

@@ -115,7 +115,26 @@
             </div>
             <p class="cv-hint" id="chapters-hint"></p>
           </div>
+          <div class="opt">
+            <span class="opt-label" id="lbl-fig" data-en="Figures">Figures</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-fig" data-opt="figures">
+              <button type="button" role="radio" data-value="none" data-en="Ignore">Ignorer</button>
+              <button type="button" role="radio" data-value="text" data-en="Description">Description</button>
+              <button type="button" role="radio" data-value="images" data-en="Images (.zip)">Images (.zip)</button>
+            </div>
+            <p class="cv-hint" id="fig-hint"></p>
+          </div>
           <label class="check"><input type="checkbox" data-opt="tables"><span><span data-en="Detect tables">Détecter les tableaux</span><small data-en="From the ruled lines of the PDF.">À partir des filets du PDF.</small></span></label>
+          <div class="opt" data-if-tables>
+            <span class="opt-label" id="lbl-tfmt" data-en="Tables written as">Tableaux écrits en</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-tfmt" data-opt="tableFmt">
+              <button type="button" role="radio" data-value="auto" data-en="Automatic">Automatique</button>
+              <button type="button" role="radio" data-value="md">Markdown</button>
+              <button type="button" role="radio" data-value="html">HTML</button>
+            </div>
+            <p class="cv-hint" data-en="Automatic: Markdown, or HTML when cells are merged (rowspan and colspan keep each value under its column).">Automatique : Markdown, ou HTML si des cellules sont fusionnées (rowspan et colspan gardent chaque valeur sous sa colonne).</p>
+          </div>
+          <label class="check" data-if-tables data-if-images><input type="checkbox" data-opt="tableImages"><span><span data-en="Add an image of each table">Joindre l'image de chaque tableau</span><small data-en="To check the figures, or for an AI that reads images.">Pour vérifier les chiffres, ou pour une IA qui lit les images.</small></span></label>
           <label class="check"><input type="checkbox" data-opt="margins"><span data-en="Remove repeated headers and footers">Retirer les en-têtes et pieds de page répétés</span></label>
           <label class="check"><input type="checkbox" data-opt="styles"><span data-en="Keep bold and italics">Garder le gras et l'italique</span></label>
           <label class="check"><input type="checkbox" data-opt="pageMarkers"><span><span data-en="Page markers">Repères de page</span><small data-en="A comment &lt;!-- page 3 --&gt; at each new page.">Un commentaire &lt;!-- page 3 --&gt; à chaque nouvelle page.</small></span></label>

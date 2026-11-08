@@ -329,10 +329,10 @@ export async function renderRegion(A, ia, B, ib, T, kd, x0, y0, w, h) {
  * Masques des différences. tolMm : tolérance de position (mm sur le papier).
  * Un trait est « supprimé » s'il est dans A et qu'aucune encre de B n'est à moins de la tolérance.
  */
-export function diffMasks(r, tolMm, thr = 48) {
+export function diffMasks(r, tolMm, thr = 48, minRad = 0) {
   const { W, H, k } = r;
   const N = W * H;
-  const rad = Math.max(0, Math.round(tolMm * MM * k));
+  const rad = Math.max(minRad, Math.round(tolMm * MM * k));
   const inkA = new Uint8Array(N), inkB = new Uint8Array(N), seeA = new Uint8Array(N), seeB = new Uint8Array(N);
   const lo = thr >> 1;
   if (r.dA) for (let j = 0; j < N; j++) { inkA[j] = r.dA[j] > thr; seeA[j] = r.dA[j] > lo; }
@@ -345,7 +345,8 @@ export function diffMasks(r, tolMm, thr = 48) {
     if (inkB[j] && !nearA[j]) { added[j] = 1; nAdd++; }
     if (inkA[j] || inkB[j]) nInk++;
   }
-  return { removed, added, nRem, nAdd, nInk, rad };
+  // nearA / nearB servent aussi à l'affichage (encre propre à une version, en niveaux continus).
+  return { removed, added, nearA, nearB, nRem, nAdd, nInk, rad };
 }
 
 /**
@@ -430,38 +431,38 @@ export function findZones(r, m, { gapMm = 4, minPx = 8 } = {}) {
 }
 
 /**
- * Image affichée : traits communs en gris (opacité réglable), supprimés et ajoutés en couleur.
+ * Image affichée, dans l'esprit du PDF comparé : l'encre garde ses niveaux (bords lissés, texte
+ * net) au lieu d'être seuillée en aplats. Encre commune en gris (opacité réglable), encre propre à
+ * l'ancienne en couleur « supprimé », propre à la nouvelle en couleur « ajouté », combinées en
+ * produit (comme le mode « Produit » de l'export). « thick » ajoute un liseré pâle autour des
+ * traits modifiés (rayon en pixels du canevas) pour les repérer sans empâter les lettres.
  * view : "overlay" | "old" | "new". Retourne un ImageData.
  */
 export function compose(r, m, { colDel, colAdd, fade = 0.35, thick = 1, view = "overlay" }) {
   const { W, H } = r;
   const N = W * H;
   const img = new ImageData(W, H);
-  const out = new Uint32Array(img.data.buffer);
-  const le = new Uint8Array(new Uint32Array([0x01020304]).buffer)[0] === 4;
-  const pack = (R, G, B) => (le ? (255 << 24) | (B << 16) | (G << 8) | R : (R << 24) | (G << 16) | (B << 8) | 255) >>> 0;
-  const dispDel = thick > 0 ? dilate(m.removed, W, H, thick) : m.removed;
-  const dispAdd = thick > 0 ? dilate(m.added, W, H, thick) : m.added;
-  const cDel = pack(...colDel), cAdd = pack(...colAdd);
-  const gray = new Uint32Array(256);
-  for (let d = 0; d < 256; d++) {
-    const v = Math.round(255 - d * fade);
-    gray[d] = pack(v, v, Math.min(255, v + Math.round(d * fade * 0.06)));
-  }
-  const dA = r.dA, dB = r.dB;
-  for (let j = 0; j < N; j++) {
-    const a = dA ? dA[j] : 0, b = dB ? dB[j] : 0;
-    if (view === "overlay") {
-      if (m.removed[j]) out[j] = cDel;
-      else if (m.added[j]) out[j] = cAdd;
-      else if (dispDel[j] && b < 40) out[j] = cDel;
-      else if (dispAdd[j] && a < 40) out[j] = cAdd;
-      else out[j] = gray[a > b ? a : b];
-    } else {
-      const d = view === "old" ? a : b;
-      const hl = view === "old" ? dispDel[j] : dispAdd[j];
-      out[j] = hl ? (view === "old" ? cDel : cAdd) : gray[Math.min(255, Math.round(d / Math.max(fade, 0.05)))];
-    }
+  const px = img.data;
+  const showA = view !== "new", showB = view !== "old";
+  const f = view === "overlay" ? fade : 1; // vues seules : l'inchangé reste noir, lisible
+  const haloDel = showA && thick > 0 ? dilate(m.removed, W, H, thick) : null;
+  const haloAdd = showB && thick > 0 ? dilate(m.added, W, H, thick) : null;
+  const HALO = 0.2;
+  // Absorption de chaque couleur (1 − composante) : multiplier par (1 − encre × absorption).
+  const kD = colDel.map(c => 1 - c / 255), kA = colAdd.map(c => 1 - c / 255);
+  const dA = showA ? r.dA : null, dB = showB ? r.dB : null;
+  const nearA = m.nearA, nearB = m.nearB;
+  for (let j = 0, o = 0; j < N; j++, o += 4) {
+    const a = dA ? dA[j] / 255 : 0, b = dB ? dB[j] / 255 : 0;
+    const del = a && !(nearB && nearB[j]) ? a : 0; // encre de l'ancienne sans voisine dans la nouvelle
+    const add = b && !(nearA && nearA[j]) ? b : 0;
+    const com = Math.max(a - del, b - add) * f;
+    let R = 1 - com, G = R, B = 1 - com * 0.94;
+    if (haloDel && haloDel[j] && del < 0.25) { const h = HALO * (1 - del); R *= 1 - h * kD[0]; G *= 1 - h * kD[1]; B *= 1 - h * kD[2]; }
+    if (haloAdd && haloAdd[j] && add < 0.25) { const h = HALO * (1 - add); R *= 1 - h * kA[0]; G *= 1 - h * kA[1]; B *= 1 - h * kA[2]; }
+    if (del) { R *= 1 - del * kD[0]; G *= 1 - del * kD[1]; B *= 1 - del * kD[2]; }
+    if (add) { R *= 1 - add * kA[0]; G *= 1 - add * kA[1]; B *= 1 - add * kA[2]; }
+    px[o] = R * 255 + 0.5; px[o + 1] = G * 255 + 0.5; px[o + 2] = B * 255 + 0.5; px[o + 3] = 255;
   }
   return img;
 }

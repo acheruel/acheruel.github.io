@@ -15,11 +15,22 @@ Inspiré des fonctions d'[iLovePDF](https://www.ilovepdf.com/fr) et de
   retirés, lecture en deux colonnes. Sortie en **un fichier** ou **un fichier par chapitre** (signets du
   PDF, sinon titres de niveau 1) avec un sommaire, dans un .zip. Mode automatique : découpage à partir de
   25 pages. Aperçu rendu ou source, copie en un clic.
+  - **Figures** : images du PDF (photos, captures), dessins vectoriels (plans, graphiques, schémas) et
+    pages numérisées sont repérés. Les parties proches d'un même dessin sont réunies, les logos répétés
+    écartés. La légende (« Figure 3 – … », « Photo 2 : … ») et le texte lu dans la figure (cotes,
+    libellés, axes) quittent les paragraphes et forment une **fiche** à la place de la figure.
+    Trois choix : *Ignorer*, *Description* (fiche seule, légère, pour une IA qui ne lit que du texte)
+    ou *Images (.zip)* : la fiche plus l'image découpée (PNG pour les dessins, JPEG pour les photos,
+    2 000 px au plus) dans un dossier `images/`, liée par `![légende](images/p004-figure1.png)`.
+  - **Tableaux écrits en** *Automatique* (Markdown, ou HTML dès qu'une cellule est fusionnée),
+    *Markdown* ou *HTML*. Le HTML garde `rowspan` et `colspan` : dans une liste de prix, les lignes
+    « type 1 » à « type 4 » restent rattachées à leur code d'ouvrage, ce qu'un tableau Markdown perd.
+    Option : joindre l'image de chaque tableau (contrôle des chiffres, IA qui lit les images).
 - **Images (.jpg, .png)** : une image par page, 96, 150 ou 300 ppp, qualité JPG réglable, en .zip.
 - **Diviser (.pdf)** : chaque page, toutes les N pages ou plages personnalisées (« 1-3, 4-10 »). Les pages
   sont copiées telles quelles (texte et vecteurs conservés).
 - **Word (.docx)** : texte modifiable (styles Titre 1 à 4 de Word, listes, tableaux avec en-tête répété,
-  lignes de section fusionnées) ou une image par page (mise en page exacte). Le fichier est écrit
+  lignes de section fusionnées, figures en images avec leur légende) ou une image par page (mise en page exacte). Le fichier est écrit
   directement au format Office Open XML, sans bibliothèque.
 - **PowerPoint (.pptx)** : une diapositive par page, au format de la page, avec le texte de la page dans
   les notes (cherchable).
@@ -28,10 +39,12 @@ Une plage de pages (« 1-10, 15 ») s'applique à tous les formats.
 
 ## Limites
 
-- Un PDF numérisé (image sans texte) ne donne pas de Markdown ni de Word modifiable : il faudrait une
-  reconnaissance de caractères (OCR). Les formats Images, Word (images) et PowerPoint fonctionnent.
+- Pas de reconnaissance de caractères (OCR) : le texte *dessiné dans une image* (capture d'écran,
+  page numérisée) n'est pas lu. Une page numérisée devient une figure « page numérisée » ; avec
+  *Images (.zip)*, une IA qui lit les images en tire le texte (souvent mieux qu'un OCR).
 - Les tableaux sans filets (simple alignement de colonnes) restent en paragraphes.
-- Les images contenues dans le PDF ne sont pas extraites dans le Markdown.
+- La détection des figures est heuristique : un dessin très aéré peut être coupé en deux, un encadré
+  très chargé en traits peut passer pour une figure. *Ignorer* revient au comportement d'avant.
 
 ## Fichiers
 

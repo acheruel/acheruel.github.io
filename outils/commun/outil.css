@@ -134,4 +134,5 @@ input[type=range] { accent-color: var(--teal); }
 .md-preview th, .md-preview td { border: 1px solid #cbd8e1; padding: 5px 8px; vertical-align: top; text-align: left; }
 .md-preview th { background: #eef3f6; color: var(--navy); font-weight: 650; }
 .md-preview tr:nth-child(even) td { background: #f8fafb; }
+.md-preview img { display: block; max-width: 100%; height: auto; max-height: 520px; margin: .2em 0 .5em; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
 .md-source { margin: 0; font-family: Consolas, "Cascadia Mono", monospace; font-size: .8125rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); tab-size: 2; }

@@ -28,7 +28,12 @@ ACC et Bluebeam Revu.
   s'il a glissé d'une page à l'autre ; en-têtes et pieds de page répétés ignorés, mots coupés en fin de
   ligne recomposés, majuscules ignorées au besoin. Affichage côte à côte avec surlignage.
 - **Visionneuse** : superposition, côte à côte, rideau, ancienne, nouvelle ; zoom à la molette, au
-  pincement ou au clavier, avec netteté recalculée au zoom.
+  pincement ou au clavier. La partie visible est recalculée à la résolution de l'écran à tous les
+  zooms (plus de texte crénelé en vue d'ensemble) et colorée comme le PDF comparé : l'encre garde
+  ses niveaux lissés, l'inchangé en gris, l'ancien et le nouveau en couleur, un liseré pâle signale
+  les traits modifiés sans empâter les lettres. Cliquer une zone ouvre sa **fiche** sur la
+  visionneuse : le texte « ancien → nouveau » s'y lit en clair, même quand les deux versions se
+  superposent sur le dessin (Échap pour fermer).
 - **PDF comparé à télécharger** : page de synthèse (tableau des pages et chiffres clés), pages superposées
   **vectorielles** (nettes, légères, écrites en quelques secondes), zones encadrées et numérotées, liste
   des changements. Option « Images (comme à l'écran) ». Liste des changements en CSV (Excel).

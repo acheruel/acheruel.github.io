@@ -21,8 +21,54 @@ function mdRuns(runs) {
 }
 
 const cell = s => mdEsc(s).replace(/\|/g, "\\|").replace(/\n/g, "<br>");
+const htmlEsc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-/** Blocs → Markdown. opts : { pageMarkers } */
+/** Le tableau a-t-il des cellules fusionnées (hors ligne de section pleine largeur) ? */
+const hasMerges = b => (b.spans || []).some(r => r.some(([rs, cs]) => rs > 1 || cs > 1));
+
+/**
+ * Tableau HTML : fusions conservées (rowspan, colspan), retours à la ligne en <br>. Une IA y
+ * retrouve quelle valeur appartient à quelle colonne, ce qu'un tableau Markdown ne peut pas dire.
+ */
+function htmlTable(b) {
+  const rows = b.rows.map((r, ri) => {
+    const tag = ri === 0 ? "th" : "td";
+    const cells = r.map((c, ci) => {
+      const [rs, cs] = b.spans?.[ri]?.[ci] || [1, 1];
+      if (!rs || !cs) return "";
+      return `<${tag}${rs > 1 ? ` rowspan="${rs}"` : ""}${cs > 1 ? ` colspan="${cs}"` : ""}>${htmlEsc(c).replace(/\n/g, "<br>")}</${tag}>`;
+    }).join("");
+    return `<tr>${cells}</tr>`;
+  });
+  return `<table>\n${rows.join("\n")}\n</table>`;
+}
+
+const FIG_LABELS = {
+  figure: "Figure", page: "p.", text: "Texte dans la figure", none: "texte de l'image non extractible du PDF : voir l'image",
+  kind: { image: "image", vector: "dessin", scan: "page numérisée" }, tableImage: "image du tableau"
+};
+
+/**
+ * Figure en Markdown. « text » : fiche (légende, nature, page, texte lu dans la figure) ;
+ * « images » : la même fiche précédée de l'image (fichier du dossier images/).
+ */
+function figureMd(b, mode, L) {
+  const head = `**${L.figure} ${b.n}** · ${L.kind[b.kind] || b.kind} · ${L.page} ${b.page + 1}`;
+  const lines = [`> ${head}${b.caption ? ` : ${mdEsc(b.caption)}` : ""}`];
+  const labels = (b.labels || []).join(" · ").replace(/\s+/g, " ").trim();
+  if (labels) lines.push(">", `> *${L.text} :* ${mdEsc(labels.length > 1500 ? labels.slice(0, 1497) + "…" : labels)}`);
+  else if (b.kind !== "vector") lines.push(">", `> *${L.none}*`);
+  const card = lines.join("\n");
+  if (mode !== "images") return card;
+  const alt = (b.caption || `${L.figure} ${b.n}, ${L.page} ${b.page + 1}`).replace(/[[\]]/g, "");
+  return `![${alt}](${b.asset})\n\n${card}`;
+}
+
+/**
+ * Blocs → Markdown.
+ * opts : { pageMarkers, figures: "none" | "text" | "images", tableFmt: "auto" | "md" | "html",
+ *          tableImages (avec figures « images »), labels (libellés des figures, selon la langue) }
+ */
 export function toMarkdown(blocks, opts = {}) {
   const parts = [];
   let prevType = null, lastPage = null;
@@ -32,12 +78,18 @@ export function toMarkdown(blocks, opts = {}) {
       parts.push({ t: `<!-- page ${b.page + 1} -->`, type: "marker" });
       lastPage = b.page;
     }
+    if (b.type === "figure") {
+      if ((opts.figures || "text") !== "none") parts.push({ t: figureMd(b, opts.figures || "text", { ...FIG_LABELS, ...opts.labels }), type: "figure" });
+      continue;
+    }
     if (b.type === "h") parts.push({ t: `${"#".repeat(b.level)} ${mdEsc(b.text)}`, type: "h" });
     else if (b.type === "p") parts.push({ t: mdRuns(b.runs), type: "p" });
     else if (b.type === "li") {
       const ind = "  ".repeat(b.level || 0);
       const num = b.ordered && /^\d+[.)]$/.test(b.marker) ? `${parseInt(b.marker, 10)}. ` : b.ordered ? `- ${b.marker} ` : "- ";
       parts.push({ t: ind + num + mdRuns(b.runs).replace(/^\\/, ""), type: "li" });
+    } else if (b.type === "table" && (opts.tableFmt === "html" || (opts.tableFmt === "auto" && hasMerges(b)))) {
+      parts.push({ t: htmlTable(b), type: "table" });
     } else if (b.type === "table") {
       const cols = Math.max(...b.rows.map(r => r.length));
       const rows = b.rows.map(r => [...r, ...Array(cols - r.length).fill("")]);
@@ -47,6 +99,10 @@ export function toMarkdown(blocks, opts = {}) {
         ...rows.slice(1).map(r => `| ${r.map(cell).join(" | ")} |`)
       ];
       parts.push({ t: lines.join("\n"), type: "table" });
+    }
+    if (b.type === "table" && opts.figures === "images" && opts.tableImages) {
+      const L = { ...FIG_LABELS, ...opts.labels };
+      for (const part of b.parts || []) parts.push({ t: `![${L.tableImage}, ${L.page} ${part.page + 1}](${part.asset})`, type: "p" });
     }
     prevType = b.type;
   }
@@ -58,6 +114,17 @@ export function toMarkdown(blocks, opts = {}) {
     md += p.t;
   });
   return md.trim() + "\n";
+}
+
+/** Images nécessaires à des blocs : [{ path, page, box, kind }]. */
+export function blockAssets(blocks, { figures, tableImages } = {}) {
+  if (figures !== "images") return [];
+  const out = [];
+  for (const b of blocks) {
+    if (b.type === "figure") out.push({ path: b.asset, page: b.page, box: b.box, kind: b.kind });
+    else if (b.type === "table" && tableImages) for (const p of b.parts || []) if (p.box) out.push({ path: p.asset, page: p.page, box: p.box, kind: "table" });
+  }
+  return out;
 }
 
 const slug = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50) || "chapitre";
@@ -137,10 +204,15 @@ function tableXml(rows) {
   return `<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="5000" w:type="pct"/><w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/></w:tblPr>${grid}${trs}</w:tbl>${para("")}`;
 }
 
-function bodyXml(blocks, { pageBreaks }) {
+function drawingXml(rid, n, cx, cy, name) {
+  return `<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${n}" name="${xmlEsc(name)}"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="${n}" name="${xmlEsc(name)}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${rid}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
+}
+
+function bodyXml(blocks, { pageBreaks, figure }) {
   let x = "";
   for (const b of blocks) {
     if (b.type === "pagebreak") { if (pageBreaks) x += para('<w:r><w:br w:type="page"/></w:r>'); continue; }
+    if (b.type === "figure") { x += figure ? figure(b) : ""; continue; }
     if (b.type === "h") x += para(run({ t: b.text }), `<w:pStyle w:val="Heading${b.level}"/>`);
     else if (b.type === "p") x += para(b.runs.map(run).join(""));
     else if (b.type === "li") {
@@ -200,11 +272,30 @@ export async function toDocx(src, { title = "", page = { w: 612, h: 792 }, pageB
       const rid = `rIdImg${n + 1}`;
       media[`word/media/page${n + 1}.${ext}`] = [im.bytes, { level: 0 }];
       rels.push(`<Relationship Id="${rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/page${n + 1}.${ext}"/>`);
-      const drawing = `<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${n + 1}" name="Page ${n + 1}"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="${n + 1}" name="page${n + 1}.${ext}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${rid}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
-      return para(drawing, '<w:jc w:val="center"/><w:spacing w:after="0"/>') + (n < images.length - 1 ? para('<w:r><w:br w:type="page"/></w:r>', '<w:spacing w:after="0"/>') : "");
+      const drawing = drawingXml(rid, n + 1, cx, cy, `page${n + 1}.${ext}`);
+      return para(drawing, '<w:spacing w:after="0"/><w:jc w:val="center"/>') + (n < images.length - 1 ? para('<w:r><w:br w:type="page"/></w:r>', '<w:spacing w:after="0"/>') : "");
     }).join("");
   } else {
-    body = bodyXml(src.blocks, { pageBreaks });
+    // Figures : image rendue (src.assets : chemin → { bytes, w, h }) et légende en italique.
+    const assets = src.assets || new Map();
+    const maxW = page.w - 2 * margin, maxH = 0.6 * (page.h - 2 * margin);
+    let nImg = 0;
+    const figure = b => {
+      const a = assets.get(b.asset);
+      let xml = "";
+      if (a) {
+        const s = Math.min(maxW / a.w, maxH / a.h, 1);
+        const cx = Math.round(a.w * s * 12700), cy = Math.round(a.h * s * 12700);
+        const ext = /\.png$/.test(b.asset) ? "png" : "jpeg";
+        const rid = `rIdFig${++nImg}`;
+        media[`word/media/figure${nImg}.${ext}`] = [a.bytes, { level: 0 }];
+        rels.push(`<Relationship Id="${rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/figure${nImg}.${ext}"/>`);
+        xml += para(drawingXml(rid, 100 + nImg, cx, cy, b.caption || `Figure ${b.n}`), '<w:keepNext/><w:spacing w:after="60"/><w:jc w:val="center"/>');
+      }
+      if (b.caption) xml += para(run({ t: b.caption, b: false, i: true }), '<w:jc w:val="center"/>');
+      return xml;
+    };
+    body = bodyXml(src.blocks, { pageBreaks, figure });
   }
   const landscape = page.w > page.h;
   const sect = `<w:sectPr><w:pgSz w:w="${twip(page.w)}" w:h="${twip(page.h)}"${landscape ? ' w:orient="landscape"' : ""}/><w:pgMar w:top="${twip(margin)}" w:right="${twip(margin)}" w:bottom="${twip(margin)}" w:left="${twip(margin)}" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr>`;

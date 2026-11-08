@@ -2,12 +2,13 @@
 import { openPdf, readFile, looksLikePdf, renderPage, dropCanvas, download, zip, safeName, fmtBytes, parseRange, esc, pdfLib, pptxgen, idle } from "../commun/pdf-outils.js";
 import { renderMarkdown } from "../commun/markdown.js";
 import { extract } from "./extract.js";
-import { toMarkdown, splitChapters, chapterFiles, toDocx } from "./writers.js";
+import { toMarkdown, splitChapters, chapterFiles, toDocx, blockAssets } from "./writers.js";
 
 const $ = id => document.getElementById(id);
 const LS = "pdfo-converto:opts";
 const DEFAULTS = {
   format: "md", mdSplit: "auto", tables: true, margins: true, styles: true, pageMarkers: false,
+  figures: "text", tableFmt: "auto", tableImages: false,
   imgFormat: "jpg", dpi: "150", quality: 0.86,
   splitMode: "each", every: 5, ranges: "",
   docxMode: "text", pageBreaks: false,
@@ -43,9 +44,18 @@ const TXT = {
     slide: n => `Diapositive ${n}`,
     docxText: "Titres, paragraphes, listes et tableaux modifiables, dans le style du document Word.",
     docxImages: "Chaque page devient une image : mise en page exacte, mais texte non modifiable.",
-    dl: { md: "Télécharger le .md", mdZip: "Télécharger les chapitres (.zip)", img: "Télécharger les images", imgOne: "Télécharger l'image", split: "Télécharger les PDF (.zip)", splitOne: "Télécharger le PDF", docx: "Télécharger le .docx", pptx: "Télécharger le .pptx" },
+    dl: { md: "Télécharger le .md", mdImg: "Télécharger le .md et les images (.zip)", mdZip: "Télécharger les chapitres (.zip)", img: "Télécharger les images", imgOne: "Télécharger l'image", split: "Télécharger les PDF (.zip)", splitOne: "Télécharger le PDF", docx: "Télécharger le .docx", pptx: "Télécharger le .pptx" },
     emptyPreview: "L'aperçu s'affichera ici.",
-    invalidRanges: "Plages invalides : ex. 1-3, 4-10, 11-20."
+    invalidRanges: "Plages invalides : ex. 1-3, 4-10, 11-20.",
+    figuresDone: (i, n) => `Rendu des figures… ${i} sur ${n}`,
+    figHint: {
+      none: "Les figures sont ignorées ; le texte qu'elles contiennent reste dans les paragraphes.",
+      text: "Chaque figure devient une fiche : légende, nature, page et texte lu dans la figure. Léger, idéal pour une IA qui ne lit que du texte.",
+      images: "La fiche de chaque figure, plus son image dans un dossier images/ : le tout dans un .zip, à donner à une IA qui lit les images."
+    },
+    found: (f, tb) => `Détecté : ${f} figure${f > 1 ? "s" : ""}, ${tb} tableau${tb > 1 ? "x" : ""}.`,
+    scanned: "PDF numérisé (pages en image, sans texte) : choisissez Figures « Images » pour joindre chaque page ; une IA qui lit les images en tirera le texte.",
+    figLabels: { figure: "Figure", page: "p.", text: "Texte dans la figure", none: "texte de l'image non extractible du PDF : voir l'image", kind: { image: "image", vector: "dessin", scan: "page numérisée" }, tableImage: "image du tableau" }
   },
   en: {
     locale: "en-CA",
@@ -74,9 +84,18 @@ const TXT = {
     slide: n => `Slide ${n}`,
     docxText: "Editable headings, paragraphs, lists and tables, in Word's own styles.",
     docxImages: "Each page becomes an image: exact layout, but the text cannot be edited.",
-    dl: { md: "Download the .md", mdZip: "Download the chapters (.zip)", img: "Download the images", imgOne: "Download the image", split: "Download the PDFs (.zip)", splitOne: "Download the PDF", docx: "Download the .docx", pptx: "Download the .pptx" },
+    dl: { md: "Download the .md", mdImg: "Download the .md and images (.zip)", mdZip: "Download the chapters (.zip)", img: "Download the images", imgOne: "Download the image", split: "Download the PDFs (.zip)", splitOne: "Download the PDF", docx: "Download the .docx", pptx: "Download the .pptx" },
     emptyPreview: "The preview will appear here.",
-    invalidRanges: "Invalid ranges: e.g. 1-3, 4-10, 11-20."
+    invalidRanges: "Invalid ranges: e.g. 1-3, 4-10, 11-20.",
+    figuresDone: (i, n) => `Rendering figures… ${i} of ${n}`,
+    figHint: {
+      none: "Figures are ignored; the text they contain stays in the paragraphs.",
+      text: "Each figure becomes a card: caption, type, page and the text read in the figure. Light, best for an AI that only reads text.",
+      images: "Each figure's card, plus its image in an images/ folder, all in a .zip: for an AI that reads images."
+    },
+    found: (f, tb) => `Found: ${f} figure${f > 1 ? "s" : ""}, ${tb} table${tb > 1 ? "s" : ""}.`,
+    scanned: "Scanned PDF (page images, no text): choose Figures “Images” to attach each page; an AI that reads images will get the text from them.",
+    figLabels: { figure: "Figure", page: "p.", text: "Text in the figure", none: "the image's text cannot be extracted from the PDF: see the image", kind: { image: "image", vector: "drawing", scan: "scanned page" }, tableImage: "table image" }
   }
 };
 const lang = () => (window.siteLang && window.siteLang() === "en" ? "en" : "fr");
@@ -126,6 +145,10 @@ function renderOpts() {
   document.querySelectorAll("[data-split]").forEach(el => { el.hidden = el.dataset.split !== o.splitMode; });
   document.querySelectorAll("[data-docx]").forEach(el => { el.hidden = el.dataset.docx !== o.docxMode; });
   $("docx-hint").textContent = o.docxMode === "text" ? t().docxText : t().docxImages;
+  document.querySelectorAll("[data-if-tables]").forEach(el => {
+    el.hidden = !o.tables || (el.hasAttribute("data-if-images") && o.figures !== "images");
+  });
+  $("fig-hint").textContent = t().figHint[o.figures] || "";
   // Onglets de format
   document.querySelectorAll("#formats [data-format]").forEach(b => {
     const on = b.dataset.format === o.format;
@@ -134,13 +157,13 @@ function renderOpts() {
   });
   document.querySelectorAll("[data-panel]").forEach(p => { p.hidden = p.dataset.panel !== o.format; });
 }
-const EXTRACT_KEYS = ["tables", "margins", "styles"];
+const EXTRACT_KEYS = ["tables", "margins", "styles", "figures"];
 let previewTimer = 0;
 function onOpt(key, value) {
   state.opts[key] = value;
   store.set(state.opts);
   if (EXTRACT_KEYS.includes(key)) state.extracted = null;
-  if (key !== "quality") state.md = null;
+  if (key !== "quality") dropMd();
   renderOpts();
   clearTimeout(previewTimer);
   previewTimer = setTimeout(updatePreview, key === "ranges" || key === "every" ? 350 : 0);
@@ -201,7 +224,7 @@ $("range").addEventListener("input", e => {
   e.target.classList.toggle("is-invalid", !!state.pdf && idx === null);
   if (!idx) return;
   state.idx = idx;
-  state.extracted = null; state.md = null;
+  state.extracted = null; dropMd();
   clearTimeout(previewTimer);
   previewTimer = setTimeout(updatePreview, 400);
 });
@@ -217,6 +240,7 @@ async function load(file) {
     const pdf = await openPdf(bytes, reason => { const pw = window.prompt(t().password(file.name, again || reason === "incorrect")); again = true; return pw; }, { fontExtraProperties: true });
     try { state.pdf?.loadingTask?.destroy(); } catch { /* déjà libéré */ }
     state.token++;
+    dropMd();
     Object.assign(state, { file: { name: file.name, size: bytes.length, bytes }, pdf, n: pdf.numPages, idx: [...Array(pdf.numPages).keys()], extracted: null, md: null, chapter: 0 });
     state.thumbs.clear();
     $("range").value = "";
@@ -266,11 +290,13 @@ async function pageRatio(i) {
 // ---------------------------------------------------------------- Structure (Markdown, Word)
 async function getExtract() {
   const o = state.opts;
-  const key = `${state.idx.join(",")}|${o.tables}|${o.margins}|${o.styles}`;
+  // Le Word modifiable place toujours les figures ; le Markdown seulement si elles ne sont pas ignorées.
+  const figures = o.format === "docx" || o.figures !== "none";
+  const key = `${state.idx.join(",")}|${o.tables}|${o.margins}|${o.styles}|${figures}`;
   if (state.extracted && state.extractKey === key) return state.extracted;
   const token = state.token;
   const r = await extract(state.pdf, state.idx, {
-    tables: o.tables, margins: o.margins, styles: o.styles,
+    tables: o.tables, margins: o.margins, styles: o.styles, figures,
     onProgress: (i, n) => { if (token === state.token) { status(t().reading(i, n), { busy: true }); progress(i, n); } }
   });
   progress(0, 0);
@@ -290,7 +316,7 @@ async function getMarkdown() {
   const source = r.outline.filter(q => q.page !== null).length >= 2 ? "outline" : "headings";
   const wantSplit = o.mdSplit === "chapters" || (o.mdSplit === "auto" && chapters && state.idx.length >= 25);
   let files;
-  const mdOpts = { pageMarkers: o.pageMarkers };
+  const mdOpts = { pageMarkers: o.pageMarkers, figures: o.figures, tableFmt: o.tableFmt, tableImages: o.tableImages, labels: x.figLabels };
   if (wantSplit && chapters) {
     const title = (await state.pdf.getMetadata().catch(() => null))?.info?.Title || base();
     files = chapterFiles(chapters, title, { intro: x.intro, toc: x.toc, tocFile: x.tocFile, pages: x.pagesOf, mdOpts });
@@ -299,9 +325,58 @@ async function getMarkdown() {
   }
   let hint = x.chapters(chapters ? chapters.length : 0, source);
   if (o.mdSplit === "auto") hint += " " + (files.length > 1 ? x.autoSplit : x.autoOne);
-  state.md = { files, hint, empty: !r.blocks.some(b => b.type !== "pagebreak") };
+  const content = r.blocks.filter(b => b.type !== "pagebreak");
+  const nFig = content.filter(b => b.type === "figure").length, nTab = content.filter(b => b.type === "table").length;
+  const scanned = content.length > 0 && content.every(b => b.type === "figure" && b.kind === "scan");
+  // Images des figures (et des tableaux) : rendues ici pour l'aperçu et le .zip.
+  const token = state.token;
+  const assets = await renderAssets(blockAssets(r.blocks, { figures: o.figures, tableImages: o.tables && o.tableImages }), token);
+  if (!assets) return null;
+  state.md = {
+    files, hint, assets, scanned,
+    urls: new Map(assets.map(a => [a.path, URL.createObjectURL(new Blob([a.bytes], { type: a.type }))])),
+    found: o.figures !== "none" || o.tables ? x.found(nFig, nTab) : "",
+    empty: !files.some(f => f.md.trim())
+  };
   state.chapter = Math.min(state.chapter, files.length - 1);
   return state.md;
+}
+function dropMd() {
+  if (state.md?.urls) for (const u of state.md.urls.values()) URL.revokeObjectURL(u);
+  state.md = null;
+}
+
+/**
+ * Image d'une zone de page (figure ou tableau), à la taille d'origine ×2 à ×4 et 2 000 px au plus
+ * sur le grand côté : assez net pour une IA qui lit les images, et léger. PNG pour les dessins et
+ * les tableaux (traits fins), JPEG pour les photos et les pages numérisées.
+ */
+async function renderCrop(i, box, kind) {
+  const page = await state.pdf.getPage(i + 1);
+  const vp = page.getViewport({ scale: 1 });
+  const pad = kind === "scan" ? 0 : 6;
+  const x0 = Math.max(0, box.x0 - pad), y0 = Math.max(0, box.y0 - pad);
+  const x1 = Math.min(vp.width, box.x1 + pad), y1 = Math.min(vp.height, box.y1 + pad);
+  const w = Math.max(1, x1 - x0), h = Math.max(1, y1 - y0);
+  const scale = Math.min(4, 2000 / Math.max(w, h));
+  const c = await renderPage(page, { scale, offsetX: -x0 * scale, offsetY: -y0 * scale, width: w * scale, height: h * scale });
+  const type = kind === "vector" || kind === "table" ? "image/png" : "image/jpeg";
+  const bytes = await toBytes(c, type, 0.86);
+  dropCanvas(c);
+  return { bytes, type, w, h };
+}
+async function renderAssets(list, token) {
+  const out = [];
+  for (let k = 0; k < list.length; k++) {
+    if (token !== state.token) return null;
+    status(t().figuresDone(k + 1, list.length), { busy: true });
+    progress(k, list.length);
+    const a = list[k];
+    out.push({ path: a.path, ...(await renderCrop(a.page, a.box, a.kind)) });
+    await idle();
+  }
+  progress(0, 0);
+  return out;
 }
 
 // ---------------------------------------------------------------- Aperçus
@@ -322,13 +397,14 @@ async function updatePreview() {
       const md = await getMarkdown();
       if (!md || token !== previewToken) return;
       $("chapters-hint").innerHTML = md.hint;
+      $("fig-hint").textContent = `${x.figHint[state.opts.figures] || ""} ${md.found}`.trim();
       const sel = $("chapter");
       if (md.files.length > 1) {
         sel.innerHTML = md.files.map((fl, k) => `<option value="${k}" ${k === state.chapter ? "selected" : ""}>${esc(fl.name)}</option>`).join("");
         sel.hidden = false;
       }
       const cur = md.files[state.chapter];
-      if (md.empty) { preview.innerHTML = `<p class="cv-empty">${esc(x.noText)}</p>`; status(x.noText, { warn: true }); return; }
+      if (md.empty) { preview.innerHTML = `<p class="cv-empty">${esc(md.scanned ? x.scanned : x.noText)}</p>`; status(md.scanned ? x.scanned : x.noText, { warn: true }); return; }
       if (state.mdView === "source") {
         const pre = document.createElement("pre");
         pre.className = "md-source";
@@ -337,11 +413,13 @@ async function updatePreview() {
       } else {
         const div = document.createElement("div");
         div.className = "md-preview";
-        div.append(await renderMarkdown(cur.md));
+        div.append(await renderMarkdown(cur.md, { images: md.urls }));
         if (token !== previewToken) return;
         preview.replaceChildren(div);
       }
-      status(x.ready(state.idx.length));
+      setDownloadLabel();
+      if (md.scanned && state.opts.figures !== "images") status(x.scanned, { warn: true });
+      else status(x.ready(state.idx.length));
       return;
     }
     if (f === "docx" && state.opts.docxMode === "text") {
@@ -397,6 +475,7 @@ $("chapter").addEventListener("change", e => { state.chapter = +e.target.value; 
 function setDownloadLabel() {
   const d = t().dl, f = state.opts.format;
   let label = d[f];
+  if (f === "md" && state.md && state.md.assets?.length) label = d.mdImg;
   if (f === "md" && state.md && state.md.files.length > 1) label = d.mdZip;
   if (f === "img" && state.idx.length === 1) label = d.imgOne;
   if (f === "split") { const g = splitGroups(); label = g && g.length === 1 ? d.splitOne : d.split; }
@@ -463,9 +542,13 @@ $("download").addEventListener("click", async () => {
     let blob, name;
     if (o.format === "md") {
       const md = await getMarkdown();
+      const images = md.assets.map(a => ({ name: a.path, data: a.bytes, store: true }));
       if (md.files.length > 1) {
-        blob = await zip(md.files.map(f => ({ name: f.name, data: f.md })));
+        blob = await zip([...md.files.map(f => ({ name: f.name, data: f.md })), ...images]);
         name = `${base()}_chapitres.zip`;
+      } else if (images.length) {
+        blob = await zip([{ name: md.files[0].name, data: md.files[0].md }, ...images]);
+        name = `${base()}_markdown.zip`;
       } else {
         blob = new Blob([md.files[0].md], { type: "text/markdown;charset=utf-8" });
         name = md.files[0].name;
@@ -507,10 +590,12 @@ $("download").addEventListener("click", async () => {
         blob = await toDocx({ images }, { title, page: first, lang: x.locale });
       } else {
         const r = await getExtract();
+        const figs = await renderAssets(blockAssets(r.blocks, { figures: "images" }), state.token);
+        if (!figs) return;
         status(x.building, { busy: true });
         // Format de page : celui du PDF s'il est courant (lettre, A4), sinon lettre.
         const page = first.w < 700 && first.h < 1000 ? first : { w: 612, h: 792 };
-        blob = await toDocx({ blocks: r.blocks }, { title, page, pageBreaks: o.pageBreaks, lang: x.locale });
+        blob = await toDocx({ blocks: r.blocks, assets: new Map(figs.map(a => [a.path, a])) }, { title, page, pageBreaks: o.pageBreaks, lang: x.locale });
       }
       name = `${base()}.docx`;
     } else if (o.format === "pptx") {
@@ -566,7 +651,7 @@ document.addEventListener("langchange", () => {
   if (state.pdf) {
     const x = t();
     $("file-meta").textContent = x.meta(state.n, fmtBytes(state.file.size, x.locale));
-    state.md = null;
+    dropMd();
     updatePreview();
   }
 });

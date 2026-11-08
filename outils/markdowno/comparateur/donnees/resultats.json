@@ -185,8 +185,8 @@
     "en": "layout model + RapidOCR (MuPDF)"
    },
    "note": {
-    "fr": "Le seul à lire les tableaux en image et les équations (OCR) et à trouver presque tous les titres. Mais 10 fois plus lent, et il a faussé le tableau 13 à cellules fusionnées (« 0.61 » devient « 0.6 | 1 »).",
-    "en": "The only one that reads image tables and equations (OCR) and finds nearly all headings. But 10 times slower, and it corrupted merged-cell table 13 (\"0.61\" became \"0.6 | 1\")."
+    "fr": "Le seul à lire les tableaux en image et les équations (OCR) et à trouver presque tous les titres. Mais 20 fois plus lent que Converto, et il a faussé le tableau 13 à cellules fusionnées (« 0.61 » devient « 0.6 | 1 »).",
+    "en": "The only one that reads image tables and equations (OCR) and finds nearly all headings. But 20 times slower than Converto, and it corrupted merged-cell table 13 (\"0.61\" became \"0.6 | 1\")."
    }
   },
   {

@@ -1,8 +1,8 @@
 // Contenu du site. Pour ajouter un outil : une entrée dans TOOLS (avec sa catégorie).
 // Pour ouvrir une section : passer ready à true et créer la page indiquée par href.
 window.SITE = {
-  version: "0.5.1",
-  date: "2026-11-07",
+  version: "0.6",
+  date: "2026-11-08",
   github: "acheruel",
   pages: "https://acheruel.github.io"
 };
@@ -168,7 +168,8 @@ window.I18N = {
       "photo-rapporto": "Photo Rapporto · Anthony Chéruel",
       "pdfo-comparo": "PDFo Comparo · Anthony Chéruel",
       "pdfo-converto": "PDFo Converto · Anthony Chéruel",
-      markdowno: "MarkDownO · Anthony Chéruel"
+      markdowno: "MarkDownO · Anthony Chéruel",
+      "markdowno-comparateur": "Comparateur PDF vers Markdown · Anthony Chéruel"
     },
     skip: "Aller au contenu",
     navLabel: "Sections",
@@ -195,7 +196,8 @@ window.I18N = {
       "photo-rapporto": "Photo Rapporto · Anthony Chéruel",
       "pdfo-comparo": "PDFo Comparo · Anthony Chéruel",
       "pdfo-converto": "PDFo Converto · Anthony Chéruel",
-      markdowno: "MarkDownO · Anthony Chéruel"
+      markdowno: "MarkDownO · Anthony Chéruel",
+      "markdowno-comparateur": "PDF to Markdown comparator · Anthony Chéruel"
     },
     skip: "Skip to content",
     navLabel: "Sections",

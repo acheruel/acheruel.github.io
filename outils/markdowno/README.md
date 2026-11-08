@@ -31,6 +31,15 @@ découpage par chapitres) ; MarkDownO le signale.
 - Les fichiers sont lus et convertis localement, un à un : aperçu rendu ou source, copie, téléchargement
   d'un .md ou de tous dans un .zip.
 
+## Comparateur PDF vers Markdown (prototype)
+
+`comparateur/` : https://acheruel.github.io/outils/markdowno/comparateur/ . Résultats d'un banc d'essai de
+plusieurs outils (MarkItDown, PDFo Converto, pymupdf4llm, OpenDataLoader PDF ; Docling et Marker à
+mesurer) sur deux manuels de ponts de la FHWA, puis les sorties côte à côte avec la page du PDF, placées
+sur le même passage. Un PDF déposé est converti en direct par PDFo Converto et, sur demande, MarkItDown.
+Les sorties précalculées et les extraits des PDF sont dans `comparateur/donnees/` ; les scripts du banc
+d'essai (lancement, notation, vérité terrain) dans `banc/`.
+
 ## Fichiers
 
 `index.html` : page ; `app.js` : interface ; `worker.js` : Pyodide et MarkItDown ; `styles.css`.

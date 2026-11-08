@@ -1,0 +1,939 @@
+{
+ "date": "2026-11-08",
+ "docs": [
+  {
+   "id": "hif18046-extrait",
+   "short": "FHWA-HIF-18-046",
+   "title": {
+    "fr": "Analyse raffinée des ponts",
+    "en": "Refined Analysis in Bridge Design"
+   },
+   "source": "https://www.fhwa.dot.gov/bridge/pubs/hif18046.pdf",
+   "pdf": "hif18046-extrait.pdf",
+   "pagesSample": 32,
+   "pagesFull": 709,
+   "pageNumbers": [
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    57,
+    58,
+    59,
+    60,
+    75,
+    76,
+    77,
+    268,
+    269,
+    270,
+    271,
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    353,
+    354,
+    355,
+    356,
+    512,
+    513
+   ]
+  },
+  {
+   "id": "if12027-extrait",
+   "short": "FHWA-IF-12-027",
+   "title": {
+    "fr": "Dalles orthotropes en acier",
+    "en": "Orthotropic Steel Bridges"
+   },
+   "source": "https://www.fhwa.dot.gov/bridge/pubs/if12027/if12027.pdf",
+   "pdf": "if12027-extrait.pdf",
+   "pagesSample": 28,
+   "pagesFull": 291,
+   "pageNumbers": [
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    59,
+    60,
+    61,
+    62,
+    127,
+    128,
+    129,
+    133,
+    134,
+    135,
+    235,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    258,
+    259,
+    260
+   ]
+  }
+ ],
+ "tools": [
+  {
+   "id": "converto",
+   "name": "PDFo Converto 1.0",
+   "where": "browser",
+   "license": "",
+   "engine": {
+    "fr": "règles, pdf.js (ce site)",
+    "en": "rules, pdf.js (this site)"
+   },
+   "note": {
+    "fr": "Le plus rapide ; tableaux vectoriels exacts (HTML, cellules fusionnées). Perd les étiquettes de ligne hors grille (tableaux 60 et 62). Pas d'OCR : tableaux en image et équations perdus.",
+    "en": "Fastest; exact vector tables (HTML, merged cells). Loses row labels outside the grid (tables 60 and 62). No OCR: image tables and equations lost."
+   }
+  },
+  {
+   "id": "markitdown",
+   "name": "MarkItDown 0.1.9",
+   "where": "browser",
+   "license": "MIT",
+   "engine": {
+    "fr": "pdfminer (moteur actuel de MarkDownO)",
+    "en": "pdfminer (current MarkDownO engine)"
+   },
+   "note": {
+    "fr": "Texte brut : ni titres, ni tableaux Markdown, ni images. Les valeurs d'un tableau restent sur une ligne, sans en-têtes de colonnes.",
+    "en": "Plain text: no headings, no Markdown tables, no images. Table values stay on one line, without column headers."
+   }
+  },
+  {
+   "id": "mdflux",
+   "name": "mdflux 0.3.1",
+   "where": "python",
+   "license": "MIT",
+   "engine": {
+    "fr": "MarkItDown + nettoyage + OCR RapidOCR",
+    "en": "MarkItDown + clean-up + RapidOCR OCR"
+   },
+   "why": {
+    "fr": "Application de bureau, pas lancée ici. Sur un PDF qui contient du texte, c'est MarkItDown suivi d'un nettoyage par règles (doublons, lignes recollées, titres devinés). Son OCR ne s'active que si le PDF entier est numérisé (moins de 30 caractères par page) : les tableaux en image d'un PDF texte restent perdus.",
+    "en": "Desktop app, not run here. On a PDF that has text, it is MarkItDown followed by rule-based clean-up (duplicates, re-joined lines, guessed headings). Its OCR only kicks in when the whole PDF is scanned (under 30 characters per page): image tables in a text PDF are still lost."
+   }
+  },
+  {
+   "id": "opendataloader",
+   "name": "OpenDataLoader PDF 2.5.20",
+   "where": "java",
+   "license": "Apache-2.0",
+   "engine": {
+    "fr": "règles (Java, appelé depuis Python)",
+    "en": "rules (Java, called from Python)"
+   },
+   "note": {
+    "fr": "Rapide ; tableaux vectoriels comme Converto ; extrait toutes les images. Titres incomplets, pas d'OCR en mode local.",
+    "en": "Fast; vector tables like Converto; extracts every image. Incomplete headings, no OCR in local mode."
+   }
+  },
+  {
+   "id": "pymupdf4llm-classic",
+   "name": "pymupdf4llm 2.1 classique",
+   "where": "python",
+   "license": "AGPL-3.0",
+   "engine": {
+    "fr": "règles (MuPDF), sans modèle",
+    "en": "rules (MuPDF), no model"
+   },
+   "note": {
+    "fr": "Sans modèle : aucun titre trouvé sur ces manuels ; tableaux vectoriels corrects.",
+    "en": "Without the model: no headings found on these manuals; vector tables are fine."
+   }
+  },
+  {
+   "id": "pymupdf4llm-navigateur",
+   "name": "pymupdf4llm 0.0.27",
+   "where": "python",
+   "license": "AGPL-3.0",
+   "engine": {
+    "fr": "MuPDF 1.26, version qui existe dans Pyodide",
+    "en": "MuPDF 1.26, the version available in Pyodide"
+   },
+   "note": {
+    "fr": "Pourrait tourner dans le navigateur (PyMuPDF est dans Pyodide 0.29) ; mesuré en Python natif. N'apporte rien de plus que Converto.",
+    "en": "Could run in the browser (PyMuPDF ships with Pyodide 0.29); measured in native Python. Adds nothing over Converto."
+   }
+  },
+  {
+   "id": "pymupdf4llm",
+   "name": "pymupdf4llm 2.1 + Layout + OCR",
+   "where": "python",
+   "license": "AGPL-3.0",
+   "engine": {
+    "fr": "modèle de mise en page + RapidOCR (MuPDF)",
+    "en": "layout model + RapidOCR (MuPDF)"
+   },
+   "note": {
+    "fr": "Le seul à lire les tableaux en image et les équations (OCR) et à trouver presque tous les titres. Mais 10 fois plus lent, et il a faussé le tableau 13 à cellules fusionnées (« 0.61 » devient « 0.6 | 1 »).",
+    "en": "The only one that reads image tables and equations (OCR) and finds nearly all headings. But 10 times slower, and it corrupted merged-cell table 13 (\"0.61\" became \"0.6 | 1\")."
+   }
+  },
+  {
+   "id": "docling",
+   "name": "Docling 2.149",
+   "where": "python",
+   "license": "MIT",
+   "engine": {
+    "fr": "modèles de mise en page et TableFormer, OCR",
+    "en": "layout and TableFormer models, OCR"
+   },
+   "why": {
+    "fr": "Non mesuré : ses modèles se téléchargent depuis Hugging Face, bloqué dans l'environnement de test. Le script du banc d'essai le lance sur un poste (banc/run_tool.py docling).",
+    "en": "Not measured: its models download from Hugging Face, which was blocked in the test environment. The test script runs it on a computer (banc/run_tool.py docling)."
+   }
+  },
+  {
+   "id": "marker",
+   "name": "Marker 2.1",
+   "where": "python",
+   "license": "Apache-2.0",
+   "engine": {
+    "fr": "modèles Surya (mise en page, OCR, tableaux, équations)",
+    "en": "Surya models (layout, OCR, tables, equations)"
+   },
+   "why": {
+    "fr": "Non mesuré, même raison que Docling (modèles sur Hugging Face). Lourd sans carte graphique.",
+    "en": "Not measured, same reason as Docling (models on Hugging Face). Heavy without a GPU."
+   }
+  }
+ ],
+ "scores": {
+  "converto": {
+   "hif18046-extrait": {
+    "pages": 32,
+    "seconds": 1.51,
+    "words": 12585,
+    "text_recall": 0.996,
+    "order": 0.991,
+    "headings_ok": 25,
+    "headings_n": 30,
+    "tables_ok": 12,
+    "tables_n": 17,
+    "present_ok": 17,
+    "present_n": 17,
+    "tables_detail": [
+     {
+      "id": "Table 1 (p. 59, vectoriel)",
+      "ok": 4,
+      "present": 4,
+      "n": 4
+     },
+     {
+      "id": "Table 9 (p. 270, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 13 (p. 274, cellules fusionnées)",
+      "ok": 2,
+      "present": 2,
+      "n": 2
+     },
+     {
+      "id": "Table 28 (p. 353, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 60 (p. 512, en-tête sur 2 lignes)",
+      "ok": 0,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 62 (p. 512)",
+      "ok": 0,
+      "present": 2,
+      "n": 2
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 3,
+    "images": 0,
+    "captions_ok": 11,
+    "captions_n": 11,
+    "figures_n": 11,
+    "rag_ok": 4,
+    "rag_n": 7,
+    "tokens": 22156,
+    "full_seconds": 21.12,
+    "full_pages": 709
+   },
+   "if12027-extrait": {
+    "pages": 28,
+    "seconds": 1.09,
+    "words": 9294,
+    "text_recall": 0.998,
+    "order": 0.995,
+    "headings_ok": 28,
+    "headings_n": 28,
+    "tables_ok": 0,
+    "tables_n": 16,
+    "present_ok": 1,
+    "present_n": 16,
+    "tables_detail": [
+     {
+      "id": "Table 4-1 (p. 60, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 3
+     },
+     {
+      "id": "Table 5-1 (p. 128, IMAGE + croquis)",
+      "ok": 0,
+      "present": 0,
+      "n": 2
+     },
+     {
+      "id": "Table 6-1 (p. 134, IMAGE)",
+      "ok": 0,
+      "present": 1,
+      "n": 3
+     },
+     {
+      "id": "Table 11-3 (p. 241, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 5
+     },
+     {
+      "id": "Table 11-4 (p. 259, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 3
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 0,
+    "images": 0,
+    "captions_ok": 10,
+    "captions_n": 10,
+    "figures_n": 10,
+    "rag_ok": 3,
+    "rag_n": 8,
+    "tokens": 14808,
+    "full_seconds": 6.64,
+    "full_pages": 291
+   }
+  },
+  "markitdown": {
+   "hif18046-extrait": {
+    "pages": 32,
+    "seconds": 3.89,
+    "words": 12585,
+    "text_recall": 0.993,
+    "order": 0.98,
+    "headings_ok": 0,
+    "headings_n": 30,
+    "tables_ok": 0,
+    "tables_n": 17,
+    "present_ok": 17,
+    "present_n": 17,
+    "tables_detail": [
+     {
+      "id": "Table 1 (p. 59, vectoriel)",
+      "ok": 0,
+      "present": 4,
+      "n": 4
+     },
+     {
+      "id": "Table 9 (p. 270, vectoriel)",
+      "ok": 0,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 13 (p. 274, cellules fusionnées)",
+      "ok": 0,
+      "present": 2,
+      "n": 2
+     },
+     {
+      "id": "Table 28 (p. 353, vectoriel)",
+      "ok": 0,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 60 (p. 512, en-tête sur 2 lignes)",
+      "ok": 0,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 62 (p. 512)",
+      "ok": 0,
+      "present": 2,
+      "n": 2
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 3,
+    "images": 0,
+    "captions_ok": 11,
+    "captions_n": 11,
+    "figures_n": 11,
+    "rag_ok": 6,
+    "rag_n": 7,
+    "tokens": 22721,
+    "full_seconds": 43.88,
+    "full_pages": 709
+   },
+   "if12027-extrait": {
+    "pages": 28,
+    "seconds": 3.01,
+    "words": 9294,
+    "text_recall": 0.999,
+    "order": 0.996,
+    "headings_ok": 0,
+    "headings_n": 28,
+    "tables_ok": 0,
+    "tables_n": 16,
+    "present_ok": 1,
+    "present_n": 16,
+    "tables_detail": [
+     {
+      "id": "Table 4-1 (p. 60, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 3
+     },
+     {
+      "id": "Table 5-1 (p. 128, IMAGE + croquis)",
+      "ok": 0,
+      "present": 0,
+      "n": 2
+     },
+     {
+      "id": "Table 6-1 (p. 134, IMAGE)",
+      "ok": 0,
+      "present": 1,
+      "n": 3
+     },
+     {
+      "id": "Table 11-3 (p. 241, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 5
+     },
+     {
+      "id": "Table 11-4 (p. 259, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 3
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 0,
+    "images": 0,
+    "captions_ok": 10,
+    "captions_n": 10,
+    "figures_n": 10,
+    "rag_ok": 3,
+    "rag_n": 8,
+    "tokens": 14819,
+    "full_seconds": 27.08,
+    "full_pages": 291
+   }
+  },
+  "opendataloader": {
+   "hif18046-extrait": {
+    "pages": 32,
+    "seconds": 3.04,
+    "words": 12585,
+    "text_recall": 0.995,
+    "order": 0.99,
+    "headings_ok": 13,
+    "headings_n": 30,
+    "tables_ok": 12,
+    "tables_n": 17,
+    "present_ok": 17,
+    "present_n": 17,
+    "tables_detail": [
+     {
+      "id": "Table 1 (p. 59, vectoriel)",
+      "ok": 4,
+      "present": 4,
+      "n": 4
+     },
+     {
+      "id": "Table 9 (p. 270, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 13 (p. 274, cellules fusionnées)",
+      "ok": 2,
+      "present": 2,
+      "n": 2
+     },
+     {
+      "id": "Table 28 (p. 353, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 60 (p. 512, en-tête sur 2 lignes)",
+      "ok": 0,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 62 (p. 512)",
+      "ok": 0,
+      "present": 2,
+      "n": 2
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 3,
+    "images": 38,
+    "captions_ok": 11,
+    "captions_n": 11,
+    "figures_n": 11,
+    "rag_ok": 5,
+    "rag_n": 7,
+    "tokens": 20446,
+    "full_seconds": 28.14,
+    "full_pages": 709
+   },
+   "if12027-extrait": {
+    "pages": 28,
+    "seconds": 3.92,
+    "words": 9294,
+    "text_recall": 0.996,
+    "order": 0.995,
+    "headings_ok": 13,
+    "headings_n": 28,
+    "tables_ok": 0,
+    "tables_n": 16,
+    "present_ok": 1,
+    "present_n": 16,
+    "tables_detail": [
+     {
+      "id": "Table 4-1 (p. 60, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 3
+     },
+     {
+      "id": "Table 5-1 (p. 128, IMAGE + croquis)",
+      "ok": 0,
+      "present": 0,
+      "n": 2
+     },
+     {
+      "id": "Table 6-1 (p. 134, IMAGE)",
+      "ok": 0,
+      "present": 1,
+      "n": 3
+     },
+     {
+      "id": "Table 11-3 (p. 241, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 5
+     },
+     {
+      "id": "Table 11-4 (p. 259, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 3
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 0,
+    "images": 16,
+    "captions_ok": 10,
+    "captions_n": 10,
+    "figures_n": 10,
+    "rag_ok": 3,
+    "rag_n": 8,
+    "tokens": 14614,
+    "full_seconds": 20.45,
+    "full_pages": 291
+   }
+  },
+  "pymupdf4llm": {
+   "hif18046-extrait": {
+    "pages": 32,
+    "seconds": 24.76,
+    "words": 12585,
+    "text_recall": 0.989,
+    "order": 0.982,
+    "headings_ok": 30,
+    "headings_n": 30,
+    "tables_ok": 13,
+    "tables_n": 17,
+    "present_ok": 14,
+    "present_n": 17,
+    "tables_detail": [
+     {
+      "id": "Table 1 (p. 59, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 4
+     },
+     {
+      "id": "Table 9 (p. 270, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 13 (p. 274, cellules fusionnées)",
+      "ok": 0,
+      "present": 0,
+      "n": 2
+     },
+     {
+      "id": "Table 28 (p. 353, vectoriel)",
+      "ok": 2,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 60 (p. 512, en-tête sur 2 lignes)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 62 (p. 512)",
+      "ok": 2,
+      "present": 2,
+      "n": 2
+     }
+    ],
+    "equations_ok": 3,
+    "equations_n": 3,
+    "images": 30,
+    "captions_ok": 11,
+    "captions_n": 11,
+    "figures_n": 11,
+    "rag_ok": 5,
+    "rag_n": 7,
+    "tokens": 22267,
+    "full_seconds": 702.25,
+    "full_pages": 709
+   },
+   "if12027-extrait": {
+    "pages": 28,
+    "seconds": 26.74,
+    "words": 9294,
+    "text_recall": 1.0,
+    "order": 0.995,
+    "headings_ok": 27,
+    "headings_n": 28,
+    "tables_ok": 10,
+    "tables_n": 16,
+    "present_ok": 12,
+    "present_n": 16,
+    "tables_detail": [
+     {
+      "id": "Table 4-1 (p. 60, IMAGE)",
+      "ok": 2,
+      "present": 2,
+      "n": 3
+     },
+     {
+      "id": "Table 5-1 (p. 128, IMAGE + croquis)",
+      "ok": 0,
+      "present": 1,
+      "n": 2
+     },
+     {
+      "id": "Table 6-1 (p. 134, IMAGE)",
+      "ok": 3,
+      "present": 1,
+      "n": 3
+     },
+     {
+      "id": "Table 11-3 (p. 241, IMAGE)",
+      "ok": 5,
+      "present": 5,
+      "n": 5
+     },
+     {
+      "id": "Table 11-4 (p. 259, IMAGE)",
+      "ok": 0,
+      "present": 3,
+      "n": 3
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 0,
+    "images": 29,
+    "captions_ok": 10,
+    "captions_n": 10,
+    "figures_n": 10,
+    "rag_ok": 6,
+    "rag_n": 8,
+    "tokens": 16918,
+    "full_seconds": 221.1,
+    "full_pages": 291
+   }
+  },
+  "pymupdf4llm-classic": {
+   "hif18046-extrait": {
+    "pages": 32,
+    "seconds": 6.61,
+    "words": 12585,
+    "text_recall": 0.987,
+    "order": 0.981,
+    "headings_ok": 0,
+    "headings_n": 30,
+    "tables_ok": 12,
+    "tables_n": 17,
+    "present_ok": 14,
+    "present_n": 17,
+    "tables_detail": [
+     {
+      "id": "Table 1 (p. 59, vectoriel)",
+      "ok": 4,
+      "present": 4,
+      "n": 4
+     },
+     {
+      "id": "Table 9 (p. 270, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 13 (p. 274, cellules fusionnées)",
+      "ok": 2,
+      "present": 2,
+      "n": 2
+     },
+     {
+      "id": "Table 28 (p. 353, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 60 (p. 512, en-tête sur 2 lignes)",
+      "ok": 0,
+      "present": 1,
+      "n": 3
+     },
+     {
+      "id": "Table 62 (p. 512)",
+      "ok": 0,
+      "present": 1,
+      "n": 2
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 3,
+    "images": 13,
+    "captions_ok": 11,
+    "captions_n": 11,
+    "figures_n": 11,
+    "rag_ok": 5,
+    "rag_n": 7,
+    "tokens": 21509,
+    "full_seconds": 99.2,
+    "full_pages": 709
+   },
+   "if12027-extrait": {
+    "pages": 28,
+    "seconds": 3.4,
+    "words": 9294,
+    "text_recall": 0.997,
+    "order": 0.993,
+    "headings_ok": 0,
+    "headings_n": 28,
+    "tables_ok": 0,
+    "tables_n": 16,
+    "present_ok": 1,
+    "present_n": 16,
+    "tables_detail": [
+     {
+      "id": "Table 4-1 (p. 60, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 3
+     },
+     {
+      "id": "Table 5-1 (p. 128, IMAGE + croquis)",
+      "ok": 0,
+      "present": 0,
+      "n": 2
+     },
+     {
+      "id": "Table 6-1 (p. 134, IMAGE)",
+      "ok": 0,
+      "present": 1,
+      "n": 3
+     },
+     {
+      "id": "Table 11-3 (p. 241, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 5
+     },
+     {
+      "id": "Table 11-4 (p. 259, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 3
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 0,
+    "images": 18,
+    "captions_ok": 10,
+    "captions_n": 10,
+    "figures_n": 10,
+    "rag_ok": 3,
+    "rag_n": 8,
+    "tokens": 14564,
+    "full_seconds": 35.23,
+    "full_pages": 291
+   }
+  },
+  "pymupdf4llm-navigateur": {
+   "hif18046-extrait": {
+    "pages": 32,
+    "seconds": 6.83,
+    "words": 12585,
+    "text_recall": 0.989,
+    "order": 0.984,
+    "headings_ok": 0,
+    "headings_n": 30,
+    "tables_ok": 9,
+    "tables_n": 17,
+    "present_ok": 14,
+    "present_n": 17,
+    "tables_detail": [
+     {
+      "id": "Table 1 (p. 59, vectoriel)",
+      "ok": 4,
+      "present": 4,
+      "n": 4
+     },
+     {
+      "id": "Table 9 (p. 270, vectoriel)",
+      "ok": 0,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 13 (p. 274, cellules fusionnées)",
+      "ok": 2,
+      "present": 2,
+      "n": 2
+     },
+     {
+      "id": "Table 28 (p. 353, vectoriel)",
+      "ok": 3,
+      "present": 3,
+      "n": 3
+     },
+     {
+      "id": "Table 60 (p. 512, en-tête sur 2 lignes)",
+      "ok": 0,
+      "present": 1,
+      "n": 3
+     },
+     {
+      "id": "Table 62 (p. 512)",
+      "ok": 0,
+      "present": 1,
+      "n": 2
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 3,
+    "images": 0,
+    "captions_ok": 11,
+    "captions_n": 11,
+    "figures_n": 11,
+    "rag_ok": 4,
+    "rag_n": 7,
+    "tokens": 21221
+   },
+   "if12027-extrait": {
+    "pages": 28,
+    "seconds": 2.91,
+    "words": 9294,
+    "text_recall": 0.998,
+    "order": 0.995,
+    "headings_ok": 0,
+    "headings_n": 28,
+    "tables_ok": 0,
+    "tables_n": 16,
+    "present_ok": 1,
+    "present_n": 16,
+    "tables_detail": [
+     {
+      "id": "Table 4-1 (p. 60, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 3
+     },
+     {
+      "id": "Table 5-1 (p. 128, IMAGE + croquis)",
+      "ok": 0,
+      "present": 0,
+      "n": 2
+     },
+     {
+      "id": "Table 6-1 (p. 134, IMAGE)",
+      "ok": 0,
+      "present": 1,
+      "n": 3
+     },
+     {
+      "id": "Table 11-3 (p. 241, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 5
+     },
+     {
+      "id": "Table 11-4 (p. 259, IMAGE)",
+      "ok": 0,
+      "present": 0,
+      "n": 3
+     }
+    ],
+    "equations_ok": 0,
+    "equations_n": 0,
+    "images": 0,
+    "captions_ok": 10,
+    "captions_n": 10,
+    "figures_n": 10,
+    "rag_ok": 3,
+    "rag_n": 8,
+    "tokens": 14213
+   }
+  }
+ }
+}

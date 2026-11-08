@@ -1,0 +1,742 @@
+{
+  "schema_name": "DoclingDocument",
+  "version": "1.11.0",
+  "name": "scan",
+  "origin": {
+    "mimetype": "application/pdf",
+    "binary_hash": 12195987748919093955,
+    "filename": "scan.pdf"
+  },
+  "furniture": {
+    "self_ref": "#/furniture",
+    "children": [],
+    "content_layer": "furniture",
+    "name": "_root_",
+    "label": "unspecified"
+  },
+  "body": {
+    "self_ref": "#/body",
+    "children": [
+      {
+        "$ref": "#/texts/0"
+      },
+      {
+        "$ref": "#/tables/0"
+      },
+      {
+        "$ref": "#/pictures/0"
+      },
+      {
+        "$ref": "#/texts/6"
+      },
+      {
+        "$ref": "#/texts/7"
+      }
+    ],
+    "content_layer": "body",
+    "name": "_root_",
+    "label": "unspecified"
+  },
+  "groups": [],
+  "texts": [
+    {
+      "self_ref": "#/texts/0",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "section_header",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 51.333333333333336,
+            "t": 749.6666666666666,
+            "r": 327.6666666666667,
+            "b": 731.3333333333334,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            31
+          ]
+        }
+      ],
+      "orig": "BRIDGE TEST - reference fixture",
+      "text": "BRIDGE TEST - reference fixture",
+      "level": 1
+    },
+    {
+      "self_ref": "#/texts/1",
+      "parent": {
+        "$ref": "#/tables/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "caption",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 50.333333333333336,
+            "t": 713.6666666666666,
+            "r": 386.6666666666667,
+            "b": 702.3333333333334,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            61
+          ]
+        }
+      ],
+      "orig": "Table 1. Design loads (KN). Keep row and column associations.",
+      "text": "Table 1. Design loads (KN). Keep row and column associations."
+    },
+    {
+      "self_ref": "#/texts/2",
+      "parent": {
+        "$ref": "#/pictures/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "caption",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 51.0,
+            "t": 549.0,
+            "r": 356.0,
+            "b": 537.3333333333334,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            55
+          ]
+        }
+      ],
+      "orig": "Figure 1. Simply supported beam, span 12 m, load 80 KN.",
+      "text": "Figure 1. Simply supported beam, span 12 m, load 80 KN."
+    },
+    {
+      "self_ref": "#/texts/3",
+      "parent": {
+        "$ref": "#/pictures/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 300.3333333333333,
+            "t": 498.6666666666667,
+            "r": 313.0,
+            "b": 489.6666666666667,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            2
+          ]
+        }
+      ],
+      "orig": "80",
+      "text": "80"
+    },
+    {
+      "self_ref": "#/texts/4",
+      "parent": {
+        "$ref": "#/pictures/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 317.3333333333333,
+            "t": 499.0,
+            "r": 330.6666666666667,
+            "b": 490.0,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            2
+          ]
+        }
+      ],
+      "orig": "KN",
+      "text": "KN"
+    },
+    {
+      "self_ref": "#/texts/5",
+      "parent": {
+        "$ref": "#/pictures/0"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 261.33333333333337,
+            "t": 428.66666666666663,
+            "r": 286.0,
+            "b": 420.0,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            3
+          ]
+        }
+      ],
+      "orig": "12m",
+      "text": "12m"
+    },
+    {
+      "self_ref": "#/texts/6",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 50.333333333333336,
+            "t": 361.6666666666667,
+            "r": 256.0,
+            "b": 328.0,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            69
+          ]
+        }
+      ],
+      "orig": "\"ULUN|OD Ya] 8Yy} SPUS Y1AG YAGHO \"ULUNJOD Yo] BY} SUBIS WHd IV YAGHO",
+      "text": "\"ULUN|OD Ya] 8Yy} SPUS Y1AG YAGHO \"ULUNJOD Yo] BY} SUBIS WHd IV YAGHO"
+    },
+    {
+      "self_ref": "#/texts/7",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 330.3333333333333,
+            "t": 362.0,
+            "r": 487.0,
+            "b": 326.0,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            49
+          ]
+        }
+      ],
+      "orig": "\"jy6u spus Y\u00a5174d0 YAGHO \"Wy6u sues VWAWVS YSCYHO",
+      "text": "\"jy6u spus Y\u00a5174d0 YAGHO \"Wy6u sues VWAWVS YSCYHO"
+    }
+  ],
+  "pictures": [
+    {
+      "self_ref": "#/pictures/0",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [
+        {
+          "$ref": "#/texts/2"
+        },
+        {
+          "$ref": "#/texts/3"
+        },
+        {
+          "$ref": "#/texts/4"
+        },
+        {
+          "$ref": "#/texts/5"
+        }
+      ],
+      "content_layer": "body",
+      "label": "picture",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 79.74497985839844,
+            "t": 520.3368225097656,
+            "r": 499.7837219238281,
+            "b": 418.8325500488281,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            0
+          ]
+        }
+      ],
+      "captions": [
+        {
+          "$ref": "#/texts/2"
+        }
+      ],
+      "references": [],
+      "footnotes": [],
+      "image": {
+        "mimetype": "image/png",
+        "dpi": 144,
+        "size": {
+          "width": 841.0,
+          "height": 203.0
+        },
+        "uri": "data:image/png;base64,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"
+      },
+      "annotations": []
+    }
+  ],
+  "tables": [
+    {
+      "self_ref": "#/tables/0",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [
+        {
+          "$ref": "#/texts/1"
+        }
+      ],
+      "content_layer": "body",
+      "label": "table",
+      "prov": [
+        {
+          "page_no": 1,
+          "bbox": {
+            "l": 48.794742584228516,
+            "t": 681.4990615844727,
+            "r": 551.0054931640625,
+            "b": 589.4900512695312,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            0
+          ]
+        }
+      ],
+      "captions": [
+        {
+          "$ref": "#/texts/1"
+        }
+      ],
+      "references": [],
+      "footnotes": [],
+      "data": {
+        "table_cells": [
+          {
+            "bbox": {
+              "l": 61.0,
+              "t": 121.66666666666667,
+              "r": 104.0,
+              "b": 136.33333333333334,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "Member",
+            "column_header": true,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 220.66666666666666,
+              "t": 123.0,
+              "r": 285.0,
+              "b": 134.66666666666666,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 2,
+            "text": "Service (KN)",
+            "column_header": true,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 381.0,
+              "t": 123.0,
+              "r": 449.0,
+              "b": 134.66666666666666,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 2,
+            "end_col_offset_idx": 3,
+            "text": "Ultimate (KN)",
+            "column_header": true,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 61.0,
+              "t": 153.0,
+              "r": 102.66666666666666,
+              "b": 162.33333333333334,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "Beam A",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 221.33333333333334,
+              "t": 153.33333333333334,
+              "r": 249.66666666666666,
+              "b": 162.33333333333334,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 2,
+            "text": "125.5",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 381.3333333333333,
+              "t": 153.33333333333334,
+              "r": 416.0,
+              "b": 162.33333333333334,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 2,
+            "end_col_offset_idx": 3,
+            "text": "188.25",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 61.0,
+              "t": 183.0,
+              "r": 102.33333333333334,
+              "b": 192.33333333333331,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "Beam B",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 220.33333333333334,
+              "t": 183.33333333333331,
+              "r": 249.33333333333334,
+              "b": 192.33333333333331,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 2,
+            "text": "240.0",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 380.3333333333333,
+              "t": 183.33333333333331,
+              "r": 409.3333333333333,
+              "b": 192.33333333333331,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 2,
+            "end_col_offset_idx": 3,
+            "text": "360.0",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          }
+        ],
+        "num_rows": 3,
+        "num_cols": 3,
+        "orientation": "rot_0",
+        "grid": [
+          [
+            {
+              "bbox": {
+                "l": 61.0,
+                "t": 121.66666666666667,
+                "r": 104.0,
+                "b": 136.33333333333334,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "Member",
+              "column_header": true,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 220.66666666666666,
+                "t": 123.0,
+                "r": 285.0,
+                "b": 134.66666666666666,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 2,
+              "text": "Service (KN)",
+              "column_header": true,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 381.0,
+                "t": 123.0,
+                "r": 449.0,
+                "b": 134.66666666666666,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 2,
+              "end_col_offset_idx": 3,
+              "text": "Ultimate (KN)",
+              "column_header": true,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ],
+          [
+            {
+              "bbox": {
+                "l": 61.0,
+                "t": 153.0,
+                "r": 102.66666666666666,
+                "b": 162.33333333333334,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "Beam A",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 221.33333333333334,
+                "t": 153.33333333333334,
+                "r": 249.66666666666666,
+                "b": 162.33333333333334,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 2,
+              "text": "125.5",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 381.3333333333333,
+                "t": 153.33333333333334,
+                "r": 416.0,
+                "b": 162.33333333333334,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 2,
+              "end_col_offset_idx": 3,
+              "text": "188.25",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ],
+          [
+            {
+              "bbox": {
+                "l": 61.0,
+                "t": 183.0,
+                "r": 102.33333333333334,
+                "b": 192.33333333333331,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "Beam B",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 220.33333333333334,
+                "t": 183.33333333333331,
+                "r": 249.33333333333334,
+                "b": 192.33333333333331,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 2,
+              "text": "240.0",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 380.3333333333333,
+                "t": 183.33333333333331,
+                "r": 409.3333333333333,
+                "b": 192.33333333333331,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 2,
+              "end_col_offset_idx": 3,
+              "text": "360.0",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ]
+        ]
+      },
+      "annotations": []
+    }
+  ],
+  "key_value_items": [],
+  "form_items": [],
+  "pages": {
+    "1": {
+      "size": {
+        "width": 612.0,
+        "height": 792.0
+      },
+      "page_no": 1
+    }
+  }
+}

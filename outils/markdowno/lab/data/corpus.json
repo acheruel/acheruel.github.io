@@ -1,0 +1,65 @@
+[
+  {
+    "id": "hif18046",
+    "title": "Manual for Refined Analysis in Bridge Design and Evaluation",
+    "url": "https://www.fhwa.dot.gov/bridge/pubs/hif18046.pdf",
+    "original_pages": 709,
+    "pages": [
+      54,
+      85,
+      598,
+      660
+    ],
+    "original_sha256": "5447c9d516ec7f8ba7b36252e975be07a076b0dd009ce8fb8c26b0050f405b18",
+    "sha256": "db9ac9edcd10b993345024927b7d5d37f720c707995dc26df5eb6ea1ea18ec09",
+    "bytes": 448252
+  },
+  {
+    "id": "if12027",
+    "title": "Manual for Design, Construction, and Maintenance of Orthotropic Steel Bridges",
+    "url": "https://www.fhwa.dot.gov/bridge/pubs/if12027/if12027.pdf",
+    "original_pages": 291,
+    "pages": [
+      34,
+      60,
+      128,
+      241
+    ],
+    "original_sha256": "21d1255672dd8135fc8f899a73b0c415166edcbb4ed684aa050f0b4bd755c34f",
+    "sha256": "5797bce976d1d699d3a12b6677a27af8d0dfed195b036d5765fd761a54ed1df6",
+    "bytes": 401063
+  },
+  {
+    "id": "native",
+    "title": "Fixture native : tableau, dessin, colonnes",
+    "pages": [
+      1
+    ],
+    "original_pages": 1,
+    "url": null,
+    "sha256": "066f759afc4072ebbf4977bf2b9695c241398d4df9b33e088371db4d0b07380a",
+    "bytes": 1779
+  },
+  {
+    "id": "scan",
+    "title": "Fixture numérisée : même page sans texte",
+    "pages": [
+      1
+    ],
+    "original_pages": 1,
+    "url": null,
+    "sha256": "1a30158692aabd68b3db334901f06fd921dcb2ef953ab73aa940da3d9356aac3",
+    "bytes": 57959
+  },
+  {
+    "id": "mixed",
+    "title": "Fixture mixte : texte + tableau en image",
+    "pages": [
+      1
+    ],
+    "original_pages": 1,
+    "url": null,
+    "sha256": "bf3991b45fadefafcc5871d8ebae1e465f1770376c35548eca8901ae2b2bfc73",
+    "bytes": 16340
+  }
+]

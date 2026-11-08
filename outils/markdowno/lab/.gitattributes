@@ -1,0 +1,3 @@
+# Keep benchmark evidence byte-for-byte; whitespace belongs to the engine output.
+data/*.pdf binary
+data/**/output.md -whitespace

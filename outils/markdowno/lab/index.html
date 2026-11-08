@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MarkDownO Lab · Comparer les PDF → Markdown</title>
+  <meta name="description" content="Comparez cinq moteurs PDF vers Markdown sur des manuels FHWA, tableaux et scans. Résultats mesurés, sources et exports vérifiables.">
+  <link rel="icon" href="../../../assets/logos/markdowno.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../assets/css/site.css">
+  <link rel="stylesheet" href="../../commun/outil.css">
+  <link rel="stylesheet" href="lab.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Aller au contenu</a>
+  <header class="topbar"><a class="brand" href="../../../">Anthony Chéruel</a><a href="../">← MarkDownO</a></header>
+  <main id="main" class="lab">
+    <header class="intro">
+      <div><p class="eyebrow">MARKDOWNO / LAB 0.3</p><h1>Le bon texte.<br>Les bonnes relations.</h1>
+        <p class="lead">Un tableau aplati peut changer le sens d’un manuel. Comparez les sorties, retrouvez la page originale et vérifiez ce que votre LLM recevra.</p>
+      </div>
+      <aside class="intro-note"><strong>5 moteurs · 11 pages</strong><p>Deux manuels FHWA et trois cas contrôlés. Mesures locales, sorties complètes et images téléchargeables.</p><a href="../benchmark/README.md">Protocole reproductible ↗</a></aside>
+    </header>
+
+    <section class="controls card" aria-label="Choisir un document">
+      <div><label for="corpus">01 / Document de référence</label><select id="corpus" disabled><option>Chargement des essais…</option></select></div>
+      <div class="upload"><label for="pdf">Ou essayer votre PDF</label><input id="pdf" type="file" accept="application/pdf,.pdf"><small>Local, 20 Mo / 30 pages au maximum pour ce prototype.</small></div>
+    </section>
+    <p id="status" role="status" aria-live="polite">Chargement des résultats…</p>
+    <p id="provenance" class="provenance"></p>
+
+    <section class="card measured" aria-labelledby="metrics-title">
+      <div class="section-title"><h2 id="metrics-title">02 / Les mesures</h2><span>Des indicateurs, pas un classement de qualité</span></div>
+      <div class="table-wrap"><table><caption class="sr-only">Mesures du document sélectionné</caption><thead><tr><th>Moteur</th><th>Première passe</th><th>Médiane suivante</th><th>Caractères</th><th>Lignes de tableau*</th><th>Images liées</th></tr></thead><tbody id="metrics"></tbody></table></div>
+      <p class="footnote">Trois passages par moteur. La médiane porte sur les deux derniers. Python natif et Chromium sont des environnements différents ; PDFo inclut le rendu des images. *Détection syntaxique, séparateurs inclus : ce nombre ne prouve ni l’exactitude ni l’exhaustivité d’un tableau.</p>
+    </section>
+
+    <div class="section-title compare-title"><h2>03 / Inspecter côte à côte</h2><label class="view-label">Affichage <select id="view"><option value="render">Rendu</option><option value="source">Markdown brut</option></select></label></div>
+    <div class="compare">
+      <section class="card pane" aria-label="Résultat A">
+        <header><label for="engine-a">A</label><select id="engine-a" disabled></select><button id="run-a" class="btn" hidden>Convertir</button></header>
+        <p class="pane-meta" id="meta-a"></p><div id="output-a" class="output md-preview" tabindex="0"></div>
+        <footer><button class="btn" id="save-a" disabled>Télécharger le paquet .zip</button><label class="import-label">Importer une sortie .md<input id="import-a" type="file" accept=".md,.txt"></label></footer>
+      </section>
+      <section class="card pane" aria-label="Résultat B">
+        <header><label for="engine-b">B</label><select id="engine-b" disabled></select><button id="run-b" class="btn" hidden>Convertir</button></header>
+        <p class="pane-meta" id="meta-b"></p><div id="output-b" class="output md-preview" tabindex="0"></div>
+        <footer><button class="btn" id="save-b" disabled>Télécharger le paquet .zip</button><label class="import-label">Importer une sortie .md<input id="import-b" type="file" accept=".md,.txt"></label></footer>
+      </section>
+    </div>
+
+    <section class="reference card">
+      <div><h2>04 / Revenir à la preuve</h2><p>Les deux sorties couvrent l’extrait entier. La page ci-dessous sert au contrôle visuel.</p><label for="page">Page originale</label><select id="page"></select><p><a id="source-pdf" target="_blank" rel="noopener">Ouvrir le PDF de référence ↗</a></p>
+        <h3>À vérifier avant un usage LLM</h3><ul><li>Chaque valeur est-elle dans la bonne ligne et sous la bonne unité ?</li><li>Les cellules fusionnées gardent-elles leur relation ?</li><li>La figure est-elle présente, avec sa légende et ses cotes ?</li><li>Le texte des images est-il reconnu ?</li><li>Les colonnes se lisent-elles dans le bon ordre ?</li></ul>
+        <p class="footnote">Une image exportée n’est pas une description. Pour un LLM textuel, il faut de l’OCR et, selon le dessin, une analyse visuelle contrôlée. Gardez toujours la source.</p>
+      </div><img id="reference" alt="Page PDF originale à comparer aux sorties" loading="lazy">
+    </section>
+    <section class="card next"><h2>Ce que ce prototype permet de décider</h2><p>Conserver MarkItDown pour les formats Office ; évaluer Docling et PyMuPDF pour les PDF complexes. Le moteur PDFo reste le point de comparaison local, rapide et sans modèle.</p><p><a href="https://parsade.com/" target="_blank" rel="noopener">Parsade / Granite Docling ↗</a> utilise un modèle visuel WebGPU distinct du pipeline Docling standard. Ses performances ne sont pas déduites de nos essais CPU. Une sortie externe peut être importée dans l’un des panneaux ; elle sera indiquée comme non chronométrée.</p><p>PDFo Converto conserve ses fonctions pendant l’évaluation. Le regroupement PDF → Markdown dans MarkDownO pourra suivre une fois le moteur et les exports validés.</p></section>
+    <footer class="lab-footer">MarkDownO Lab · Corpus sélectionné, pas une certification de fidélité · <a href="../benchmark/REPORT.md">Lire le rapport et les limites</a></footer>
+  </main>
+</body>
+</html>

@@ -146,7 +146,7 @@ commerciales de MDFlux, Parsade et Marker n’ont pas été reprises comme résu
 
 **Oui à un seul produit spécialisé ; non à une suppression avant validation du remplaçant.**
 Le changement livré ajoute un lien vers le lab dans PDFo Converto et MarkDownO, et corrige le
-message trop général disant que PDFo donne toujours un meilleur résultat. Les fonctions actuelles
+message trop général sur la supériorité de PDFo. Les fonctions actuelles
 restent accessibles pendant le comparatif. Après validation, déplacer l’interface Markdown dans
 MarkDownO, garder un lien/redirection depuis PDFo, et partager l’extracteur nécessaire à Word.
 Il ne faut pas supprimer `extract.js`/`writers.js` qui servent également à DOCX.

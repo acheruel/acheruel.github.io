@@ -52,4 +52,4 @@ Docling et Marker téléchargent leurs modèles depuis Hugging Face au premier l
 | Équations | 3 équations dessinées en image : leurs nombres sont-ils lus ? |
 | Figures | images extraites et liées ; légendes « Figure N. » retrouvées |
 | Questions RAG | la sortie est coupée en morceaux d'environ 1 200 caractères ; la réponse doit être dans un des 3 morceaux les mieux classés (BM25) |
-| Jetons | taille pour une IA (vocabulaire o200k, sinon caractères / 4) |
+| Jetons | taille pour une IA : vocabulaire o200k si tiktoken peut le charger, sinon caractères / 4 (cas des résultats publiés) |

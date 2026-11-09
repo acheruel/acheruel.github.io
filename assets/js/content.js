@@ -135,10 +135,10 @@ window.TOOLS = [
     logo: "assets/logos/pdfo-converto.svg",
     href: "outils/pdfo-converto/",
     code: "https://github.com/acheruel/acheruel.github.io/tree/main/outils/pdfo-converto",
-    tagline: { fr: "PDF vers Markdown, images, Word, PowerPoint", en: "PDF to Markdown, images, Word, PowerPoint" },
+    tagline: { fr: "PDF vers Word, PowerPoint, images ou pages", en: "PDF to Word, PowerPoint, images or pages" },
     desc: {
-      fr: "Convertissez un PDF en Markdown (titres, listes, tableaux avec leurs cellules fusionnées, figures en fiches ou en images, un fichier par chapitre au besoin), en images JPG ou PNG, en pages séparées, en Word ou en PowerPoint, avec un aperçu avant de télécharger. Rien ne quitte votre appareil.",
-      en: "Convert a PDF to Markdown (headings, lists, tables with their merged cells, figures as cards or images, one file per chapter if needed), JPG or PNG images, separate pages, Word or PowerPoint, with a preview before you download. Nothing leaves your device."
+      fr: "Convertissez un PDF en Word modifiable (titres, listes, tableaux, figures), en PowerPoint, en images JPG ou PNG ou en pages séparées, avec un aperçu avant de télécharger. Pour le Markdown, un bouton envoie le PDF à MarkDownO. Rien ne quitte votre appareil.",
+      en: "Convert a PDF to editable Word (headings, lists, tables, figures), PowerPoint, JPG or PNG images or separate pages, with a preview before you download. For Markdown, a button sends the PDF to MarkDownO. Nothing leaves your device."
     }
   },
   {

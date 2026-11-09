@@ -115,8 +115,8 @@
     "en": "rules, pdf.js (this site), no OCR"
    },
    "note": {
-    "fr": "Le plus rapide ; tableaux vectoriels exacts (HTML, cellules fusionnées, libellés de ligne hors grille depuis la 1.1). Pas d'OCR : tableaux en image et équations perdus ; d'où MarkDownO.",
-    "en": "Fastest; exact vector tables (HTML, merged cells, row labels outside the grid since 1.1). No OCR: image tables and equations lost; hence MarkDownO."
+    "fr": "Le plus rapide ; tableaux vectoriels exacts (HTML, cellules fusionnées, libellés de ligne hors grille depuis la 1.1). Pas d'OCR : tableaux en image et équations perdus. Depuis Converto 1.2, ce Markdown est celui de MarkDownO avec l'OCR désactivé.",
+    "en": "Fastest; exact vector tables (HTML, merged cells, row labels outside the grid since 1.1). No OCR: image tables and equations lost. Since Converto 1.2, this Markdown is MarkDownO's with OCR off."
    }
   },
   {

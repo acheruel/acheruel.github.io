@@ -1,8 +1,9 @@
-"""Exporte les résultats du banc d'essai vers le comparateur du site (outils/markdowno/comparateur/donnees/)."""
+"""Exporte les résultats du banc d'essai vers le comparateur local (hors du site) :
+« 0-Site perso/PDFo Converto et MarkDownO/Comparateur PDF vers Markdown/donnees », puis `python construire.py` là-bas."""
 import json, shutil, pathlib, datetime, sys
 
 ROOT = pathlib.Path(__file__).parent
-DEST = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ROOT.parent / "acheruel.github.io/outils/markdowno/comparateur/donnees")
+DEST = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ROOT.parents[3] / "PDFo Converto et MarkDownO/Comparateur PDF vers Markdown/donnees")
 R = json.load(open(ROOT / "resultats.json", encoding="utf-8"))
 
 DOCS = [

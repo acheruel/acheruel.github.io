@@ -1,6 +1,6 @@
 # Banc d'essai PDF vers Markdown
 
-Scripts qui ont produit les résultats du [comparateur](../comparateur/) : ils lancent chaque outil sur
+Scripts qui ont produit les résultats du comparateur PDF vers Markdown : ils lancent chaque outil sur
 les mêmes PDF, puis notent les sorties avec une vérité terrain relevée à la main.
 
 ## Documents
@@ -13,7 +13,11 @@ Deux manuels de la FHWA (domaine public) :
   Construction, and Maintenance of Orthotropic Steel Bridges*, 291 pages : **tableaux insérés comme images**.
 
 `make_samples.py` en tire deux extraits (32 et 28 pages) choisis pour leurs tableaux, figures et
-équations, en gardant les signets du PDF. Les extraits sont dans `../comparateur/donnees/`.
+équations, en gardant les signets du PDF.
+
+Le comparateur n'est plus sur le site : c'est un fichier HTML local, hors du dépôt, dans
+`0-Site perso/PDFo Converto et MarkDownO/Comparateur PDF vers Markdown/` (extraits, sorties et
+résultats dans `donnees/`, page construite par `construire.py`).
 
 ## Lancer
 
@@ -37,7 +41,8 @@ pip install marker-pdf   # autre environnement
 python run_tool.py marker pdfs/hif18046-extrait.pdf out/marker
 
 python score.py          # tableau des notes + resultats.json
-python exporter.py ../comparateur/donnees   # met à jour le comparateur
+python exporter.py      # écrit dans le dossier donnees/ du comparateur local
+python construire.py    # dans le dossier du comparateur : refait le fichier HTML
 ```
 
 Docling et Marker téléchargent leurs modèles depuis Hugging Face au premier lancement.

@@ -28,7 +28,7 @@ Une plage de pages (« 1-10, 15 ») s'applique à tous les formats.
 Depuis la version 1.2, le Markdown n'est plus dans Converto : [MarkDownO](../markdowno/) utilise le même
 moteur (titres, tableaux à cellules fusionnées, figures en fiches ou en images, un fichier par chapitre)
 et lit en plus, par OCR local, les tableaux insérés comme images, le texte des figures et les pages
-numérisées. Sur le banc d'essai du [comparateur](../markdowno/comparateur/), il lit 31 lignes de tableau
+numérisées. Sur le banc d'essai (`../markdowno/banc/`), il lit 31 lignes de tableau
 sur 33, contre 17 pour le Markdown de Converto 1.1. Le bouton « Ouvrir ce PDF dans MarkDownO » y envoie
 le PDF et la plage de pages par le stockage local du navigateur, sans passer par le réseau. Pour
 retrouver l'ancien Markdown sans OCR, choisir « OCR des images : Non » dans MarkDownO.

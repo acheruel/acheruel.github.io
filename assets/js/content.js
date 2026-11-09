@@ -168,8 +168,7 @@ window.I18N = {
       "photo-rapporto": "Photo Rapporto · Anthony Chéruel",
       "pdfo-comparo": "PDFo Comparo · Anthony Chéruel",
       "pdfo-converto": "PDFo Converto · Anthony Chéruel",
-      markdowno: "MarkDownO · Anthony Chéruel",
-      "markdowno-comparateur": "Comparateur PDF vers Markdown · Anthony Chéruel"
+      markdowno: "MarkDownO · Anthony Chéruel"
     },
     skip: "Aller au contenu",
     navLabel: "Sections",
@@ -196,8 +195,7 @@ window.I18N = {
       "photo-rapporto": "Photo Rapporto · Anthony Chéruel",
       "pdfo-comparo": "PDFo Comparo · Anthony Chéruel",
       "pdfo-converto": "PDFo Converto · Anthony Chéruel",
-      markdowno: "MarkDownO · Anthony Chéruel",
-      "markdowno-comparateur": "PDF to Markdown comparator · Anthony Chéruel"
+      markdowno: "MarkDownO · Anthony Chéruel"
     },
     skip: "Skip to content",
     navLabel: "Sections",

@@ -1,10 +1,10 @@
 // MarkDownO : interface. Les PDF passent par le moteur PDF du site (structure de PDFo Converto et
 // OCR local des zones en image, pdf.js) ; les autres formats par MarkItDown, dans un travailleur.
-import { download, zip, safeName, fmtBytes, esc } from "../commun/pdf-outils.js";
+import { download, zip, safeName, fmtBytes, esc, openPdf } from "../commun/pdf-outils.js";
 import { renderMarkdown } from "../commun/markdown.js";
 import { reprendre } from "../commun/relais.js";
 import { OCR_ENGINE } from "../commun/ocr.js";
-import { convertPdf } from "./pdf.js";
+import { convertPdf, renderCrop } from "./pdf.js";
 
 const $ = id => document.getElementById(id);
 const LS = "markdowno:view", LS_PDF = "markdowno:pdf";
@@ -67,6 +67,15 @@ const TXT = {
     copyFail: "Copie impossible : utilisez le téléchargement.",
     preview: "Aperçu",
     fromConverto: name => `« ${name} » reçu de PDFo Converto.`,
+    chapterAll: "Tout le document",
+    chapterOpt: (c, k) => `${k + 1}. ${c.title} · ${c.from === c.to ? `p. ${c.from + 1}` : `p. ${c.from + 1}–${c.to + 1}`}`,
+    figCount: n => `${n} figure${n > 1 ? "s" : ""}`,
+    figNone: "Aucune figure détectée dans ce fichier.",
+    figNoneChapter: "Aucune figure dans ce chapitre.",
+    figNotPdf: "Les figures ne sont extraites que des PDF, avec le moteur « Structure + OCR ».",
+    figZip: "Télécharger ces figures (.zip)",
+    figRender: (i, n) => `Images des figures… ${i} sur ${n}`,
+    figOpen: "Ouvrir l'image en grand",
     figLabels: {
       figure: "Figure", page: "p.", text: "Texte dans la figure", none: "texte de l'image non extractible du PDF : voir l'image",
       kind: { image: "image", vector: "dessin", scan: "page numérisée" }, tableImage: "image du tableau",
@@ -114,6 +123,15 @@ const TXT = {
     copyFail: "Could not copy: use the download instead.",
     preview: "Preview",
     fromConverto: name => `“${name}” received from PDFo Converto.`,
+    chapterAll: "Whole document",
+    chapterOpt: (c, k) => `${k + 1}. ${c.title} · ${c.from === c.to ? `p. ${c.from + 1}` : `pp. ${c.from + 1}–${c.to + 1}`}`,
+    figCount: n => `${n} figure${n > 1 ? "s" : ""}`,
+    figNone: "No figure found in this file.",
+    figNoneChapter: "No figure in this chapter.",
+    figNotPdf: "Figures are only extracted from PDFs, with the “Structure + OCR” engine.",
+    figZip: "Download these figures (.zip)",
+    figRender: (i, n) => `Figure images… ${i} of ${n}`,
+    figOpen: "Open the full-size image",
     figLabels: {
       figure: "Figure", page: "p.", text: "Text in the figure", none: "the image's text cannot be extracted from the PDF: see the image",
       kind: { image: "image", vector: "drawing", scan: "scanned page" }, tableImage: "table image",
@@ -131,7 +149,7 @@ const loadPdfOpts = () => { try { return { ...PDF_DEFAULTS, ...JSON.parse(localS
 const state = {
   engine: "idle", engineInfo: null, engineError: "", step: 0,
   files: [], cur: -1, nextId: 1, pdf: { ...loadPdfOpts(), pages: "" },
-  view: (() => { try { return localStorage.getItem(LS) === "source" ? "source" : "render"; } catch { return "render"; } })()
+  view: (() => { try { const v = localStorage.getItem(LS); return v === "source" || v === "figures" ? v : "render"; } catch { return "render"; } })()
 };
 const status = (msg, warn = false) => { $("status").textContent = msg; $("status").classList.toggle("is-warn", warn); };
 const extOf = name => (name.includes(".") ? name.split(".").pop().toLowerCase() : "");
@@ -259,7 +277,7 @@ async function addFiles(list) {
   if (!list.length) return;
   for (const file of list) {
     const ext = extOf(file.name);
-    const f = { id: state.nextId++, name: file.name, size: file.size, ext, status: "wait", md: "", error: "", bytes: null, file };
+    const f = { id: state.nextId++, name: file.name, size: file.size, ext, status: "wait", md: "", error: "", bytes: null, file, chapter: -1 };
     if (!ACCEPTED.has(ext)) { f.status = "err"; f.error = t().unsupported(ext || "?"); }
     state.files.push(f);
   }
@@ -273,7 +291,9 @@ async function addFiles(list) {
 
 function dropResult(f) {
   if (f.urls) for (const u of f.urls.values()) URL.revokeObjectURL(u);
-  Object.assign(f, { md: "", files: null, assets: null, urls: null, info: null, note: "", error: "" });
+  if (f.figUrls) for (const u of f.figUrls.values()) u.then(x => URL.revokeObjectURL(x)).catch(() => {});
+  if (f.pdfDoc) f.pdfDoc.then(d => d.loadingTask?.destroy()).catch(() => {});
+  Object.assign(f, { md: "", files: null, assets: null, urls: null, info: null, note: "", error: "", chapters: null, figures: null, figUrls: null, pdfDoc: null, keep: null, chapter: -1 });
 }
 
 let running = false;
@@ -301,6 +321,8 @@ async function processQueue() {
         f.status = "err";
         f.error = String(err.message || err);
       }
+      // Un PDF à figures garde ses octets : leurs images sont rendues à la demande (vue Figures).
+      f.keep = f.status === "ok" && f.figures?.length ? f.bytes : null;
       f.bytes = null;
       renderFiles();
       if (state.files.indexOf(f) === state.cur) showCurrent();
@@ -328,6 +350,8 @@ async function convertPdfFile(f) {
   f.files = r.files;
   f.assets = r.assets;
   f.info = r.info;
+  f.chapters = r.chapters;
+  f.figures = r.figures;
   f.urls = new Map(r.assets.map(a => [a.path, URL.createObjectURL(new Blob([a.bytes], { type: a.type }))]));
   f.note = state.pdf.ocr === "off" ? x.pdfNoOcr : "";
 }
@@ -363,6 +387,26 @@ $("clear").addEventListener("click", () => {
   status("");
 });
 
+/** Markdown affiché : tout le document, ou le chapitre choisi. */
+const shownMd = f => (f.chapter >= 0 && f.chapters?.[f.chapter] ? f.chapters[f.chapter].md : f.md);
+
+function renderChapters(f) {
+  const sel = $("chapter");
+  const list = f?.status === "ok" ? f.chapters || [] : [];
+  sel.hidden = list.length < 2;
+  if (sel.hidden) return;
+  const x = t();
+  sel.innerHTML = `<option value="-1">${esc(x.chapterAll)}</option>` + list.map((c, k) => `<option value="${k}">${esc(x.chapterOpt(c, k))}</option>`).join("");
+  sel.value = String(f.chapter);
+}
+$("chapter").addEventListener("change", e => {
+  const f = state.files[state.cur];
+  if (!f) return;
+  f.chapter = +e.target.value;
+  showCurrent();
+  $("preview").scrollTop = 0;
+});
+
 async function showCurrent() {
   const x = t();
   const f = state.files[state.cur];
@@ -378,21 +422,92 @@ async function showCurrent() {
   $("preview-title").textContent = f ? f.name : x.preview;
   $("copy").disabled = $("save-one").disabled = !(f && f.status === "ok");
   $("save-one-label").textContent = f && isBundle(f) ? ".zip" : ".md";
+  renderChapters(f);
   if (!f) { body.innerHTML = `<p class="md-empty">${esc(x.select)}</p>`; return; }
   if (f.status === "err") { body.innerHTML = `<p class="md-error">${esc(f.error)}</p>`; return; }
   if (f.status !== "ok") { body.innerHTML = `<p class="md-empty">${esc(f.status === "run" ? x.converting : x.waiting)}</p>`; return; }
-  if (!f.md.trim()) { body.innerHTML = `<p class="md-empty">${esc(x.emptyMd)}</p>`; return; }
+  if (state.view === "figures") { showFigures(f); return; }
+  const md = shownMd(f);
+  if (!md.trim()) { body.innerHTML = `<p class="md-empty">${esc(x.emptyMd)}</p>`; return; }
   if (state.view === "source") {
     const pre = document.createElement("pre");
     pre.className = "md-source";
-    pre.textContent = f.md;
+    pre.textContent = md;
     body.replaceChildren(pre);
   } else {
     const div = document.createElement("div");
     div.className = "md-preview";
-    div.append(await renderMarkdown(f.md, { images: f.urls || undefined }));
+    div.append(await renderMarkdown(md, { images: f.urls || undefined }));
     if (state.files[state.cur] === f) body.replaceChildren(div);
   }
+}
+
+// ---------------------------------------------------------------- Figures (galerie)
+const shownFigures = f => (f.figures || []).filter(g => f.chapter < 0 || g.chapter === f.chapter);
+
+/** Image d'une figure : celle déjà rendue (option « Fiches + images »), sinon rendue à la demande. */
+function figureUrl(f, g) {
+  if (f.urls?.has(g.path)) return Promise.resolve(f.urls.get(g.path));
+  f.figUrls = f.figUrls || new Map();
+  if (!f.figUrls.has(g.path)) {
+    if (!f.pdfDoc) f.pdfDoc = openPdf(f.keep, null, { fontExtraProperties: true });
+    f.figUrls.set(g.path, f.pdfDoc.then(async pdf => {
+      const r = await renderCrop(pdf, g.page, g.box, g.kind);
+      return URL.createObjectURL(new Blob([r.bytes], { type: r.type }));
+    }));
+  }
+  return f.figUrls.get(g.path);
+}
+
+const figObserver = new IntersectionObserver(entries => {
+  for (const en of entries) {
+    if (!en.isIntersecting) continue;
+    const img = en.target;
+    figObserver.unobserve(img);
+    const f = state.files.find(x => x.id === +img.dataset.file);
+    const g = f?.figures?.[+img.dataset.fig];
+    if (!g || !(f.keep || f.urls?.has(g.path))) continue;
+    figureUrl(f, g)
+      .then(url => { img.src = url; img.closest("a").href = url; })
+      .catch(err => { console.warn(err); img.closest("figure").classList.add("is-failed"); });
+  }
+}, { root: $("preview"), rootMargin: "400px" });
+
+function showFigures(f) {
+  const x = t(), L = x.figLabels;
+  const body = $("preview");
+  if (!f.figures) { body.innerHTML = `<p class="md-empty">${esc(x.figNotPdf)}</p>`; return; }
+  const list = shownFigures(f);
+  if (!list.length) { body.innerHTML = `<p class="md-empty">${esc(f.figures.length ? x.figNoneChapter : x.figNone)}</p>`; return; }
+  const head = document.createElement("div");
+  head.className = "md-figs-head";
+  head.innerHTML = `<span>${esc(x.figCount(list.length))}</span><button type="button" class="btn btn-quiet" id="figs-zip">${esc(x.figZip)}</button>`;
+  const ul = document.createElement("ul");
+  ul.className = "md-figs";
+  ul.innerHTML = list.map(g => {
+    const k = f.figures.indexOf(g);
+    // La légende porte déjà le numéro du document (« Figure 3. … ») ; sans légende, numéro d'ordre.
+    const meta = [g.caption ? null : `${L.figure} ${g.n}`, `${L.page} ${g.page + 1}`, L.kind[g.kind] || g.kind].filter(Boolean).join(" · ");
+    return `<li><figure><a class="md-fig-img" target="_blank" rel="noopener" title="${esc(x.figOpen)}"><img alt="${esc(g.caption || `${L.figure} ${g.n}`)}" data-file="${f.id}" data-fig="${k}"></a>
+      <figcaption><b>${esc(meta)}</b>${g.caption ? `<span>${esc(g.caption)}</span>` : ""}</figcaption></figure></li>`;
+  }).join("");
+  body.replaceChildren(head, ul);
+  ul.querySelectorAll("img[data-fig]").forEach(img => figObserver.observe(img));
+  head.querySelector("#figs-zip").addEventListener("click", () => saveFigures(f, list));
+}
+
+async function saveFigures(f, list) {
+  const x = t();
+  const entries = [];
+  for (let k = 0; k < list.length; k++) {
+    status(x.figRender(k + 1, list.length));
+    const url = await figureUrl(f, list[k]);
+    entries.push({ name: list[k].path, data: new Uint8Array(await (await fetch(url)).arrayBuffer()), store: true });
+  }
+  const stem = safeName(f.name.replace(/\.pdf$/i, ""));
+  const name = `${stem}_figures${f.chapter >= 0 ? `_chapitre${String(f.chapter + 1).padStart(2, "0")}` : ""}.zip`;
+  download(await zip(entries), name);
+  status(x.saved(name));
 }
 $("view").addEventListener("click", e => {
   const b = e.target.closest("button");
@@ -450,7 +565,7 @@ $("save-all").addEventListener("click", async () => {
 });
 $("copy").addEventListener("click", async () => {
   const f = state.files[state.cur];
-  try { await navigator.clipboard.writeText(f.md); status(t().copied); } catch { status(t().copyFail, true); }
+  try { await navigator.clipboard.writeText(shownMd(f)); status(t().copied); } catch { status(t().copyFail, true); }
 });
 
 // ---------------------------------------------------------------- Langue et démarrage

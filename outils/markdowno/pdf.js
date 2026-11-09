@@ -9,7 +9,7 @@ import { ocrBlocks } from "../commun/ocr.js";
 const toBytes = (canvas, type, q) => new Promise(res => canvas.toBlob(async b => res(new Uint8Array(await b.arrayBuffer())), type, q));
 
 /** Image d'une zone de page (figure ou tableau), 2 000 px au plus : PNG pour traits fins, JPEG pour photos. */
-async function renderCrop(pdf, i, box, kind) {
+export async function renderCrop(pdf, i, box, kind) {
   const page = await pdf.getPage(i + 1);
   const vp = page.getViewport({ scale: 1 });
   const pad = kind === "scan" ? 0 : 6;
@@ -30,7 +30,8 @@ async function renderCrop(pdf, i, box, kind) {
  * opts : { ocr: "auto" | "off", figures: "text" | "images", split: "one" | "chapters", pages: "" (ex. « 1-10 »),
  *          pageMarkers, labels (libellés des fiches), chapterLabels }
  * hooks : { onStep(key, i, n), onOcrStatus(m), isCancelled() }
- * Retourne { files: [{ name, md }], md, assets: [{ path, bytes, type }], info }.
+ * Retourne { files: [{ name, md }], md, assets: [{ path, bytes, type }], info,
+ *            chapters: [{ title, from, to, md }] (vide sans chapitres), figures: [{ n, page, box, kind, caption, path, chapter }] }.
  */
 export async function convertPdf(bytes, name, opts, hooks = {}) {
   const pdf = await openPdf(bytes, null, { fontExtraProperties: true });
@@ -47,9 +48,11 @@ export async function convertPdf(bytes, name, opts, hooks = {}) {
     }
     const mdOpts = { pageMarkers: !!opts.pageMarkers, figures: opts.figures, tableFmt: "auto", tableImages: false, labels: opts.labels };
     const base = safeName(name.replace(/\.pdf$/i, ""));
-    const chapters = opts.split === "chapters" ? splitChapters(blocks, x.outline) : null;
+    // Chapitres toujours calculés : aperçu et figures par chapitre, même pour une sortie en un fichier.
+    const chapters = splitChapters(blocks, x.outline);
+    const split = opts.split === "chapters" && chapters;
     let files;
-    if (chapters) {
+    if (split) {
       const title = (await pdf.getMetadata().catch(() => null))?.info?.Title || base;
       files = chapterFiles(chapters, title, { ...opts.chapterLabels, mdOpts });
     } else {
@@ -63,6 +66,15 @@ export async function convertPdf(bytes, name, opts, hooks = {}) {
       const a = list[k];
       assets.push({ path: a.path, ...(await renderCrop(pdf, a.page, a.box, a.kind)) });
     }
+    const chapterOf = new Map();
+    (chapters || []).forEach((c, k) => { for (const b of c.blocks) chapterOf.set(b, k); });
+    const figures = blocks.filter(b => b.type === "figure").map(b => ({
+      n: b.n, page: b.page, box: b.box, kind: b.kind, caption: b.caption || "", path: b.asset, chapter: chapterOf.get(b) ?? -1
+    }));
+    const chapterList = (chapters || []).map((c, k) => ({
+      title: c.title || opts.chapterLabels?.intro || "", from: c.from, to: c.to,
+      md: split ? files[k + 1].md : toMarkdown(c.blocks, mdOpts)
+    }));
     const content = blocks.filter(b => b.type !== "pagebreak");
     const info = {
       pages: idx.length, of: pdf.numPages,
@@ -70,11 +82,11 @@ export async function convertPdf(bytes, name, opts, hooks = {}) {
       ocrTables: content.filter(b => b.type === "table" && b.ocr).length,
       figures: content.filter(b => b.type === "figure").length,
       uncertain: ocr ? ocr.uncertain : 0, ocrZones: ocr ? ocr.zones : 0, scans: ocr ? ocr.scans : 0,
-      chapters: chapters ? chapters.length : 0,
+      chapters: split ? chapters.length : 0,
       seconds: (performance.now() - t0) / 1000
     };
     const md = files.length === 1 ? files[0].md : files.map(f => f.md).join("\n\n---\n\n");
-    return { files, md, assets, info };
+    return { files, md, assets, info, chapters: chapterList, figures };
   } finally {
     try { pdf.loadingTask?.destroy(); } catch { /* déjà libéré */ }
   }

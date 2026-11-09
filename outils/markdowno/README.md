@@ -6,7 +6,7 @@ https://acheruel.github.io/outils/markdowno/
 ## PDF (normes, guides de conception, manuels)
 
 Les PDF passent par le moteur PDF du site, choisi après un banc d'essai contre MarkItDown, Docling,
-Marker, pymupdf4llm et OpenDataLoader (voir le [comparateur](comparateur/)) :
+Marker, pymupdf4llm et OpenDataLoader (voir `banc/`) :
 
 1. **Structure** (moteur de PDFo Converto, `../commun/pdf-extract.js`) : titres d'après les polices et
    les signets, paragraphes recomposés, listes, **tableaux vectoriels** retrouvés par leurs filets, avec
@@ -51,14 +51,23 @@ Le bouton « Ouvrir ce PDF dans MarkDownO » de Converto dépose le PDF et la pl
 stockage local du navigateur (`../commun/relais.js`, IndexedDB), puis ouvre MarkDownO, qui le reprend
 une seule fois et l'efface. Rien ne passe par le réseau.
 
-## Comparateur et banc d'essai
+## Aperçu
 
-- `comparateur/` : https://acheruel.github.io/outils/markdowno/comparateur/ . Résultats du banc d'essai
-  (MarkDownO, PDFo Converto, MarkItDown, Docling, Marker, pymupdf4llm, OpenDataLoader PDF) sur deux
-  manuels de ponts de la FHWA, puis les sorties côte à côte avec la page du PDF, placées sur le même
-  passage. Un PDF déposé est converti en direct.
-- `banc/` : lancement de chaque outil, notation (vérité terrain relevée à la main : 33 lignes de 11
-  tableaux, 3 équations, 15 questions), exportation vers le comparateur. Voir `banc/README.md`.
+- **Rendu**, **Markdown** (source) ou **Figures** : la galerie de toutes les figures repérées dans le PDF,
+  avec leur page, leur nature (image, dessin, page numérisée) et leur légende. Les images sont rendues
+  à la demande depuis le PDF (gardé en mémoire tant que le fichier est dans la liste) ; un clic ouvre
+  l'image en grand, et « Télécharger ces figures (.zip) » les enregistre.
+- **Chapitre** : pour un PDF à signets ou à titres de niveau 1, une liste permet de n'afficher qu'un
+  chapitre, en Rendu, en Markdown ou en Figures, que la sortie soit en un fichier ou par chapitre.
+  « Copier » copie ce qui est affiché.
+
+## Banc d'essai
+
+`banc/` : lancement de chaque outil (MarkDownO, PDFo Converto, MarkItDown, Docling, Marker, pymupdf4llm,
+OpenDataLoader PDF) sur deux manuels de ponts de la FHWA, notation (vérité terrain relevée à la main :
+33 lignes de 11 tableaux, 3 équations, 15 questions), exportation des résultats. Voir `banc/README.md`.
+Le comparateur qui les affiche (résultats, puis sorties côte à côte avec la page du PDF) n'est plus
+publié sur le site : c'est un fichier HTML local, hors du dépôt.
 
 ## Fichiers
 

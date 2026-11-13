@@ -113,8 +113,7 @@ button { font: inherit; cursor: pointer; }
 .tool:hover .tool-open svg { transform: translate(2px, -2px); }
 .tool.is-internal:hover .tool-open svg { transform: translateX(3px); }
 
-/* Note sous un titre de catégorie et liste de liens (page Ressources) */
-.group-note { margin: -4px 0 14px; font-size: .875rem; line-height: 1.5; color: var(--muted); }
+/* Sélection de liens (sous-page de Ressources) */
 .picks { margin-top: 18px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 16px 18px 10px; animation: rise .6s var(--ease) both; animation-delay: 240ms; }
 .no-intro .picks { animation: none; }
 .picks-title { margin: 0 0 8px; font-size: 1rem; font-weight: 650; letter-spacing: -.2px; color: var(--navy); }
@@ -161,6 +160,9 @@ button { font: inherit; cursor: pointer; }
   .tool-group + .tool-group { margin-top: 28px; }
   .tools { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
   .footer-inner { padding: 12px 20px; }
+}
+@media (min-width: 801px) {
+  .tools.tools-viewers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (pointer: coarse) {
   .tab { padding: 16px 0 14px; }

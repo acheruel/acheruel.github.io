@@ -2,7 +2,7 @@
 // Pour ouvrir une section : passer ready à true et créer la page indiquée par href.
 window.SITE = {
   version: "0.6",
-  date: "2026-11-08",
+  date: "2026-11-13",
   github: "acheruel",
   pages: "https://acheruel.github.io"
 };
@@ -163,6 +163,7 @@ window.I18N = {
     pageTitle: {
       outils: "Anthony Chéruel · Outils",
       ressources: "Anthony Chéruel · Ressources",
+      "simon-willison": "Outils de Simon Willison · Anthony Chéruel",
       "aide-memoire": "Aide-mémoire de mathématiques · Anthony Chéruel",
       respiro: "Respiro · Anthony Chéruel",
       "photo-rapporto": "Photo Rapporto · Anthony Chéruel",
@@ -190,6 +191,7 @@ window.I18N = {
     pageTitle: {
       outils: "Anthony Chéruel · Tools",
       ressources: "Anthony Chéruel · Resources",
+      "simon-willison": "Simon Willison's tools · Anthony Chéruel",
       "aide-memoire": "Math reference sheet · Anthony Chéruel",
       respiro: "Respiro · Anthony Chéruel",
       "photo-rapporto": "Photo Rapporto · Anthony Chéruel",
